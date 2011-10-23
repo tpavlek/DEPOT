@@ -1,0 +1,14 @@
+<?php
+$cap[0]="Welcome one, welcome all to the TEKAEF Birthday Special! Today's adventure - making a cake! Nothing really exciting happens at the start, just mixing shit and putting it in the oven. Really a rather lame intro to such an epic adventure";
+$cap[1]="Simply following the instructions, I remove the cake ~20 min later, the holes you see in the centre are where I inserted a fork to test for done-ness in the middle. No, I won't use toothpicks. Screw toothpicks. Screw you.";
+$cap[2]="The recipe said to wait until the cake was completely cooled before taking it out of the pan. Hahahaha. You're not the boss of me book, YOU CANNOT CONTROL ME. I take it out when it's mostly cooled. It breaks into over 9000 pieces. Fuck. Should've listened to the recipe.";
+$cap[3]="However, being the genius I am, I think that since I have a bunch of messed up cake, I'll make a trifle. Yeah, I know, great plan. What you seee being mixed is chocolate pudding, whip cream and condensed milk. Yum.";
+$cap[4]="So it goes layer of cake, layer of whipcream-choco-condensed milk mixture, then--you guessed it--MORE WHIP CREAM. This bitch is going to be so sweet. Nummy.";
+$cap[5]="The trifle! It is completed! If sex could be a food, this would be it.";
+$cap[6]="And here it is, the final image in which Winston Om Nom Nom's the delicousness. BUT WAIT THERE'S MORE! This is a birthday special, so it doesn't end here!";
+$cap[7]="I repeat the steps to make a cake, this time I'm NOT going to screw shit up. I wait for it too cool completely. But it's taking too long, so once it's mostly-almost-entirely cooled I try to take it out. It breaks. Fuck. BUT WAIT! The pieces are large, maybe it can build it like a puzzle. And yes, I DID have difficulty doing a three piece puzzle. Is there a problem with that?";
+$cap[8]="I whip up some really sticky chocolate-sugar icing, and use it as glue to attach the cake to itself. Great success!";
+$cap[9]="Now I wanna write my name on the cake, so I mix icing sugar and water in a bowl, and I put in a SHITLOAD of icing sugar, but it's kinda still too watery. I'm starting to feel bad about wasting, because this is already WAY more than I need, then my genius comes to me! Microwaves only heat the water in whatever you put in it. So, logically, if I put my concoction in there, the water should evaporate out, leaving a perfect density paste. Logically. Screw you nature.";
+$cap[10]="But nevermind icing! I have delicious cake and delicious trifle. Now to call a woman to clean up this mess...";
+?>
+ 

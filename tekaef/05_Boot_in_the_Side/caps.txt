@@ -1,0 +1,13 @@
+<?php
+$cap[0]="Alright, in today's tekaef, I will be making something simple, Sidekicks, as my house is totally devoid of food and we haven't been shopping for weeks, so I figure this is the only thing I _can_ make";
+$cap[1]="So I open up the package, get out all the pots and pans, etc, then read the instructions. Says I'll need a cup of milk. So I open up the fridge and WHAT'S THIS?! NO MILK! Someone basically deserves a kick in the face for NOT BUYING FOOD FOR THEIR NINE YEAR OLD CHILD! I mean _seriously_ how hard is it to just pick up a jug of milk or some bread here or there? YOU WORK AT FRIGGIN' WALMART! But I digress... No milk so I'm starving now. Open up the cupboard to find something else to eat.";
+$cap[2]="Oh praise tha lord! I hath found a replacement for milk, preservatives to the rescue!";
+$cap[3]="Okay. WHAT THE HELL IS THIS!? I need a friggin' _cup_ of milk, not a litre, and they give such craptastic measurements. Someone else has just earned a kick in the face. I'm also craptastic at math. Basically, doing arithmetic is for losers who don't know how to cook.";
+$cap[4]="So I just throw in some milk and a few spoonfulls of the powerdered milk. Tastes like watery shit, so I add a few more. Tastes like shit with some consistency to it, so I imagine it's good.";
+$cap[5]="It was worrysome, I started to boil the milk, but y'know how normal milk gets that little film on top of it when it boils? Yeah, this stuff had that times a thousand. It was basically an impenetrable wall of disgusting crap.";
+$cap[6]="May have looked and smelled disgusting but I hadn't eaten for over nine thousand years, so I throw in the noodles.";
+$cap[7]="...I got bored.";
+$cap[8]="Hurrah! It's done. And it only _kinda_ looks gross. Yeah, no. Can't lie to myself. Looks like shit. If my normal stuff is Jesus, this is the antichrist.";
+$cap[9]="You'll notice that I took this Om Nom Nom from a different angle. It's a new style of photography I invented, because I'm a master photographer. I call it 'hiding the fact that what I made looks like totally disgusting crap'.";
+$cap[10]="Yeah. My sink is still dirty. What're you gonna do about it?";
+?>

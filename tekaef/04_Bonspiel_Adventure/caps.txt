@@ -1,0 +1,39 @@
+<?php
+$cap[0]="Mmkay! So this week's TEKAEF was done at a Bonspiel (for
+those of you who aren't Canadian-literate, that's a curling
+tournament) during a break. We had ingredients for either deviled
+eggs or omlettes. I chose the latter. Of course, to partition
+resources better, they shoved us in groups of three, so this one
+actually fufills the _friends_ part of tekaef";
+$cap[1]="So I wisk up my eggs (the small bowl is mine). My eggs are
+whisked better than his, I assume you agree.";
+$cap[2]="I originally put a _lot_ of oil in my pan, I'd say a good
+five tablespoons, but then the teacher came along and went all
+health-nazi on my ass and dumped some of the oil into another groups
+pan. Of course, I stole it back as soon as she wasn't looking, but
+unfortunately, I couldn't get it all back, so I could only work with
+like, three tablespoons of oil. Also, the black elbow you see in the
+picture is the teacher. Apparently she doesn't understand a little
+concept called GET THE HELL OUT OF MY SHOT";
+$cap[3]="I throw it in the pan, then throw on the meat, and it smells
+_so friggin' sexy_. Though I'll admit, all the oil made it look
+peculiar";
+$cap[4]="So there it is in my pan, all folded over and looking
+totally sexy and, dare I say it, _like an omlette should_, but I
+gotta fry the other side so... (insert whoosh-esque noises here)";
+$cap[5]="Godammit. It now looks nothing like an omlette should";
+$cap[6]="Well... If it's not an omlette, might as well make it an
+english muffin!";
+$cap[7]="I throw significant amounts of (stolen when the teacher wasn't looking) oil on the frying pan, and try to fry the whole muffing to toast it and melt cheese and such. Took too long _trying_ to take pictures (which I failed to do) and didn't pay enough attention causing it to burn. But no matter, this is not a challenge for me. BECAUSE I AM EBON! I R OMNIPOTENT. I USE KNIFE TO REMOVE BURN!";
+$cap[8]="And they're all done. Look at how sexy they all look. Mine
+especially. If you're wondering why I didn't document my group
+member's process, it's because I don't give a crap about them. Neither
+should you.";
+$cap[9]="This is mine. It is truly a happy meal, and easily the
+sexiest of the lot";
+$cap[10]="And here's nameless group member number one's. Nothing really
+exciting. Moving on.";
+$cap[11]="Ditto.";
+$cap[12]="This one didn't come from my group. I was walking by and it
+simply looked so awful that I couldn't help but take a picture.";
+?>

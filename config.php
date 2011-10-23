@@ -1,0 +1,7 @@
+<?php
+
+$TOPICS_PER_PAGE = 35;
+$POSTS_PER_PAGE = 35;
+$USERS_PER_PAGE = 50;
+
+?>

@@ -1,0 +1,22 @@
+<?php
+echo"<html>
+        <head>
+                <title>TEKAEF</title>
+<style type=\"text/css\">
+body {
+        background-color: lightblue;
+}
+h1 { font-size:36px; text-decoration:none; }
+p { font-size:14px; font-weight:normal; text-decoration:none; }
+.caption { font-size:18px; font-weight:normal; text-decoration:none; width: 820px;}
+</style>
+        </head>
+        <body>
+                <center>
+        <h1>The previous epic Kitchen adventures of Ebon and friends</h1>";
+$adventuredirs=glob('*',GLOB_ONLYDIR);
+$adventure=preg_replace('/_/',' ',$folder);
+foreach ($adventuredirs as $folder) echo '<a href="index.php?adventure=' . $folder . '">' . $adventure . 
+'</a><br><br>'
+echo "</center></body></html>";
+?>

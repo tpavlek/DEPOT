@@ -1,0 +1,216 @@
+a:link { text-decoration:none; color:black;}
+a:visited {color:black;}
+a:hover{text-decoration:underline; color:#0066FF; }
+body {
+background-color:yellow;
+text-align:center;
+}
+ul {
+list-style: none;
+padding:2%;
+}
+
+#listbox {
+border: solid black 4px;
+text-align:center;
+margin: 0px auto;
+width: 98%;
+}
+td {
+//border-right: solid black 1px;
+border-top: solid black 1px;
+cellspacing: -1;
+border-collapse:collapse;
+}
+table {width:100%;}
+th { text-align:left;}
+
+#main {
+background-color:#FFFFFF;
+border: solid black 1px;
+width:900px;
+}
+
+.options {
+float:right;
+font-size: 70%;
+display:block;
+padding-right:2%;
+margin-right:7.7%;
+}
+#DepotWarehouseBlaggvqkj6shb9se4qkg66ajo5uee0 li {
+border: solid black 4px;
+margin-bottom:20px;
+padding:2%;
+margin-left:5%;
+margin-right:5%;
+margin-bottom:none;
+}
+#DepotWarehouseBlaggvqkj6shb9se4qkg66ajo5uee0 ul {
+border:none;}
+#creditfooter {
+display:none;}
+.feedTitle {
+display:none;
+}
+
+.headline {
+font-weight:bold;
+font-size:170%;
+float:left;}
+.date {text-align:right;
+font-size:70%;
+}
+.banner {
+font-size:300%;
+font-weight:bold;
+}
+
+#navbar {
+margin:0px auto;
+border: none;
+text-align:center;}
+
+.nav {
+	border: 2px solid black;
+	padding: 8px;
+	margin-right:2px;
+	display:inline-block;
+	width:170px;
+}
+
+.nav a {
+	display: block;
+	text-align: center;
+}
+
+.nav span {
+	font-weight: bold;
+	font-size:150%;
+}
+
+.sub_nav {
+	margin-left:-10px;
+	display: none;
+	padding:8px; 
+  position: absolute;
+  z-index: 2;
+	width:170px;
+	border: solid black 2px;
+}
+.sub_nav a {
+	display: block;
+	border: 0;
+	margin: 0;
+}
+.cleaner {
+clear:both;
+}
+
+#qod{background-color:#CC0000;}
+#qod:hover{background-color:#FF0000;}
+#blag{background-color:#0066FF;}
+#blag:hover{background-color:#00CCFF;}
+#forum {background-color:#9900CC;}
+#forum:hover{background-color:#9933FF;}
+#leaderboard{background-color:#009933; display:none;}
+#leaderboard:hover{background-color:#00CC00;}
+#about {background-color:#FF6600;}
+#about:hover{background-color:#FF9966;}
+
+
+
+#navbar a:hover {
+text-decoration:none;
+color:black;}
+
+.caption { 
+        padding: 1%;
+        border: solid black 3px;
+        border-color: #000;
+		margin: 0px auto;
+        width: 790px;
+}
+.pics {
+border: solid black 4px;
+width: 800px;
+height: 600px;
+}
+.old {width:400px; height: 300px; }
+.olddiv {border: solid black 4px;
+padding:2%;
+width: 410px;
+text-align:center;}
+
+.userinfo {
+font-size:70%;
+text-align:right;
+margin:4%;}
+
+.username {
+font-weight:bold;}
+
+.formbox {
+text-align:left;
+margin:0px auto;
+width:50%;
+}
+.textinput {
+float:right;
+}
+label {
+font-weight:bold;
+}
+.submit {
+text-align:center;
+}
+
+ul {
+list-style:none;
+border: solid black 4px;
+padding: 1px;
+margin:5%;
+text-align:left;
+display:block;
+}
+
+.subject {
+text-align:left;
+width:70%;
+display:inline-block;
+font-weight:bold;
+}
+
+.author {
+float:right;
+font-size: 70%;
+display:block;
+}
+
+hr {
+width: 80%;
+color: #339900;
+background-color: #339900;
+height: 2px;
+border: none;
+}
+
+.big {
+font-size:200%;
+text-align:center;
+font-weight: bold;
+}
+
+.reply{
+width:70%;
+float:right;
+}
+
+li label {
+width: 30%;
+}
+
+.message {
+width: 90%;
+display:inline-block;
+}

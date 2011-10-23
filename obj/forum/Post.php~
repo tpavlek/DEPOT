@@ -1,0 +1,62 @@
+<?php
+require_once('obj/page.php');
+class Post extends Page {
+
+	private $tid;
+	private $pid;
+	private $subject;
+	private $message;
+	private $author;
+	private $author_uid;
+
+	public function __construct($pid) {
+		parent::__construct();
+		$arr = $this->db->getPost($pid);
+		$this->tid = $arr['data']['in_reply_to'];
+		$this->pid = $arr['data']['pid'];
+		$this->subject = $arr['data']['subject'];
+		$this->message = $arr['data']['message'];
+		$this->author = $arr['data']['author'];
+		$this->author_uid = $arr['data']['author_uid'];
+	}
+	
+	static function showPostForm() {
+		$str = "<ul><form action='?page=post&method=newReply&tid=" . $_GET['tid'] . 			"' method='post'>	
+			<p><li><label for='subject'> Subject: 
+			<input class='reply' type='text' name='subject' value='RE: " . $this->db->getTopicSubject($_GET['tid']) . "'></li></p>
+			<p><li><label for='message'> Message:
+			<textarea class='reply' name='message'></textarea></li></p>
+			<input type='submit' value='GO GO!'>
+			</form></ul>";
+		return $str;
+	}
+
+	static function newPostReply() {
+		return $this->db->add(array('table' => 'posts', 'fields' => array(':author' => 
+			$_SESSION['username'], ':subject' => $this->subject, ':message' => 
+			$_POST['message'], ':in_reply_to' => $this->tid, ':date' => $this->date)));
+	}
+	
+	function getPID() {
+		return $this->pid;
+	}
+	
+	function getAuthor() {
+		return $this->author;
+	}
+	
+	function getAuthorUID() {
+		return $this->author_uid;
+	}
+	
+	function getSubject() {
+		return $this->subject;
+	}
+	
+	
+	function getMessage() {
+		return $this->message;
+	}
+}
+
+?>

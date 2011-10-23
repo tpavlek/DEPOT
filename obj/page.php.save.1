@@ -1,0 +1,116 @@
+<?php
+require_once('obj/db.php');
+session_start();
+class Page {
+	public $date;
+	public $html;
+	protected $db;
+
+	public function __construct() {
+		$this->db = new DB("test","green","test","localhost");
+		$this->date = date("d-m-Y H:i:s");
+	}
+
+	public function __toString() {
+		return (string)$this->html;	
+	}
+
+	function permissions($reqd) {
+		switch ($reqd) {
+			case 'loggedIn': 
+				if (isset($_SESSION['username'])) return true;
+				else $this->redirect("login")
+		}
+	}
+
+	function redirect($dest) {
+		
+		switch ($dest) {
+			case 'login': header("Refresh: 3, url=?page=login");
+		}
+	}
+
+	function blog() {
+		$this->html = "<script src='http://feeds.feedburner.com/DepotWarehouseBlag?format=sigpro' type='text/javascript' ></script>";
+	}
+
+	function forum() {
+		require_once('obj/ForumList.php');
+		$forumList = new ForumList();
+		$this->html .= $forumList->showForums();
+	}
+
+	function viewForum($fid) { //TODO get rid of magic numbers
+		require_once('obj/Forum.php');
+		$forumObj = new Forum($fid, array('pageNum' => 0, 'pageLimit' => 35));
+		$this->html .= $forumObj->displayTopics();
+		$this->html .= $forumObj->displayNewPostButton();
+	}
+
+	function login($method) {
+		require_once('obj/LoginPage.php');
+		$loginPage = new LoginPage();
+		$this->html .= "<br /> <br />";
+		switch ($method) {
+			case 'showForm': $this->html .= $loginPage->showForm(); break;
+			case 'auth': $this->html .= $loginPage->auth(array('method'=>'loginUser')); break;
+			default: $this->html .= $loginPage->showForm(); break;
+		}
+	}
+
+	function userControl($method) {
+		require_once('obj/UserControl.php');
+		$userControlObj = new UserControl();
+		switch ($method) {
+			case 'showForm': $this->html .= $userControlObj->showForm(); break;
+			case 'logOut': $this->html .= $userControlObj->logOut(); break;
+			default: $this->html .= $userControlObj->showForm(); break;
+		}
+	}
+
+	function register($method) {
+		require_once('obj/RegisterPage.php');
+		$registerPage = new RegisterPage();
+		switch ($method) {
+			case 'showForm': $this->html .= $registerPage->showForm(); break;
+			case 'register': $this->html .= $registerPage->startRegistration(); break;
+			case 'finishRegistration': $this->html .=  $registerPage->finishRegistration(); break;
+		}
+	}
+
+	function post($method) {
+		require_once('obj/forum/Post.php');
+		$post = new Post($_GET['tid']);
+		switch($method) {
+			case 'showForm': $this->html .= $post->showForm(); break;
+			case 'newReply': $result = $post->newReply(); 
+				$this->html .= "<span class='big'>" . $result['message'] ."</span>"; break;
+		}
+	}
+
+	function viewTopic($tid) {
+		require_once('obj/forum/Topic.php');
+		$topic = new Topic($tid);
+		$this->html .= $topic->showTopic();
+	}
+
+	function newTopic($method) {
+		require_once('obj/forum/Topic.php');
+		switch($method) {
+			case 'newTopic': $result = Topic::createTopic($this);
+				$this->html .= "<span class='big'>" . $result['message'] . "</span>"; break;
+			case 'showForm': $this->html .= Topic::showTopicForm($_GET['fid']); break;
+		}
+	}
+
+	function userList() {
+		require_once('obj/UserList.php');
+		
+	}
+
+	public function getHTML() {
+		return $this->html;
+	}
+}
+
+?>
