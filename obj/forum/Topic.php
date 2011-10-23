@@ -36,33 +36,6 @@ class Topic extends Page {
 		return $str;
 	}
 
-	static function showTopicForm($fid) {
-		$str = "<ul><form action='?page=newTopic&method=newTopic&fid=" . $fid
-      . "' method='post'> 
-      <p><li><label for='subject'> Subject: 
-      <input class='reply' type='text' name='subject'></li></p>
-      <p><li><label for='message'> Message:
-      <textarea class='reply' name='message'></textarea></li></p>
-      <input type='submit' value='GO GO!'>
-      </form></ul>"; 
-		return $str;
-	}
-
-	static function createTopic($obj) {
-		require_once('funcs/verify.php');
-		if (!verifyString($_POST['subject'],3,100))
-			return array('status' => 1, 'message' => 'Subject is invalid');
-		else {
-			$result = $obj->db->createTopic(array('table' => 'topics', 'fields' => array(':subject' =>
-			$_POST['subject'], ':message' => $_POST['message'], ':author' => $_SESSION['username'], ':author_uid' =>
-			$_SESSION['uid'], ':last_poster' => $_SESSION['username'], ':date' => $obj->date, ':last_reply' =>
-			$obj->date, ':in_forum' => $_GET['fid'], ':last_reply_uid' => $_SESSION['uid'])));
-			if($result['status'] == 0)
-				$obj->db->updateForumList(new Topic($obj->db->getLastInsertId()));
-			return $result;
-		}
-	}
-
 	function getReplies() {
 		$pageNum = (isset ($_GET['pageNum'])) ? $_GET['pageNum'] : 0;
 		$postsPerPage = (isset($_GET['postsPerPage'])) ? $_GET['postsPerPage'] : 35;

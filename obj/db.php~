@@ -1,4 +1,6 @@
 <?php
+require_once('funcs/verify.php');
+require_once('config.php');
 class DB {
 
 	private $pdo;
@@ -36,20 +38,68 @@ class DB {
 			return (array('status' => 1, 'message' => 'Adding to database failed.'));
 	}
 	
+	function addTopic($args) {
+		if (!$this->isInDatabase(array('type' => 'forum', 'value' => $args['fields'][':in_forum'])))
+			return array('status' => 1, 'message' => "That forum doesn't exist, you hobo");
+		else {
+			$ver1 = verifyString($args['fields'][':subject'], $GLOBALS['SUBJECT_MIN_LENGTH'], $GLOBALS['SUBJECT_MAX_LENGTH']);
+			$ver2 = verifyString($args['fields'][':message'], $GLOBALS['POST_MIN_LENGTH'], $GLOBALS['POST_MAX_LENGTH']);
+			if ($ver1['status'] == 1) {
+				$ver1['message'] = "Subject " . $ver1['message'];
+				return $ver1;
+			} else $args['fields'][':subject'] = validateString($args[':subject']);
+			if ($ver2['status'] == 1) {
+				$ver2['message'] = "Message " . $ver2['message'];
+				return $ver2;
+			} else $args['fields'][':message'] = validateString($args[':message']);
+			$result = $this->add($args);
+			if ($result['status'] == 0) {
+				require_once('obj/forum/Topic.php');
+				$this->updateForumList(new Topic($this->getLastInsertId()));
+			}
+			return $result;
+		}
+	}
+	
 	function addPost($args) { //TODO UPDATE POST COUNT
 		if (!$this->isInDatabase(array('type' => 'topic', 'value' => $args['fields'][':in_reply_to'])))
-			return array('status' => 1, 'message' => 'That topic doesn\'t exist, you hobo');
-		else
-			return $this->add($args);
+			return array('status' => 1, 'message' => "That topic doesn't exist, you hobo");
+		else {
+			$ver1 = verifyString($args['fields'][':subject'], $SUBJECT_MIN_LENGTH, $SUBJECT_MAX_LENGTH);
+			$ver2 = verifyString($args['fields'][':message'], $POST_MIN_LENGTH, $POST_MAX_LENGTH);
+			if ($ver1['status'] == 1) {
+				$ver1['message'] = "Subject " . $ver1['message'];
+				return $ver1;
+			} else $args['fields'][':subject'] = validateString($args[':subject']);
+			if ($ver2['status'] == 1) {
+				$ver2['message'] = "Message " . $ver2['message'];
+				return $ver2;
+			} else $args['fields'][':message'] = validateString($args[':message']);
+			$result = $this->add($args);
+			if ($result['status'] == 0) {
+				require_once('obj/forum/Post.php');
+				require_once('obj/forum/Topic.php');
+				$post = new Post($this->getLastInsertId());
+				$this->updateTopicList($post);
+				$this->updateForumList(new Topic($post->getTID()));
+			}
+			return $result;
+		}
 	}
-	
-	function createTopic($args) {
-		if (!$this->isInDatabase(array('type' => 'forum', 'value' => $args['fields'][':in_forum'])))
-			return array('status' => 1, 'message' => 'Forum doesn\t exist. Choose a real home, hobo');
+
+	function updateTopicList($post) {
+		$query = "UPDATE topics set last_poster = :last_poster, replies = replies + 1, last_reply = :last_reply, last_reply_uid = :last_reply_uid where tid = :tid";
+		$queryPrepared = $this->pdo->prepare($query);
+		$queryPrepared->bindParam(':last_poster', $post->getAuthor());
+		$queryPrepared->bindParam(':last_reply', $post->getDate());
+		$queryPrepared->bindParam(':last_reply_uid', $post->getAuthorUID());
+		$queryPrepared->bindParam(':tid', $post->getTID());
+		if ($queryPrepared->execute())
+			return array('status' => 0, 'message' => 'Successfully updated topic list');
 		else
-			return $this->add($args);
+			return array('status' => 1, 'message' => 'Failed to update topic list'); 
+		
 	}
-	
 
 	function delete($args) {
 		$query = "DELETE from " . $args['table'];
@@ -126,6 +176,7 @@ class DB {
 		$query = "SELECT id from user ORDER BY ";
 		switch ($args['orderBy']) {
 			case 'points': $query .= "points DESC"; break;
+			case 'join_date': $query .= "STR_TO_DATE(join_date, '%d-%m-%Y %H:%i:%s')";  break;
 			default: $query .= $args['orderBy']; break;
 		}
 		$queryPrepared = $this->pdo->prepare($query);
@@ -152,7 +203,7 @@ class DB {
 			return array('status' => 0, 'data' => $queryPrepared->fetch());
 	}
 
-	function updateForumList($fid, $topic) {
+	function updateForumList($topic) {
 		$query = "UPDATE forums set last_topic = :last_topic, last_topic_id =
 			:last_topic_id, last_poster = :last_poster, last_poster_id = 
 			:last_poster_id where fid = :fid";
@@ -161,7 +212,7 @@ class DB {
 		$queryPrepared->bindParam(':last_topic_id', $topic->getTid());
 		$queryPrepared->bindParam(':last_poster', $topic->getAuthor());
 		$queryPrepared->bindParam(':last_poster_id', $topic->getAuthorUID());
-		$queryPrepared->bindParam(':fid', $fid);
+		$queryPrepared->bindParam(':fid', $topic->getFID());
 		if ($queryPrepared->execute())
 			return array('status' => 0, 'message' => 'Successfully updated forum list');
 		else
@@ -220,7 +271,7 @@ class DB {
 	}
 
 	function getTopic($tid) {
-    $query = "SELECT subject, author, last_poster, tid, author_uid, message, in_forum from 
+    $query = "SELECT subject, author, last_poster, tid, author_uid, message, in_forum, last_reply_uid from 
 			topics WHERE tid = :tid";
     $queryPrepared = $this->pdo->prepare($query);
 		$queryPrepared->bindParam(':tid', $tid);

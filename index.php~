@@ -97,7 +97,7 @@ if (isset($_GET['page'])) {
 		case 'newTopic': 
 			if (isset($_GET['method'])) {
 				$page->newTopic($_GET['method']);
-			} else $page->newTopic("showForm"); 
+			} else{$page->newTopic("showForm");} 
 		break;
 			
 		case 'userProfile': if (!isset($_GET['uid'])) $page->redirect("userList");

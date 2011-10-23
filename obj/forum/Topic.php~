@@ -10,6 +10,7 @@ class Topic extends Page {
 	private $author;
 	private $author_uid;
 	private $replies;
+	private $last_reply_uid;
 
 	public function __construct($tid) {
 		parent::__construct();
@@ -21,11 +22,12 @@ class Topic extends Page {
 		$this->author_uid = $arr['data']['author_uid'];
 		$this->last_poster = $arr['data']['last_poster'];
 		$this->fid = $arr['data']['in_forum'];
+		$this->last_reply_uid = $arr['data']['last_reply_uid'];
 	}
 
 	function showTopic() {
 		$str = "<ul><li class='subject'>" . $this->subject . "</li>";
-    $str .= "<li class='author'><a href='?page=viewProfile&uid=" . $this->author_uid . "'>" . $this->author . "</li><hr>";
+    $str .= "<li class='author'><a href='?page=userProfile&uid=" . $this->author_uid . "'>" . $this->author . "</a></li><hr>";
     $str .= "<li class='message'>" . $this->message . "</li></ul>";
 		$str .= $this->getReplies();
 		$str .= "<ul class='big'>";
@@ -47,13 +49,18 @@ class Topic extends Page {
 	}
 
 	static function createTopic($obj) {
-		$result = $obj->db->createTopic(array('table' => 'topics', 'fields' => array(':subject' =>
+		require_once('funcs/verify.php');
+		if (!verifyString($_POST['subject'],3,100))
+			return array('status' => 1, 'message' => 'Subject is invalid');
+		else {
+			$result = $obj->db->createTopic(array('table' => 'topics', 'fields' => array(':subject' =>
 			$_POST['subject'], ':message' => $_POST['message'], ':author' => $_SESSION['username'], ':author_uid' =>
 			$_SESSION['uid'], ':last_poster' => $_SESSION['username'], ':date' => $obj->date, ':last_reply' =>
-			$obj->date, ':in_forum' => $_GET['fid'])));
-		if($result['status'] == 0)
-			$obj->db->updateForumList($_GET['fid'],new Topic($obj->db->getLastInsertId()));
-		return $result;
+			$obj->date, ':in_forum' => $_GET['fid'], ':last_reply_uid' => $_SESSION['uid'])));
+			if($result['status'] == 0)
+				$obj->db->updateForumList(new Topic($obj->db->getLastInsertId()));
+			return $result;
+		}
 	}
 
 	function getReplies() {
@@ -64,7 +71,7 @@ class Topic extends Page {
 		foreach ($this->replies['data'] as $post) {
 			$str .= "<ul>";
       $str .= "<li class='subject'>" . $post->getSubject() . "</li>";
-      $str .= "<li class='author'>" . $post->getAuthor() . "</li><hr>";
+      $str .= "<li class='author'><a href='?page=userProfile&uid=" . $post->getAuthorUID() . "'>" . $post->getAuthor() . "</a></li><hr>";
       $str .= "<li>" . $post->getMessage() . "</li>";
       $str .= "</ul>";
 		}
@@ -73,6 +80,10 @@ class Topic extends Page {
 
 	function getTid() {
 		return $this->tid;
+	}
+
+	function getFID() {
+		return $this->fid;
 	}
 
 	function getSubject() {
@@ -91,6 +102,10 @@ class Topic extends Page {
 		return $this->author_uid;
 	}
 
+
+	function getLastReplyUID() {
+		return $this->last_reply_uid;
+	}
 	function getLastPoster() {
 		return $this->last_poster;
 	}

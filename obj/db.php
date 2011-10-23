@@ -1,4 +1,6 @@
 <?php
+require_once('funcs/verify.php');
+require_once('config.php');
 class DB {
 
 	private $pdo;
@@ -36,10 +38,43 @@ class DB {
 			return (array('status' => 1, 'message' => 'Adding to database failed.'));
 	}
 	
+	function addTopic($args) {
+		if (!$this->isInDatabase(array('type' => 'forum', 'value' => $args['fields'][':in_forum'])))
+			return array('status' => 1, 'message' => "That forum doesn't exist, you hobo");
+		else {
+			$ver1 = verifyString($args['fields'][':subject'], $GLOBALS['SUBJECT_MIN_LENGTH'], $GLOBALS['SUBJECT_MAX_LENGTH']);
+			$ver2 = verifyString($args['fields'][':message'], $GLOBALS['POST_MIN_LENGTH'], $GLOBALS['POST_MAX_LENGTH']);
+			if ($ver1['status'] == 1) {
+				$ver1['message'] = "Subject " . $ver1['message'];
+				return $ver1;
+			} else $args['fields'][':subject'] = validateString($args['fields'][':subject']);
+			if ($ver2['status'] == 1) {
+				$ver2['message'] = "Message " . $ver2['message'];
+				return $ver2;
+			} else $args['fields'][':message'] = validateString($args['fields'][':message']);
+			$result = $this->add($args);
+			if ($result['status'] == 0) {
+				require_once('obj/forum/Topic.php');
+				$this->updateForumList(new Topic($this->getLastInsertId()));
+			}
+			return $result;
+		}
+	}
+	
 	function addPost($args) { //TODO UPDATE POST COUNT
 		if (!$this->isInDatabase(array('type' => 'topic', 'value' => $args['fields'][':in_reply_to'])))
 			return array('status' => 1, 'message' => "That topic doesn't exist, you hobo");
 		else {
+			$ver1 = verifyString($args['fields'][':subject'], $SUBJECT_MIN_LENGTH, $SUBJECT_MAX_LENGTH);
+			$ver2 = verifyString($args['fields'][':message'], $POST_MIN_LENGTH, $POST_MAX_LENGTH);
+			if ($ver1['status'] == 1) {
+				$ver1['message'] = "Subject " . $ver1['message'];
+				return $ver1;
+			} else $args['fields'][':subject'] = validateString($args['fields'][':subject']);
+			if ($ver2['status'] == 1) {
+				$ver2['message'] = "Message " . $ver2['message'];
+				return $ver2;
+			} else $args['fields'][':message'] = validateString($args['fields'][':message']);
 			$result = $this->add($args);
 			if ($result['status'] == 0) {
 				require_once('obj/forum/Post.php');
@@ -65,17 +100,6 @@ class DB {
 			return array('status' => 1, 'message' => 'Failed to update topic list'); 
 		
 	}
-	
-	function createTopic($args) {
-		if (!$this->isInDatabase(array('type' => 'forum', 'value' => $args['fields'][':in_forum'])))
-			return array('status' => 1, 'message' => 'Forum doesn\t exist. Choose a real home, hobo');
-		else {
-			$result = $this->add($args);
-			$result['tid'] = $this->getLastInsertId();
-			return $result;
-		}
-	}
-	
 
 	function delete($args) {
 		$query = "DELETE from " . $args['table'];

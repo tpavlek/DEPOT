@@ -87,7 +87,7 @@ class Page {
 	function userProfile($uid) {
 		require_once('obj/UserProfile.php');
 		require_once('obj/User.php');
-		protected $profile = new UserProfile(new User($uid));
+		$profile = new UserProfile(new User($uid));
 		$this->html .= $profile->showUser();
 	}
 
@@ -125,15 +125,16 @@ class Page {
 
 	function newTopic($method) {
 		if ($this->permissions("unbanned") && $this->permissions("loggedIn")) {
-			require_once('obj/forum/Topic.php');
+			require_once('obj/forum/TopicAction.php');
+			$topic = new TopicAction();
 			switch($method) {
-				case 'newTopic': $result = Topic::createTopic($this);
+				case 'newTopic': $result = $topic->createTopic();
 					$this->html .= "<span class='big'>" . $result['message'] . "</span>";
 					if ($result['status'] == 0)
-						header('Refresh: 3, url=?page=viewTopic&tid=' . $result['tid']);
+						//header('Refresh: 3, url=?page=viewTopic&tid=' . $result['tid']);
 				break;
 				default:
-				case 'showForm':  $this->html .= Topic::showTopicForm($_GET['fid']); 
+				case 'showForm':  $this->html .= $topic->showForm($_GET['fid']); 
 				break;
 			}
 		}
