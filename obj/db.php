@@ -88,11 +88,12 @@ class DB {
 	}
 
 	function updateTopicList($post) {
-		$query = "UPDATE topics set last_poster = :last_poster, replies = replies + 1, last_reply = :last_reply, last_reply_uid = :last_reply_uid where tid = :tid";
+		$query = "UPDATE topics set last_poster = :last_poster, replies = replies + 1, last_reply = :last_reply, last_reply_uid = :last_reply_uid, last_reply_pid = :last_reply_pid where tid = :tid";
 		$queryPrepared = $this->pdo->prepare($query);
 		$queryPrepared->bindParam(':last_poster', $post->getAuthor());
 		$queryPrepared->bindParam(':last_reply', $post->getDate());
 		$queryPrepared->bindParam(':last_reply_uid', $post->getAuthorUID());
+		$queryPrepared->bindParam(':last_reply_pid', $post->getPID());
 		$queryPrepared->bindParam(':tid', $post->getTID());
 		if ($queryPrepared->execute())
 			return array('status' => 0, 'message' => 'Successfully updated topic list');
@@ -206,12 +207,13 @@ class DB {
 	function updateForumList($topic) {
 		$query = "UPDATE forums set last_topic = :last_topic, last_topic_id =
 			:last_topic_id, last_poster = :last_poster, last_poster_id = 
-			:last_poster_id where fid = :fid";
+			:last_poster_id, last_poster_pid = :last_poster_pid where fid = :fid";
 		$queryPrepared = $this->pdo->prepare($query);
 		$queryPrepared->bindParam(':last_topic', $topic->getSubject());
 		$queryPrepared->bindParam(':last_topic_id', $topic->getTid());
 		$queryPrepared->bindParam(':last_poster', $topic->getAuthor());
 		$queryPrepared->bindParam(':last_poster_id', $topic->getAuthorUID());
+		$queryPrepared->bindParam(':last_poster_pid', $topic->getLastReplyPID());
 		$queryPrepared->bindParam(':fid', $topic->getFID());
 		if ($queryPrepared->execute())
 			return array('status' => 0, 'message' => 'Successfully updated forum list');
@@ -271,7 +273,7 @@ class DB {
 	}
 
 	function getTopic($tid) {
-    $query = "SELECT subject, author, last_poster, tid, author_uid, message, in_forum, last_reply_uid from 
+    $query = "SELECT subject, author, last_poster, tid, author_uid, message, in_forum, last_reply_uid, last_reply_pid from 
 			topics WHERE tid = :tid";
     $queryPrepared = $this->pdo->prepare($query);
 		$queryPrepared->bindParam(':tid', $tid);
