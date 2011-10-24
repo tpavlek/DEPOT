@@ -32,7 +32,7 @@ class DB {
     }
 		$query .= $queryPart2;
 		$queryPrepared = $this->pdo->prepare($query);
-		if ($queryPrepared->execute($args['fields']))
+		if ($queryPrepared->execute($args['fields'])) 
 			return (array('status' => 0, 'message' => 'Successfully added to database'));
 		else
 			return (array('status' => 1, 'message' => 'Adding to database failed.'));

@@ -17,7 +17,7 @@ class Forum extends Page {
 		$str = "<ul>";
 		foreach ($this->topicList['data'] as $topic) {
 			$str .= "<a href='?page=viewTopic&tid=" . $topic->getTid() . "'><li class='subject'>" . $topic->getSubject() . "</li></a>";
-			$str .= "<li class='author'><a href='?page=userProfile&uid=" . $topic->getLastReplyUID() . "'>" . $topic->getLastPoster() . "</a></li>";
+			$str .= "<div class='author' style='text-align:right'><span><a href='?page=userProfile&uid=" . $topic->getLastReplyUID() . "'>" . $topic->getLastPoster() . "</a></span><br><span><a href='?page=viewTopic&tid=" . $topic->getTid() . "#" . $topic->getLastReplyPID() . "'><img src='assets/icons/arrow_sm.png' height=10><a></span></div>";
 			$str .= "<hr>";
 		}
 		$str .= "</ul>";

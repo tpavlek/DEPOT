@@ -32,8 +32,11 @@ class DB {
     }
 		$query .= $queryPart2;
 		$queryPrepared = $this->pdo->prepare($query);
-		if ($queryPrepared->execute($args['fields']))
+		if ($queryPrepared->execute($args['fields'])) {
+			echo "Query: " . $query . "<br><br>";
+			echo "Values: " . print_r($queryPrepared);
 			return (array('status' => 0, 'message' => 'Successfully added to database'));
+			}
 		else
 			return (array('status' => 1, 'message' => 'Adding to database failed.'));
 	}
@@ -65,8 +68,8 @@ class DB {
 		if (!$this->isInDatabase(array('type' => 'topic', 'value' => $args['fields'][':in_reply_to'])))
 			return array('status' => 1, 'message' => "That topic doesn't exist, you hobo");
 		else {
-			$ver1 = verifyString($args['fields'][':subject'], $SUBJECT_MIN_LENGTH, $SUBJECT_MAX_LENGTH);
-			$ver2 = verifyString($args['fields'][':message'], $POST_MIN_LENGTH, $POST_MAX_LENGTH);
+			$ver1 = verifyString($args['fields'][':subject'], $GLOBALS['SUBJECT_MIN_LENGTH'], $GLOBALS['SUBJECT_MAX_LENGTH']);
+			$ver2 = verifyString($args['fields'][':message'], $GLOBALS['POST_MIN_LENGTH'], $GLOBALS['POST_MAX_LENGTH']);
 			if ($ver1['status'] == 1) {
 				$ver1['message'] = "Subject " . $ver1['message'];
 				return $ver1;
@@ -88,11 +91,12 @@ class DB {
 	}
 
 	function updateTopicList($post) {
-		$query = "UPDATE topics set last_poster = :last_poster, replies = replies + 1, last_reply = :last_reply, last_reply_uid = :last_reply_uid where tid = :tid";
+		$query = "UPDATE topics set last_poster = :last_poster, replies = replies + 1, last_reply = :last_reply, last_reply_uid = :last_reply_uid, last_reply_pid = :last_reply_pid where tid = :tid";
 		$queryPrepared = $this->pdo->prepare($query);
 		$queryPrepared->bindParam(':last_poster', $post->getAuthor());
 		$queryPrepared->bindParam(':last_reply', $post->getDate());
 		$queryPrepared->bindParam(':last_reply_uid', $post->getAuthorUID());
+		$queryPrepared->bindParam(':last_reply_pid', $post->getPID());
 		$queryPrepared->bindParam(':tid', $post->getTID());
 		if ($queryPrepared->execute())
 			return array('status' => 0, 'message' => 'Successfully updated topic list');

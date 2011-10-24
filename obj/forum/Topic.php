@@ -80,6 +80,10 @@ class Topic extends Page {
 	function getLastReplyUID() {
 		return $this->last_reply_uid;
 	}
+	
+	function getLastReplyPID() {
+		return $this->last_reply_pid;
+	}
 	function getLastPoster() {
 		return $this->last_poster;
 	}

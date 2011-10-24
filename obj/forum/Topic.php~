@@ -24,6 +24,7 @@ class Topic extends Page {
 		$this->last_poster = $arr['data']['last_poster'];
 		$this->fid = $arr['data']['in_forum'];
 		$this->last_reply_uid = $arr['data']['last_reply_uid'];
+		$this->last_reply_pid = $arr['data']['last_reply_pid'];
 	}
 
 	function showTopic() {
