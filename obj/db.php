@@ -65,8 +65,8 @@ class DB {
 		if (!$this->isInDatabase(array('type' => 'topic', 'value' => $args['fields'][':in_reply_to'])))
 			return array('status' => 1, 'message' => "That topic doesn't exist, you hobo");
 		else {
-			$ver1 = verifyString($args['fields'][':subject'], $SUBJECT_MIN_LENGTH, $SUBJECT_MAX_LENGTH);
-			$ver2 = verifyString($args['fields'][':message'], $POST_MIN_LENGTH, $POST_MAX_LENGTH);
+			$ver1 = verifyString($args['fields'][':subject'], $GLOBALS['SUBJECT_MIN_LENGTH'], $GLOBALS['SUBJECT_MAX_LENGTH']);
+			$ver2 = verifyString($args['fields'][':message'], $GLOBALS['POST_MIN_LENGTH'], $GLOBALS['POST_MAX_LENGTH']);
 			if ($ver1['status'] == 1) {
 				$ver1['message'] = "Subject " . $ver1['message'];
 				return $ver1;

@@ -1,5 +1,5 @@
 <?php
-$VARIBALE_NAME = 5;
+$var = getFromGetPost('var');
 
-echo $VARIABLE_NAME;
+echo $var;
 ?>
