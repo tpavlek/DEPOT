@@ -56,6 +56,7 @@ class DB {
 			if ($result['status'] == 0) {
 				require_once('obj/forum/Topic.php');
 				$this->updateForumList(new Topic($this->getLastInsertId()));
+				$this->updatePostCount($args['fields'][':author_uid']);
 			}
 			return $result;
 		}
@@ -82,6 +83,7 @@ class DB {
 				$post = new Post($this->getLastInsertId());
 				$this->updateTopicList($post);
 				$this->updateForumList(new Topic($post->getTID()));
+				$this->updatePostCount($args['fields'][':author_uid']);
 			}
 			return $result;
 		}
@@ -219,6 +221,19 @@ class DB {
 			return array('status' => 0, 'message' => 'Successfully updated forum list');
 		else
 			return array('status' => 1, 'message' => 'Failed to update forum list');
+	}
+	
+	function updatePostCount($uid, $num=1) {
+		echo "Updating count";
+		echo "<br>UID: " . $uid;
+		echo "<br>num: " . $num;
+		$query = "UPDATE user set postcount = postcount + :num";
+		$queryPrepared = $this->pdo->prepare($query);
+		$queryPrepared->bindParam(':num', $num);
+		if($queryPrepared->execute())
+			return array('status' => 0, 'message' => 'Post count updated successfully');
+		else
+			return array('status' => 0, 'message' => 'Post count could not be updated');
 	}
 	
 	function updateProfilePic($uid, $path) {

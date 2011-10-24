@@ -11,6 +11,9 @@ class UserControl extends Page {
 			<span class='big'>Profile</span>
 			<form action='?page=userControl&method=changePic' method='POST'>
 			<input type='submit' value='Change Profile Picture'>
+			</form>
+			<form action='?page=userProfile&uid=" . $_SESSION['uid'] . "' method='POST'>
+			<input type='submit' value='View Profile'>
 			</form>";
 		return $str;
 	}
