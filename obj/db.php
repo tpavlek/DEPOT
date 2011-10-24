@@ -195,7 +195,7 @@ class DB {
 	}
 	
 	function getUser($uid) {
-		$query = "SELECT id, username, email, join_date, rank, postcount, block, points from user WHERE id = :uid";
+		$query = "SELECT id, username, email, join_date, rank, postcount, block, points, profile_pic from user WHERE id = :uid";
     $queryPrepared = $this->pdo->prepare($query);
 		$queryPrepared->bindParam(':uid', $uid);
 		if (!$queryPrepared->execute()) 

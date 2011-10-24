@@ -9,6 +9,7 @@ class User extends Page {
 	private $postcount;
 	private $block;
 	private $points;
+	private $profilePic;
 
 	public function __construct($uid) {
 		parent::__construct();
@@ -20,6 +21,7 @@ class User extends Page {
 		$this->postcount = $arr['data']['postcount'];
 		$this->block = $arr['data']['block'];
 		$this->points = $arr['data']['points'];
+		$this->profilePic = $arr['data']['profile_pic'];
 	}
 
 	function getUsername() {
@@ -44,6 +46,10 @@ class User extends Page {
 	
 	function getPoints() {
 		return $this->points;
+	}
+	
+	function getProfilePic() {
+		return $this->profilePic;
 	}
 }
 

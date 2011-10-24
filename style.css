@@ -5,9 +5,13 @@ body {
 background-color:yellow;
 text-align:center;
 }
+.bold {
+font-weight:bold;
+}
 ul {
 list-style: none;
 padding:2%;
+overflow:auto;
 }
 
 #listbox {
@@ -185,6 +189,14 @@ float:right;
 font-size: 70%;
 display:block;
 }
+
+.userbox {
+float:right;
+font-size: 70%;
+display:block;
+text-align:right;
+}
+
 
 hr {
 width: 80%;

@@ -1,5 +1,6 @@
 <?php
 require_once('obj/page.php');
+require_once('obj/control/UserBox.php');
 class Topic extends Page {
 
 	protected $fid;
@@ -28,9 +29,9 @@ class Topic extends Page {
 	}
 
 	function showTopic() {
-		$str = "<ul><li class='subject'>" . $this->subject . "</li>";
-    $str .= "<li class='author'><a href='?page=userProfile&uid=" . $this->author_uid . "'>" . $this->author . "</a></li><hr>";
-    $str .= "<li class='message'>" . $this->message . "</li></ul>";
+		$str = "<ul><li class='subject'>" . $this->subject . "<hr></li>";
+    $str .= new UserBox($this->getAuthorUID());
+    $str .= "<li>" . $this->message . "</li></ul>";
 		$str .= $this->getReplies();
 		$str .= "<ul class='big'>";
 		$str .= "<a href='?page=post&tid=" . $this->tid ."'>NEW REPLY</a>";
@@ -45,8 +46,8 @@ class Topic extends Page {
 		$str = "";
 		foreach ($this->replies['data'] as $post) {
 			$str .= "<ul id='" . $post->getPID() . "'>";
-      $str .= "<li class='subject'>" . $post->getSubject() . "</li>";
-      $str .= "<li class='author'><a href='?page=userProfile&uid=" . $post->getAuthorUID() . "'>" . $post->getAuthor() . "</a></li><hr>";
+      $str .= "<li class='subject'>" . $post->getSubject() . "<hr></li>";
+      $str .= new UserBox($post->getAuthorUID());
       $str .= "<li>" . $post->getMessage() . "</li>";
       $str .= "</ul>";
 		}
