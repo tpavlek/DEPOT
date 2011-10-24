@@ -47,11 +47,11 @@ class DB {
 			if ($ver1['status'] == 1) {
 				$ver1['message'] = "Subject " . $ver1['message'];
 				return $ver1;
-			} else $args['fields'][':subject'] = validateString($args[':subject']);
+			} else $args['fields'][':subject'] = validateString($args['fields'][':subject']);
 			if ($ver2['status'] == 1) {
 				$ver2['message'] = "Message " . $ver2['message'];
 				return $ver2;
-			} else $args['fields'][':message'] = validateString($args[':message']);
+			} else $args['fields'][':message'] = validateString($args['fields'][':message']);
 			$result = $this->add($args);
 			if ($result['status'] == 0) {
 				require_once('obj/forum/Topic.php');
@@ -70,11 +70,11 @@ class DB {
 			if ($ver1['status'] == 1) {
 				$ver1['message'] = "Subject " . $ver1['message'];
 				return $ver1;
-			} else $args['fields'][':subject'] = validateString($args[':subject']);
+			} else $args['fields'][':subject'] = validateString($args['fields'][':subject']);
 			if ($ver2['status'] == 1) {
 				$ver2['message'] = "Message " . $ver2['message'];
 				return $ver2;
-			} else $args['fields'][':message'] = validateString($args[':message']);
+			} else $args['fields'][':message'] = validateString($args['fields'][':message']);
 			$result = $this->add($args);
 			if ($result['status'] == 0) {
 				require_once('obj/forum/Post.php');
@@ -206,12 +206,13 @@ class DB {
 	function updateForumList($topic) {
 		$query = "UPDATE forums set last_topic = :last_topic, last_topic_id =
 			:last_topic_id, last_poster = :last_poster, last_poster_id = 
-			:last_poster_id where fid = :fid";
+			:last_poster_id, last_poster_pid = :last_poster_pid where fid = :fid";
 		$queryPrepared = $this->pdo->prepare($query);
 		$queryPrepared->bindParam(':last_topic', $topic->getSubject());
 		$queryPrepared->bindParam(':last_topic_id', $topic->getTid());
 		$queryPrepared->bindParam(':last_poster', $topic->getAuthor());
 		$queryPrepared->bindParam(':last_poster_id', $topic->getAuthorUID());
+		$queryPrepared->bindParam(':last_poster_pid', $topic->getLastReplyPID());
 		$queryPrepared->bindParam(':fid', $topic->getFID());
 		if ($queryPrepared->execute())
 			return array('status' => 0, 'message' => 'Successfully updated forum list');
@@ -271,7 +272,7 @@ class DB {
 	}
 
 	function getTopic($tid) {
-    $query = "SELECT subject, author, last_poster, tid, author_uid, message, in_forum, last_reply_uid from 
+    $query = "SELECT subject, author, last_poster, tid, author_uid, message, in_forum, last_reply_uid, last_reply_pid from 
 			topics WHERE tid = :tid";
     $queryPrepared = $this->pdo->prepare($query);
 		$queryPrepared->bindParam(':tid', $tid);

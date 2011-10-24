@@ -2,7 +2,7 @@
 
 class TopicAction extends Page {
 	function showForm() {
-		$str = "<ul><form action='?page=newTopic&method=newTopic&fid=" . $fid
+		$str = "<ul><form action='?page=newTopic&method=newTopic&fid=" . $_GET['fid']
       . "' method='post'> 
       <p><li><label for='subject'> Subject: 
       <input class='reply' type='text' name='subject'></li></p>

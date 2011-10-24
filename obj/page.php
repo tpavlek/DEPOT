@@ -9,6 +9,7 @@ class Page {
 
 	public function __construct() {
 		$this->db = new DB("ebon","green","depot","localhost");
+		date_default_timezone_set('America/Edmonton');
 		$this->date = date("d-m-Y H:i:s");
 	}
 

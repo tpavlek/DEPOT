@@ -11,6 +11,7 @@ class Topic extends Page {
 	private $author_uid;
 	private $replies;
 	private $last_reply_uid;
+	private $last_reply_pid;
 
 	public function __construct($tid) {
 		parent::__construct();
@@ -23,6 +24,7 @@ class Topic extends Page {
 		$this->last_poster = $arr['data']['last_poster'];
 		$this->fid = $arr['data']['in_forum'];
 		$this->last_reply_uid = $arr['data']['last_reply_uid'];
+		$this->last_reply_pid = $arr['data']['last_reply_pid'];
 	}
 
 	function showTopic() {
@@ -42,7 +44,7 @@ class Topic extends Page {
 		$this->replies = $this->db->getRepliesInTopicByPage($this->tid, array('pageNum' => $pageNum, 'postsPerPage' => $postsPerPage));
 		$str = "";
 		foreach ($this->replies['data'] as $post) {
-			$str .= "<ul>";
+			$str .= "<ul id='" . $post->getPID() . "'>";
       $str .= "<li class='subject'>" . $post->getSubject() . "</li>";
       $str .= "<li class='author'><a href='?page=userProfile&uid=" . $post->getAuthorUID() . "'>" . $post->getAuthor() . "</a></li><hr>";
       $str .= "<li>" . $post->getMessage() . "</li>";
@@ -74,8 +76,7 @@ class Topic extends Page {
 	function getAuthorUID() {
 		return $this->author_uid;
 	}
-
-
+	
 	function getLastReplyUID() {
 		return $this->last_reply_uid;
 	}
