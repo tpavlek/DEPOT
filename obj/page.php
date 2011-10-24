@@ -79,9 +79,10 @@ class Page {
 		require_once('obj/UserControl.php');
 		$userControlObj = new UserControl();
 		switch ($method) {
+			default:
 			case 'showForm': $this->html .= $userControlObj->showForm(); break;
+			case 'changePic': $this->html .= $userControlObj->changePic(); break;
 			case 'logOut': $this->html .= $userControlObj->logOut(); break;
-			default: $this->html .= $userControlObj->showForm(); break;
 		}
 	}
 	

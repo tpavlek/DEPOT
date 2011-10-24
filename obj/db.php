@@ -220,6 +220,17 @@ class DB {
 		else
 			return array('status' => 1, 'message' => 'Failed to update forum list');
 	}
+	
+	function updateProfilePic($uid, $path) {
+		$query = "UPDATE user set profile_pic = :profile_pic where id = :uid";
+		$queryPrepared = $this->pdo->prepare($query);
+		$queryPrepared->bindParam(':profile_pic', $path);
+		$queryPrepared->bindParam(':uid', $uid);
+		if ($queryPrepared->execute())
+			return array('status' => 0, 'message' => 'Successfully changed profile picture');
+		else
+			return array('status' => 1, 'message' => 'Failed to update the profile picture in the database');
+	}
 
 	function getTopicsInForumByPage($fid, $args) {
 		$query = "SELECT tid from topics where in_forum = :fid ORDER by 

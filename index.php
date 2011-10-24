@@ -67,9 +67,7 @@ if (isset($_GET['page'])) {
 			} else $page->register("showForm"); break;
 		case 'userControl': 
 			if (isset($_GET['method'])) {
-				switch ($_GET['method']) {
-					case 'logout': $page->userControl("logOut"); break;
-				}
+				$page->userControl($_GET['method']);
 			} else {
 				$page->userControl("showForm"); 
 			} 
