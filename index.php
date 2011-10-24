@@ -23,7 +23,10 @@ if (!isset($_SESSION['username'])) {
 
 <a href="http://depotwarehouse.net"><span class="banner">DEPOT WAREHOUSE!</span></a>
 <br /> <br />
-
+Error is fixed,<br><br>
+Sincerely,<br>
+OUR GREAT LEADER
+<Br><Br>
 <div id="navbar">
   <div class="nav" id="qod"><a href="qod.php"><span>QoD</span></a>
     <div class="sub_nav" id="leaderboard"><a href="?page=userList"><span>Leaderboard</span></a></div>
