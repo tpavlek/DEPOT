@@ -9,6 +9,7 @@ require_once("obj/page.php");
 <meta name="viewport" content="width=device-width, 
 height=device-height, user-scalable=no" />
 <script type="text/javascript" src="includes/jquery.js"></script>
+<script type="text/javascript" src="funcs/jsfuncs.js"></script>
 <link rel="stylesheet" type="text/css" href="style.css">
 <title>DEPOT WAREHOUSE!</title>
 </head>

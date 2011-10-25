@@ -4,7 +4,7 @@ require_once('config.php');
 session_start();
 class Page {
 	public $date;
-	public $html;
+	private $html;
 	protected $db;
 
 	public function __construct() {

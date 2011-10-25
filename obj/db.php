@@ -9,6 +9,14 @@ class DB {
 		$this->pdo = new PDO("mysql:host=localhost;dbname=depot","ebon","green");
 	}
 
+	static function getInstance() {
+		return new DB("1","2","3","4");
+	}
+	
+	function getPDO() {
+		return $this->pdo;
+	}
+
 	/**
 	* Adds to the database. Takes an associative array, with 'table' => table_name
 	* and 'fields' => array(':field_name' => 'value', etc.)
@@ -121,6 +129,16 @@ class DB {
 		else
 			return (array('status' => 1, 'message' => 'Could not delete from database'));
 	}
+	
+	function deletePost($pid) {
+		require_once('obj/forum/Post.php');
+		$post = new Post($pid);
+		$result = $this->delete(array('table' => 'posts', 'fields' => array(':pid' => $pid)));
+		if ($result['status' == 0])
+			$this->updatePostCount($post->getAuthorUID());
+		return $result;
+			
+	}
 
 	function isBanned($uid) {
 		$query = "SELECT rank from user where id = :uid";
@@ -144,6 +162,24 @@ class DB {
 		$queryPrepared->execute();
 		if ($queryPrepared->rowCount() != 0) return true;
 		else return false;
+	}
+	
+	function isTopicAuthor($tid, $uid) {
+		$query = "SELECT author_uid from topics where tid = :tid";
+		$queryPrepared = $this->pdo->prepare($query);
+		$queryPrepared->bindParam(':tid', $tid);
+		$queryPrepared->execute();
+		$data = $queryPrepared->fetch();
+		return ($data['author_uid'] == $uid);
+	}
+	
+	function isPostAuthor($pid, $uid) {
+		$query = "SELECT author_uid from posts where pid = :pid";
+		$queryPrepared = $this->pdo->prepare($query);
+		$queryPrepared->bindParam(':pid', $pid);
+		$queryPrepared->execute();
+		$data = $queryPrepared->fetch();
+		return ($data['author_uid'] == $uid);
 	}
 
 	function getUserByEmail($email, $args) {
@@ -224,9 +260,6 @@ class DB {
 	}
 	
 	function updatePostCount($uid, $num=1) {
-		echo "Updating count";
-		echo "<br>UID: " . $uid;
-		echo "<br>num: " . $num;
 		$query = "UPDATE user set postcount = postcount + :num";
 		$queryPrepared = $this->pdo->prepare($query);
 		$queryPrepared->bindParam(':num', $num);
@@ -319,6 +352,24 @@ class DB {
 			$data = $queryPrepared->fetch();
 			return $data['subject'];
 		}
+	}
+	
+	function isAdmin($uid) {
+		if (isset($_SESSION['rank']))
+			if ($_SESSION['rank'] == 'admin') return true;
+		else {
+			$query = "SELECT rank from user where uid = :uid";
+			$queryPrepared = $this->pdo->prepare($query);
+			$queryPrepared->bindParam(':uid', $uid);
+			$queryPrepared->execute();
+			$data = $queryPrepared->fetch();
+			if ($data['rank'] == 'admin') return true;
+			else return false;
+		}
+	}
+	
+	function isAuthor($data) { // IMPORTANT GET THIS SHIT DONE
+		return false;
 	}
 
 	function getLastInsertId() {

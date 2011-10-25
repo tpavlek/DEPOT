@@ -19,7 +19,7 @@ class TopicAction extends Page {
 			return array('status' => 1, 'message' => 'Subject is invalid');
 		else {
 			$result = $this->db->addTopic(array('table' => 'topics', 'fields' => array(':subject' =>
-			$_POST['subject'], ':message' => $_POST['message'], ':author' => $_SESSION['username'], ':author_uid' =>
+			$_POST['subject'], ':message' => nl2br($_POST['message']), ':author' => $_SESSION['username'], ':author_uid' =>
 			$_SESSION['uid'], ':last_poster' => $_SESSION['username'], ':date' => $this->date, ':last_reply' =>
 			$this->date, ':in_forum' => $_GET['fid'], ':last_reply_uid' => $_SESSION['uid'], ':last_reply_pid' => 0)));
 			return $result;

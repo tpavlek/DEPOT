@@ -14,6 +14,9 @@ padding:2%;
 overflow:auto;
 }
 
+.buttonrow {
+text-align:left;
+}
 #listbox {
 border: solid black 4px;
 text-align:center;

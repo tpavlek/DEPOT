@@ -14,7 +14,7 @@ class PostAction extends Page {
 	}
 	
 	function newReply() {
-		return $this->db->addPost(array('table' => 'posts', 'fields' => array(':author' => $_SESSION['username'], ':author_uid' => $_SESSION['uid'], ':subject' => $_POST['subject'], ':message' => $_POST['message'], ':in_reply_to' => $_GET['tid'], ':date' => $this->date)));
+		return $this->db->addPost(array('table' => 'posts', 'fields' => array(':author' => $_SESSION['username'], ':author_uid' => $_SESSION['uid'], ':subject' => $_POST['subject'], ':message' => nl2br($_POST['message']), ':in_reply_to' => $_GET['tid'], ':date' => $this->date)));
 	}
 }
 

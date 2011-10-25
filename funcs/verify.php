@@ -6,6 +6,6 @@ function verifyString($str, $min, $max) {
 }
 
 function validateString($str) {
-	return strip_tags($str,"<i><b>");
+	return strip_tags($str,"<i><b><br>");
 }
 ?>

@@ -29,9 +29,9 @@ class Topic extends Page {
 	}
 
 	function showTopic() {
-		$str = "<ul><li class='subject'>" . $this->subject . "<hr></li>";
-    $str .= new UserBox($this->getAuthorUID());
-    $str .= "<li>" . $this->message . "</li></ul>";
+		$str = "<ul id='tid_" . $this->tid . "'><li class='subject'>" . $this->subject . "<hr></li>";
+    $str .= new UserBox($this->getAuthorUID(), array('tid' => $this->tid));
+    $str .= "<li class='message'>" . $this->message . "</li></ul>";
 		$str .= $this->getReplies();
 		$str .= "<ul class='big'>";
 		$str .= "<a href='?page=post&tid=" . $this->tid ."'>NEW REPLY</a>";
@@ -45,10 +45,10 @@ class Topic extends Page {
 		$this->replies = $this->db->getRepliesInTopicByPage($this->tid, array('pageNum' => $pageNum, 'postsPerPage' => $postsPerPage));
 		$str = "";
 		foreach ($this->replies['data'] as $post) {
-			$str .= "<ul id='" . $post->getPID() . "'>";
+			$str .= "<ul id='pid_" . $post->getPID() . "'>";
       $str .= "<li class='subject'>" . $post->getSubject() . "<hr></li>";
-      $str .= new UserBox($post->getAuthorUID());
-      $str .= "<li>" . $post->getMessage() . "</li>";
+      $str .= new UserBox($post->getAuthorUID(), array('pid' => $post->getPID()));
+      $str .= "<li class='message'>" . $post->getMessage() . "</li>";
       $str .= "</ul>";
 		}
 		return $str;

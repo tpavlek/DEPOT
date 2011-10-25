@@ -1,16 +1,20 @@
 <?php
 require_once('obj/User.php');
+require_once('obj/control/PostDeleteButton.php');
+require_once('obj/control/TopicDeleteButton.php');
 class UserBox {
 	private $user;
 	private $html;
 	
-	public function __construct($uid) {
+	public function __construct($uid, $id) {
 	
 		$this->user = new User($uid);
 		$this->html = "<div class='userbox'>";
 		$this->html .= $this->buildUsername() . "<br />";
 		$this->html .= $this->buildUserPicture() . "<br />";
 		$this->html .= $this->buildPostCount() . "<br />";
+		if (key($id) == 'pid') $this->html .= new PostDeleteButton($id['pid']);
+		else if (key($id) == 'tid') $this->html .= new TopicDeleteButton($id['tid']);
 		$this->html .= "</div>";
 		
 	}

@@ -4,7 +4,7 @@ class UserControl extends Page {
 
 	function showForm() {
 		$str = "<span class='big'>User Actions</span>
-			<form action='?page=userControl&method=logout' method='POST'>
+			<form action='?page=userControl&method=logOut' method='POST'>
 			<input type='submit' value='Log Out'>
 			</form>
 			<hr>
