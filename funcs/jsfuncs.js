@@ -19,7 +19,8 @@ function hidePost(data) {
 
 function modifyDeletedPost(data) {
 	if (data['status'] == 0) {
-		$('#' + data['pid']).children('.message').html("[deleted]");
+		$('#' + data['pid']).children('.message').hide('fast');
+		$('#' + data['pid']).children('.message').html("[deleted]").show('fast');
 	}
 }
 
