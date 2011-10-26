@@ -1,12 +1,12 @@
 <?php
-session_start();
-class Post {
+require_once('obj/page.php');
+class APIPost {
 static function adminDeletePost() {
 	$db = DB::getInstance();
 	$pid = str_replace("pid_", "", $_POST['pid']);
 	if ($db->isAdmin($_SESSION['uid'])) {
 		$result = $db->deletePost($pid);
-		if ($result['status'] == 1)
+		if ($result['status'] == 0)
 			return array('status' => 0, 'pid' => "pid_" . $pid);	
 		else return array('status' => 1);
 	} else return array('status' => 1);

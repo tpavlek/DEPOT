@@ -134,7 +134,7 @@ class DB {
 		require_once('obj/forum/Post.php');
 		$post = new Post($pid);
 		$result = $this->delete(array('table' => 'posts', 'fields' => array(':pid' => $pid)));
-		if ($result['status' == 0])
+		if ($result['status'] == 0)
 			$this->updatePostCount($post->getAuthorUID());
 		return $result;
 			
