@@ -9,5 +9,5 @@ $query = $query . " ORDER by date DESC";
 echo $query;
 $topics = $pdo->query($query);
 $arr = $topics->fetch();*/
-header('Location: index.php?page=viewTopic&tid=2503');
+header('Location: index.php?page=viewTopic&tid=2505');
 ?>
