@@ -20,10 +20,21 @@ function adminDeleteTopic(evt) {
 		success: hideTopic,
 		data: {'tid': tid}
 	});
-	console.log('after ajax');
+}
+
+function userDeleteTopic(evt) {
+	var tid = $(evt.target).parents().filter('ul').attr('id');
+	$.ajax({
+		url: "api.php?type=topic&method=userDeleteTopic",
+		type: "POST",
+		dataType: "json",
+		success: hideTopic,
+		data: {'tid': tid}
+	});
 }
 
 function hideTopic(data) {
+	console.log(data);
 	$('.topic').hide('fast');
 }
 

@@ -404,7 +404,7 @@ class DB {
 		if (isset($_SESSION['rank']))
 			return ($_SESSION['rank'] == 'admin');
 		else {
-			$query = "SELECT rank from user where uid = :uid";
+			$query = "SELECT rank from user where id = :uid";
 			$queryPrepared = $this->pdo->prepare($query);
 			$queryPrepared->bindParam(':uid', $uid);
 			$queryPrepared->execute();
