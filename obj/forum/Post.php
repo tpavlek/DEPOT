@@ -21,6 +21,10 @@ class Post extends Page {
 		$this->author_uid = $arr['data']['author_uid'];
 		$this->postDate = $arr['data']['date'];
 	}
+	
+	function isDeleted() {
+		return ($this->message == "[deleted]");
+	}
 
 	function getTID() {
 		return $this->tid;

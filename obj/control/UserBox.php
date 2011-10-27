@@ -1,5 +1,7 @@
 <?php
 require_once('obj/User.php');
+require_once('obj/forum/Post.php');
+require_once('obj/forum/Topic.php');
 require_once('obj/control/PostDeleteButton.php');
 require_once('obj/control/TopicDeleteButton.php');
 class UserBox {
@@ -13,8 +15,14 @@ class UserBox {
 		$this->html .= $this->buildUsername() . "<br />";
 		$this->html .= $this->buildUserPicture() . "<br />";
 		$this->html .= $this->buildPostCount() . "<br />";
-		if (key($id) == 'pid') $this->html .= new PostDeleteButton($id['pid']);
-		else if (key($id) == 'tid') $this->html .= new TopicDeleteButton($id['tid']);
+		if (key($id) == 'pid') {
+			$post = new Post($id['pid']);
+			$this->html .= new PostDeleteButton($post);
+		} 
+		else if (key($id) == 'tid') {
+			$topic = new Topic($id['tid']);
+			$this->html .= new TopicDeleteButton($topic);
+		}
 		$this->html .= "</div>";
 		
 	}

@@ -29,13 +29,15 @@ class Topic extends Page {
 	}
 
 	function showTopic() {
-		$str = "<ul id='tid_" . $this->tid . "'><li class='subject'>" . $this->subject . "<hr></li>";
+		$str = "<div class='topic'>";
+		$str .= "<ul id='tid_" . $this->tid . "'><li class='subject'>" . $this->subject . "<hr></li>";
     $str .= new UserBox($this->getAuthorUID(), array('tid' => $this->tid));
     $str .= "<li class='message'>" . $this->message . "</li></ul>";
 		$str .= $this->getReplies();
 		$str .= "<ul class='big'>";
 		$str .= "<a href='?page=post&tid=" . $this->tid ."'>NEW REPLY</a>";
 		$str .= "</ul>";
+		$str .= "</div>";
 		return $str;
 	}
 
@@ -52,6 +54,10 @@ class Topic extends Page {
       $str .= "</ul>";
 		}
 		return $str;
+	}
+	
+	function isDeleted() {
+		return ($this->message == "[deleted]");
 	}
 
 	function getTid() {

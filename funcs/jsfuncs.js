@@ -11,18 +11,45 @@ function adminDeletePost(evt) {
 
 }
 
+function adminDeleteTopic(evt) {
+	var tid = $(evt.target).parents().filter('ul').attr('id');
+	$.ajax({
+		url: "api.php?type=topic&method=adminDeleteTopic",
+		type: "POST",
+		dataType: "json",
+		success: hideTopic,
+		data: {'tid': tid}
+	});
+	console.log('after ajax');
+}
+
+function hideTopic(data) {
+	$('.topic').hide('fast');
+}
+
+function userDeleteTopic(evt) {
+	var tid = $(evt.target).parents().filter('ul').attr('id');
+	$.ajax({
+		url: "api.php?type=post&method=userDeleteTopic",
+		type: "POST",
+		dataType: "json",
+		success: hideTopic,
+		data: {'tid': tid}
+	});
+}
+
 function hidePost(data) {
 	if (data['status'] == 0) {
 		$('#' + data['pid']).hide('fast');
 	}
 }
 
-function modifyDeletedPost(data) {
+/*function modifyDeletedPost(data) {
 	if (data['status'] == 0) {
 		$('#' + data['pid']).children('.message').hide('fast');
 		$('#' + data['pid']).children('.message').html("[deleted]").show('fast');
 	}
-}
+}*/
 
 function userDeletePost(evt) {
 	var pid = $(evt.target).parents().filter('ul').attr('id');
@@ -30,7 +57,7 @@ function userDeletePost(evt) {
 		url: "api.php?type=post&method=userDeletePost",
 		type: "POST",
 		dataType: "json",
-		success: modifyDeletedPost,
+		success: hidePost(data),
 		error: errorPost,
 		data: {'pid': pid}
 	});

@@ -130,14 +130,52 @@ class DB {
 			return (array('status' => 1, 'message' => 'Could not delete from database'));
 	}
 	
+	function deleteTopic($tid) {
+		require_once('obj/forum/Topic.php');
+		$result = $this->getRepliesAsPDOStatement($tid);
+		if ($result['status'] == 1) return $result;
+		$data = $result['data'];
+		$topic = new Topic($tid);
+		$result = $this->delete(array('table' => 'topics', 'fields' => array(':tid' => $tid)));
+		if ($result['status'] == 1) return $result;
+		else $this->updatePostCount($topic->getAuthorUID(), -1);
+		while ($item = $data->fetch()) {
+			$this->deletePost($item['pid']);
+		}
+		$newTid = $this->getLastTopic($topic->getFID());
+		$this->updateForumList(new Topic($newTid['data']['tid']));
+		return array('status' => 0, 'message' => 'Everything is gone');
+	}
+	
 	function deletePost($pid) {
 		require_once('obj/forum/Post.php');
+		require_once('obj/forum/Topic.php');
 		$post = new Post($pid);
 		$result = $this->delete(array('table' => 'posts', 'fields' => array(':pid' => $pid)));
-		if ($result['status'] == 0)
-			$this->updatePostCount($post->getAuthorUID());
-		return $result;
-			
+		if ($result['status'] == 1) return $result;
+		$this->updatePostCount($post->getAuthorUID(), -1);
+		$topic = new Topic($post->getTID());
+		if ($topic->getLastReplyPID() == $post->getPID()) {
+			$newPid = $this->getLastReply($post->getTID());
+			$this->updateTopicList(new Post($newPid['data']['pid']));
+		}
+		return array('status' => 0, 'message' => 'Post deleted successfully');
+	}
+	
+	function getLastReply($tid) {
+		$query = "SELECT pid from posts where in_reply_to = :tid ORDER BY STR_TO_DATE(date, '%d-%m-%Y %H:%i:%s') DESC LIMIT 0,1";
+		$queryPrepared = $this->pdo->prepare($query);
+		$queryPrepared->bindParam(':tid', $tid);
+		if (!$queryPrepared->execute()) return array('status' => 1, 'message' => 'Could not get last post');
+		return array('status' => 0, 'data' => $queryPrepared->fetch());
+	}
+	
+	function getLastTopic($fid) {
+		$query = "SELECT tid from topics where in_forum = :fid ORDER BY STR_TO_DATE(date, '%d-%m-%Y %H:%i:%s') DESC";
+		$queryPrepared = $this->pdo->prepare($query);
+		$queryPrepared->bindParam(':fid', $fid);
+		if (!$queryPrepared->execute()) return array('status' => 1, 'message' => 'Could not get last topic');
+		else return array('status' => 0, 'data' => $queryPrepared->fetch());
 	}
 
 	function isBanned($uid) {
@@ -300,6 +338,14 @@ class DB {
 		}
 	}
 	
+	function getRepliesAsPDOStatement($tid) {
+		$query = "SELECT pid from posts where in_reply_to = :tid";
+		$queryPrepared = $this->pdo->prepare($query);
+		$queryPrepared->bindParam(':tid', $tid);
+		if (!$queryPrepared->execute()) return array('status' => 1, 'message' => 'Could not retrieve posts');
+		else return array('status' => 0, 'data' => $queryPrepared);
+	}
+	
 	function getRepliesInTopicByPage($tid, $args) {
 		$query = "SELECT pid from posts where in_reply_to = :tid ORDER by 
 			STR_TO_DATE(date, '%d-%m-%Y %H:%i:%s')
@@ -356,15 +402,15 @@ class DB {
 	
 	function isAdmin($uid) {
 		if (isset($_SESSION['rank']))
-			if ($_SESSION['rank'] == 'admin') return true;
+			return ($_SESSION['rank'] == 'admin');
 		else {
 			$query = "SELECT rank from user where uid = :uid";
 			$queryPrepared = $this->pdo->prepare($query);
 			$queryPrepared->bindParam(':uid', $uid);
 			$queryPrepared->execute();
 			$data = $queryPrepared->fetch();
-			if ($data['rank'] == 'admin') return true;
-			else return false;
+			print_r($data);
+			return ($data['rank'] == 'admin');
 		}
 	}
 	

@@ -4,7 +4,7 @@ class TopicDeleteButton extends Control {
 	private $path;
 	private $html;
 	
-	public function __construct($tid) {
+	public function __construct($topic) {
 		parent::__construct();
 		$this->path = "assets/icons/del_sm.png";
 		$this->html = "<div class='buttonrow'>";
@@ -12,9 +12,11 @@ class TopicDeleteButton extends Control {
 			$this->html .= "<img onClick='javascript:adminDeleteTopic(event)' height=10 src='" . $this->path . "' />";
 		}
 		else if (isset ($_SESSION['uid'])) {
-			if (parent::permissions(array('permissions' => array('topicauthor'), 'args' => array('tid' => $tid, 'uid' => $_SESSION['uid'])))) {
+			if (!$post->isDeleted()) {
+			if (parent::permissions(array('permissions' => array('topicauthor'), 'args' => array('tid' => $topic->getTID(), 'uid' => $_SESSION['uid'])))) {
 				$this->html .= "<img onClick='javascript:userDeleteTopic(event)' height=10 src='" . $this->path . "'>";
 			}
+		}
 		}
 		$this->html .= "</div>";
 	}

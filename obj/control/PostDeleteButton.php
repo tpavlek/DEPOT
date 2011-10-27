@@ -4,7 +4,7 @@ class PostDeleteButton extends Control {
 	private $path;
 	private $html;
 	
-	public function __construct($pid) {
+	public function __construct($post) {
 		parent::__construct();
 		$this->path = "assets/icons/del_sm.png";
 		$this->html = "<div class='buttonrow'>";
@@ -12,8 +12,10 @@ class PostDeleteButton extends Control {
 			$this->html .= "<img onClick='javascript:adminDeletePost(event)' height=10 src='" . $this->path . "' />";
 		}
 		else if (isset ($_SESSION['uid'])) {
-			if (parent::permissions(array('permissions' => array('postauthor'), 'args' => array('pid' => $pid, 'uid' => $_SESSION['uid'])))) {
-				$this->html .= "<img onClick='javascript:userDeletePost(event)' height=10 src='" . $this->path . "'>";
+			if (!$post->isDeleted()) {
+				if (parent::permissions(array('permissions' => array('postauthor'), 'args' => array('pid' => $post->getPID(), 'uid' => $_SESSION['uid'])))) {
+					$this->html .= "<img onClick='javascript:userDeletePost(event)' height=10 src='" . $this->path . "'>";
+				}
 			}
 		}
 		$this->html .= "</div>";
