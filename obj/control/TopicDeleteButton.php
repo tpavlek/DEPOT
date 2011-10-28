@@ -12,7 +12,7 @@ class TopicDeleteButton extends Control {
 			$this->html .= "<img onClick='javascript:adminDeleteTopic(event)' height=10 src='" . $this->path . "' />";
 		}
 		else if (isset ($_SESSION['uid'])) {
-			if (!$post->isDeleted()) {
+			if (!$topic->isDeleted()) {
 			if (parent::permissions(array('permissions' => array('topicauthor'), 'args' => array('tid' => $topic->getTID(), 'uid' => $_SESSION['uid'])))) {
 				$this->html .= "<img onClick='javascript:userDeleteTopic(event)' height=10 src='" . $this->path . "'>";
 			}
