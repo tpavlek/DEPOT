@@ -14,6 +14,11 @@ class APITopic {
 	
 	static function userDeleteTopic() {
 		$db = DB::getInstance();
+		if (isset($_POST['tid'])) $tid = str_replace('tid_', '', $_POST['tid']);
+		else return array('status' => 1, 'message' = 'You did not post me the tid, hobo');
+		if (!$db->isTopicAuthor($tid, $_SESSION['uid'])) return array('status' => 1, 'message' => 'You are not the topic author');
+		$result = $db->userDeleteTopic($tid);
+		if ($result['status'] == 0) return array('status' => 0, 'tid' => 'tid_' . $tid);
 	}
 }
 
