@@ -28,23 +28,22 @@ class Topic extends Page {
 		$this->last_reply_pid = $arr['data']['last_reply_pid'];
 	}
 
-	function showTopic() {
-		$str = "<div class='topic'>";
+	function showTopic($args) {
+		$str = "<script src='funcs/lazyload.js'></script>";
+		$str .= "<div class='topic'>";
 		$str .= "<ul id='tid_" . $this->tid . "'><li class='subject'>" . $this->subject . "<hr></li>";
     $str .= new UserBox($this->getAuthorUID(), array('tid' => $this->tid));
     $str .= "<li class='message'>" . $this->message . "</li></ul>";
-		$str .= $this->getReplies();
+		$str .= $this->getReplies($args);
+		$str .= "</div>";
 		$str .= "<ul class='big'>";
 		$str .= "<a href='?page=post&tid=" . $this->tid ."'>NEW REPLY</a>";
 		$str .= "</ul>";
-		$str .= "</div>";
 		return $str;
 	}
-
-	function getReplies() {
-		$pageNum = (isset ($_GET['pageNum'])) ? $_GET['pageNum'] : 0;
-		$postsPerPage = (isset($_GET['postsPerPage'])) ? $_GET['postsPerPage'] : 35;
-		$this->replies = $this->db->getRepliesInTopicByPage($this->tid, array('pageNum' => $pageNum, 'postsPerPage' => $postsPerPage));
+	
+	function getReplies($args) {
+		$this->replies = $this->db->getRepliesInTopicByPage($this->tid, $args);
 		$str = "";
 		foreach ($this->replies['data'] as $post) {
 			$str .= "<ul id='pid_" . $post->getPID() . "'>";

@@ -46,6 +46,10 @@ class DB {
 			return (array('status' => 1, 'message' => 'Adding to database failed.'));
 	}
 	
+	function update($args) { //TODO MAGIC FUNCTION
+	
+	}
+	
 	function addTopic($args) {
 		if (!$this->isInDatabase(array('type' => 'forum', 'value' => $args['fields'][':in_forum'])))
 			return array('status' => 1, 'message' => "That forum doesn't exist, you hobo");
@@ -334,7 +338,7 @@ class DB {
 			foreach ($arr as $a) {
 				$data[] = new Topic($a['tid']);
 			}
-			return array('status' => 1, 'data' => $data);
+			return array('status' => 0, 'data' => $data);
 		}
 	}
 	
@@ -362,7 +366,7 @@ class DB {
 			foreach ($arr as $a) {
 				$data[] = new Post($a['pid']);
 			}
-			return array('status' => 1, 'data' => $data);
+			return array('status' => 0, 'data' => $data);
 		}
 	}
 	

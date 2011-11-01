@@ -5,6 +5,7 @@ switch($_GET['type']) {
  		switch ($_GET['method']) {
  			case 'adminDeletePost': print json_encode(APIPost::adminDeletePost()); break;
  			case 'userDeletePost': print json_encode(APIPost::userDeletePost()); break;
+ 			case 'loadNextPage': print json_encode(APIPost::loadNextPage()); break;
  		} break;
  	case 'topic': require_once('api/apitopic.php');
  		switch($_GET['method']) {

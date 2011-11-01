@@ -1,3 +1,5 @@
+var pageNum = 1;//((getUrlVars()['pageNum'])) + 1;
+	//if (pageNum) pageNum = 1;
 function adminDeletePost(evt) {
 	var pid = $(evt.target).parents().filter('ul').attr('id');
 	$.ajax({
@@ -55,6 +57,40 @@ function hidePost(data) {
 	if (data['status'] == 0) {
 		$('#' + data['pid']).hide('fast');
 	}
+}
+
+function loadNextPageOfPosts(evt) {
+	console.log("loadnextpage");
+	var tid = $('.topic').children('ul').attr('id');
+	
+	$.ajax({
+		url: "api.php?type=post&method=loadNextPage",
+		type: "GET",
+		dataType: "json",
+		success: concatNextPage,
+		data: {'tid': tid, 'num': pageNum}
+	});
+}
+
+function concatNextPage(data) {
+	if (data['status'] == 0) {
+		$('.topic').append(data['html']);
+		pageNum++;
+	}
+	console.log(pageNum);
+}
+
+function getUrlVars()
+{
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
 }
 
 /*function modifyDeletedPost(data) {

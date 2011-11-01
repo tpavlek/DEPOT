@@ -27,6 +27,16 @@ static function adminDeletePost() {
 		}
 		else return array('status' => 1, 'message' => 'Not post Author');
 	}
+	
+	static function loadNextPage() {
+		require_once('obj/forum/Topic.php');
+		$tid = str_replace('tid_', '', $_GET['tid']);
+		$num = $_GET['num'];
+		$topic = new Topic($tid);
+		$data = $topic->getReplies(array('pageNum' => $num, 'postsPerPage' => 15));
+		if (!$data) return array ('status' => 1, 'message' => 'No more posts');
+		else return array('status' => 0, 'html' => $data, 'pageNum' => $num);
+	}
 }
 
 ?>

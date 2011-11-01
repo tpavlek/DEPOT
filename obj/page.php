@@ -120,7 +120,10 @@ class Page {
 			require_once('obj/forum/Topic.php');
 			if ($this->db->isInDatabase(array('type' => 'topic', 'value' => $tid))) {
 				$topic = new Topic($tid);
-				$this->html .= $topic->showTopic();
+				$pageNum = (isset($_GET['pageNum'])) ? $_GET['pageNum'] : 0;
+				$postsPerPage = (isset($_GET['postsPerPage'])) ? $_GET['postsPerPage'] : 15;
+				$args = array('pageNum' => $pageNum, 'postsPerPage' => $postsPerPage); 
+				$this->html .= $topic->showTopic($args);
 			} else $this->html .= "<span class='big'>Topic doesn't exist, hobo</span>";
 		}
 	}
