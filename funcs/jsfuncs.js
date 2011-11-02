@@ -74,10 +74,9 @@ function loadNextPageOfPosts(evt) {
 
 function concatNextPage(data) {
 	if (data['status'] == 0) {
-		$('.topic').append(data['html']);
 		pageNum++;
+		$('.topic').append(data['html']);
 	}
-	console.log(pageNum);
 }
 
 function getUrlVars()
@@ -106,7 +105,7 @@ function userDeletePost(evt) {
 		url: "api.php?type=post&method=userDeletePost",
 		type: "POST",
 		dataType: "json",
-		success: hidePost(data),
+		success: hidePost,
 		error: errorPost,
 		data: {'pid': pid}
 	});
