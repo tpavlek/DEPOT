@@ -302,9 +302,10 @@ class DB {
 	}
 	
 	function updatePostCount($uid, $num=1) {
-		$query = "UPDATE user set postcount = postcount + :num";
+		$query = "UPDATE user set postcount = postcount + :num where id = :uid";
 		$queryPrepared = $this->pdo->prepare($query);
 		$queryPrepared->bindParam(':num', $num);
+		$queryPrepared->bindParam(':uid', $uid);
 		if($queryPrepared->execute())
 			return array('status' => 0, 'message' => 'Post count updated successfully');
 		else
