@@ -124,8 +124,12 @@ echo (string)$page;
 		}
 		return color;
 	}
-	$('#main-content').css("background", rand_color());
-	$('body').css("background-color", rand_color());
+	randpage();
+	setInterval(randpage,1500);
+	function randpage() {
+		$('#main-content').css("background", rand_color());
+		$('body').css("background-color", rand_color());
+	}
 
 </script>
 </body>
