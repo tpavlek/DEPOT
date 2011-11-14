@@ -14,7 +14,6 @@ function adminDeletePost(evt) {
 }
 
 function adminDeleteTopic(evt) {
-	console.log('adminDeleteTopic');
 	var tid = $(evt.target).parents().filter('ul').attr('id');
 	$.ajax({
 		url: "api.php?type=topic&method=adminDeleteTopic",
@@ -37,12 +36,10 @@ function userDeleteTopic(evt) {
 }
 
 function hideTopic(data) {
-	console.log('hideTopic');
 	$('.topic').hide('fast');
 }
 
 function userDeleteTopic(evt) {
-	console.log('userDeleteTopic');
 	var tid = $(evt.target).parents().filter('ul').attr('id');
 	$.ajax({
 		url: "api.php?type=post&method=userDeleteTopic",
@@ -60,9 +57,7 @@ function hidePost(data) {
 }
 
 function loadNextPageOfPosts(evt) {
-	console.log("loadnextpage");
 	var tid = $('.topic').children('ul').attr('id');
-	
 	$.ajax({
 		url: "api.php?type=post&method=loadNextPage",
 		type: "GET",
@@ -112,7 +107,5 @@ function userDeletePost(evt) {
 }
 
 function errorPost(data) {
-	console.log(data);
-	console.log("error");
 }
 // $(evt.target).parents().filter('ul')

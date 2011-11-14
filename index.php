@@ -14,6 +14,7 @@ height=device-height, user-scalable=no" />
 <title>DEPOT WAREHOUSE!</title>
 </head>
 <body>
+<div id="main-content">
 <?php
 if (!isset($_SESSION['username'])) {
     echo "<div class='userinfo'><a href=\"?page=login\">Login</a> / <a href='?page=register'>Register</a></div>";
@@ -112,5 +113,7 @@ $page->blog();
 echo "<br>";
 echo (string)$page;
 ?>
+<br>
+</div>
 </body>
 </html>

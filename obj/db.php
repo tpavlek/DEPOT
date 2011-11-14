@@ -418,10 +418,6 @@ class DB {
 			return ($data['rank'] == 'admin');
 		}
 	}
-	
-	function isAuthor($data) { // IMPORTANT GET THIS SHIT DONE
-		return false;
-	}
 
 	function getLastInsertId() {
 		return $this->pdo->lastInsertId();
