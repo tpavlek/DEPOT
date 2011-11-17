@@ -3,12 +3,25 @@ a:visited {color:black;}
 a:hover{text-decoration:underline; color:#0066FF; }
 
 body {
+width:100%;
 text-align:center;
 margin:0;
 background-color: #FFFF33;
 }
 
 #main-content {
+}
+
+.title {
+	font-weight:bold;
+	font-size:120%;
+	text-align:right;
+	position:fixed;
+	top:10px;
+	left:47%;
+
+	
+
 }
 .bold {
 font-weight:bold;
@@ -87,38 +100,6 @@ margin:0px auto;
 border: none;
 text-align:center;}
 
-.nav {
-	border: 2px solid black;
-	padding: 8px;
-	margin-right:2px;
-	display:inline-block;
-	width:170px;
-}
-
-.nav a {
-	display: block;
-	text-align: center;
-}
-
-.nav span {
-	font-weight: bold;
-	font-size:150%;
-}
-
-.sub_nav {
-	margin-left:-10px;
-	display: none;
-	padding:8px; 
-  position: absolute;
-  z-index: 2;
-	width:170px;
-	border: solid black 2px;
-}
-.sub_nav a {
-	display: block;
-	border: 0;
-	margin: 0;
-}
 .cleaner {
 clear:both;
 }
@@ -159,15 +140,23 @@ width: 410px;
 text-align:center;}
 
 .userinfo {
+position:fixed;
+width:98%;
+height:40px;
 color: #FFFFFF;
 font-size:70%;
-text-align:right;
-padding-top: 10px;
-padding-bottom:10px;
 padding-right:1.7%;
+padding-left:1.7%;
 background-image: url('assets/backgrounds/userbar.png');
 background-repeat: repeat-x;
 }
+
+.userinfo .user{
+	padding-top:10px;
+	text-align:right;
+	float:right;
+}
+
 .userinfo a {
 color: #FFFFFF;
 }
@@ -175,12 +164,38 @@ color: #FFFFFF;
 	background-color:#0066FF;
 }
 
+.nav {
+	float:left;
+	height:100%;
+}
+
+.nav span {
+font-size:120%;
+}
+.nav div {
+display:inline-block;
+padding-top:13px;
+height:27px;
+padding-left:2px;
+padding-right:2px;
+}
+
+.nav div:hover {
+background-color:#bebebe;
+}
+
+.nav .mid {
+	border-right: 2px #bebebe;
+	margin-right:5px;
+}
+
 #userControlDropDown {
 	padding: 10px;
 	background: #FFFFFF;
 	right: 0;
+	top:40px;
 	margin-right:1%;
-	position: absolute;
+	position: fixed;
 	border: 1px solid black;
 	z-index:2;
 }

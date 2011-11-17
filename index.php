@@ -14,11 +14,18 @@ height=device-height, user-scalable=no" />
 <title>DEPOT WAREHOUSE!</title>
 </head>
 <body>
+<div class='userinfo'>
+<div class="nav">
+	<a href="qod.php"><div><span class="mid">QoD</span></div></a>
+	<a href="?page=userList"><div><span class="mid">Leaderboard</span></div></a>
+	<a href="?page=forum"><div><span>Forum</span></div></a>
+</div>
+<a href="index.php"><span class="title">DEPOT!</span></a>
 <?php
 if (!isset($_SESSION['username'])) {
-    echo "<div class='userinfo'><a href=\"?page=login\">Login</a> / <a href='?page=register'>Register</a></div>";
+    echo "<span class='user'><a href='?page=login'>Login</a> / <a href='?page=register'>Register</a></span>";
     } else { ?>
-    <div class='userinfo'>Welcome, <span class='username'><a href='?page=userControl'><?php echo $_SESSION['username']; ?> !</a></span> <img src="assets/icons/down_arrow_sm.png" onclick="showDropDown(event)" ></div>
+    <span class="user">Welcome, <span class='username'><a href='?page=userControl'><?php echo $_SESSION['username']; ?> !</a></span> <img src="assets/icons/down_arrow_sm.png" onclick="showDropDown(event)" ></div>
     <div id="userControlDropDown" style="display:none">
     	<span class="bold">Enable Colour Change:</span>
     	<input type="checkbox" id="disableColourChange" 
@@ -36,33 +43,13 @@ if (!isset($_SESSION['username'])) {
     	<span class="bold"><a href="?page=userControl">User Control</a></span>
     	<hr /> 
     	<span class="bold"><a href="?page=userControl&method=logOut">Log out</a></span>
-    	
-    </div>
-    <?php
-}
-?>
-<div id="main-content">
-<a href="http://depotwarehouse.net"><span class="banner">DEPOT WAREHOUSE!</span></a>
-<br /> <br />
+    	</div>
+    	</span>
+<?php } ?>
 
-<div id="navbar">
-  <div class="nav" id="qod"><a href="qod.php"><span>QoD</span></a>
-    <div class="sub_nav" id="leaderboard"><a href="?page=userList"><span>Leaderboard</span></a></div>
-  </div>
-  <a href="?page=forum"><div class="nav" id="forum"><span>Forum</span></a></div>
-  <a href="http://blag.depotwarehouse.net"><div class="nav" id="blag"><span>Blag</span></a></div>
-  <a href="?page=about"><div class="nav" id="about"><span>About</span></a></div>
 </div>
-<div class="cleaner"></div>
-<script type="text/javascript">
-$(function() {
-    $("div.nav").hover(function() {
-             $(this).find("div.sub_nav").slideDown(400);
-                 }, function() {
-                          $(this).find("div.sub_nav").slideUp(400);
-                              });
-                            });
-</script>
+<div id="main-content">
+<br /> <br />
 
 <?php
 if (isset($_SESSION['rank']) && $_SESSION['rank'] == 'admin') {
