@@ -31,7 +31,7 @@ if (!isset($_SESSION['username'])) {
     		<?php
     			echo $_SESSION['colour_time'];
     		?>
-    		class="obnoxiousColours" onchange="showNewValue()"/><button id="obnoxiousColoursGoButton" onclick="updateObnoxiousColours()"> Change </button> </div>
+    		class="obnoxiousColours" onchange="showNewValue()"/><button id="obnoxiousColoursGoButton" onclick="updateObnoxiousColours()"> </button> </div>
     	<hr>
     	<span class="bold"><a href="?page=userControl">User Control</a></span>
     	<hr /> 
@@ -150,8 +150,11 @@ echo (string)$page;
 	var intervalBob;
 	
 	$(window).load(function(){
-		if($('#disableColourChange').is(':checked'))
+
+		if($('#disableColourChange').is(':checked')) {
 			intervalBob = setInterval(randpage, $('.obnoxiousColours').val());
+			$('#obnoxiousColoursGoButton').text(($('.obnoxiousColours').val() / 1000) + "s");
+		}
 	});
 	
 	function rand_color() {
@@ -185,9 +188,11 @@ echo (string)$page;
 	
 	function hideColourVariation() {
 		if($('#disableColourChange').is(':checked')) {
-			$('#colourChangePrefs').show('fast');
 			var ms = $('.obnoxiousColours').val();
 			if (ms == 0) ms = 3000;
+			$('.obnoxiousColours').val(ms);
+			$('#obnoxiousColoursGoButton').text(($('.obnoxiousColours').val() / 1000) + "s");
+			$('#colourChangePrefs').show('fast');
 			intervalBob = setInterval(randpage,ms);
 			$.post("api.php?type=sess&method=addToSession", {'colour_time' : 3000});
 		} else {
