@@ -10,10 +10,11 @@ class SessObj extends Page {
 
 	public function loginUser($email) { //TODO handle status 1
 		if ($this->db->isInDatabase(array('type' => 'email', 'value' => $email))) {
-			$arr = $this->db->getUserByEmail($email, array('id', 'username','rank'));
+			$arr = $this->db->getUserByEmail($email, array('id', 'username','rank', 'colour_time'));
 			$_SESSION['username'] = $arr['username'];
 			$_SESSION['rank'] = $arr['rank'];
 			$_SESSION['uid'] = $arr['id'];
+			$_SESSION['colour_time'] == $arr['colour_time'];
 			return(array('status' => 0, 'message' => 'Successfully logged in'));
 		} else
 			return (array('status' => 1, 'message' => 'Account not found in database'));

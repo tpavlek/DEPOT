@@ -46,8 +46,32 @@ class DB {
 			return (array('status' => 1, 'message' => 'Adding to database failed.'));
 	}
 	
-	function update($args) { //TODO MAGIC FUNCTION
-	
+	function update($args) { 
+		$query = "UPDATE " . $args['table'] . " set ";
+		$i = 1;
+		foreach ($args['fields'] as $a => $v) {
+			$query .=  str_replace(":","",$a);
+			$query .= " = " . $v;
+      if ($i < count($args['fields']))
+        $query .= ", ";
+      else $query .= " ";
+      $i++;
+		}
+		$i = 1;
+		$query .= "WHERE ";
+		foreach ($args['where'] as $a => $v) {
+			$query .=  str_replace(":","",$a);
+			$query .= " = " . $v;
+      if ($i < count($args['fields']))
+        $query .= " AND ";
+      else $query .= " ";
+      $i++;
+		}
+		$queryPrepared = $this->pdo->prepare($query);
+		if ($queryPrepared->execute(array_merge($args['fields'], $args['where']))) 
+			return (array('status' => 0, 'message' => 'Successfully updated.'));
+		else
+			return (array('status' => 1, 'message' => 'Adding to database failed.'));
 	}
 	
 	function addTopic($args) {

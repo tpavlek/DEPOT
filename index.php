@@ -20,7 +20,23 @@ if (!isset($_SESSION['username'])) {
     } else { ?>
     <div class='userinfo'>Welcome, <span class='username'><a href='?page=userControl'><?php echo $_SESSION['username']; ?> !</a></span> <img src="assets/icons/down_arrow_sm.png" onclick="showDropDown(event)" ></div>
     <div id="userControlDropDown" style="display:none">
-    	<span class="bold"><a href="?page=userControl&method=logOut">Log out</span>
+    	<span class="bold">Enable Colour Change:</span>
+    	<input type="checkbox" id="disableColourChange" 
+    	<?php 
+    			if ($_SESSION['colour_time'] != 0) echo "checked='yes'";
+    	?>
+    	 onchange="hideColourVariation()">
+    	<div id='colourChangePrefs' <?php if ($_SESSION['colour_time'] == 0) echo "style='display:none'" ?>>
+    		<input type="range" min="0" max="30000" value=
+    		<?php
+    			echo $_SESSION['colour_time'];
+    		?>
+    		class="obnoxiousColours" onchange="showNewValue()"/><button id="obnoxiousColoursGoButton" onclick="updateObnoxiousColours()"> Change </button> </div>
+    	<hr>
+    	<span class="bold"><a href="?page=userControl">User Control</a></span>
+    	<hr /> 
+    	<span class="bold"><a href="?page=userControl&method=logOut">Log out</a></span>
+    	
     </div>
     <?php
 }
@@ -119,6 +135,25 @@ echo (string)$page;
 <br>
 </div>
 <script type="text/javascript">
+	var alertFallback = true;
+   if (typeof console === "undefined" || typeof console.log === "undefined") {
+     console = {};
+     if (alertFallback) {
+         console.log = function(msg) {
+              alert(msg);
+         };
+     } else {
+         console.log = function() {};
+     }
+   }
+
+	var intervalBob;
+	
+	$(window).load(function(){
+		if($('#disableColourChange').is(':checked'))
+			intervalBob = setInterval(randpage, $('.obnoxiousColours').val());
+	});
+	
 	function rand_color() {
 		var letters = '0123456789ABCDEF'.split('');
 		var color = '#';
@@ -127,10 +162,39 @@ echo (string)$page;
 		}
 		return color;
 	}
-	randpage();
-	setInterval(randpage,2000);
+	
 	function randpage() {
 		$('body').css("background", rand_color());
+	}
+	
+	function showNewValue() {
+		$('#obnoxiousColoursGoButton').text(($('.obnoxiousColours').val() / 1000) + "s");
+	}	
+	
+	function updateObnoxiousColours() {
+		clearInterval(intervalBob);
+		intervalBob = setInterval(randpage,$('.obnoxiousColours').val());
+		$.ajax({
+			url: "api.php?type=sess&method=addToSession",
+			type: "POST",
+			data: {'colour_time': $('.obnoxiousColours').val()},
+			success: function(data) {
+			}
+		});
+	}
+	
+	function hideColourVariation() {
+		if($('#disableColourChange').is(':checked')) {
+			$('#colourChangePrefs').show('fast');
+			var ms = $('.obnoxiousColours').val();
+			if (ms == 0) ms = 3000;
+			intervalBob = setInterval(randpage,ms);
+			$.post("api.php?type=sess&method=addToSession", {'colour_time' : 3000});
+		} else {
+			$('#colourChangePrefs').hide('fast');
+			$.post("api.php?type=sess&method=addToSession", {'colour_time':0}, function(data){console.log(data)});
+			clearInterval(intervalBob);
+		}
 	}
 
 </script>

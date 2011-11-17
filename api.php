@@ -11,5 +11,9 @@ switch($_GET['type']) {
  		switch($_GET['method']) {
  			case 'adminDeleteTopic': print json_encode(APITopic::adminDeleteTopic()); break;
  		} break;
+ 	case 'sess': require_once('api/apisess.php');
+ 		switch($_GET['method']) {
+ 			case 'addToSession': print json_encode(APISess::addToSession()); break;
+ 		} break;
  }
 ?>
