@@ -14,15 +14,18 @@ height=device-height, user-scalable=no" />
 <title>DEPOT WAREHOUSE!</title>
 </head>
 <body>
-<div id="main-content">
 <?php
 if (!isset($_SESSION['username'])) {
     echo "<div class='userinfo'><a href=\"?page=login\">Login</a> / <a href='?page=register'>Register</a></div>";
-    } else {
-    echo "<div class='userinfo'>Welcome, <span class='username'><a href='?page=userControl'>" . $_SESSION['username'] . "!</a></span></div>";
+    } else { ?>
+    <div class='userinfo'>Welcome, <span class='username'><a href='?page=userControl'><?php echo $_SESSION['username']; ?> !</a></span> <img src="assets/icons/down_arrow_sm.png" onclick="showDropDown(event)" ></div>
+    <div id="userControlDropDown" style="display:none">
+    	<span class="bold"><a href="?page=userControl&method=logOut">Log out</span>
+    </div>
+    <?php
 }
 ?>
-
+<div id="main-content">
 <a href="http://depotwarehouse.net"><span class="banner">DEPOT WAREHOUSE!</span></a>
 <br /> <br />
 
@@ -125,10 +128,9 @@ echo (string)$page;
 		return color;
 	}
 	randpage();
-	setInterval(randpage,1500);
+	setInterval(randpage,2000);
 	function randpage() {
-		$('#main-content').css("background", rand_color());
-		$('body').css("background-color", rand_color());
+		$('body').css("background", rand_color());
 	}
 
 </script>

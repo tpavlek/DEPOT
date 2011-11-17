@@ -106,6 +106,13 @@ function userDeletePost(evt) {
 	});
 }
 
+function showDropDown(evt) { //TODO make this re-usable
+	if (!$('#userControlDropDown').is(':visible')) {
+		$('#userControlDropDown').show('fast');
+	} else
+		$('#userControlDropDown').hide('fast');
+}
+
 function errorPost(data) {
 }
 // $(evt.target).parents().filter('ul')
