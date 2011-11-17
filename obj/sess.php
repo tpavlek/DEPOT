@@ -14,7 +14,7 @@ class SessObj extends Page {
 			$_SESSION['username'] = $arr['username'];
 			$_SESSION['rank'] = $arr['rank'];
 			$_SESSION['uid'] = $arr['id'];
-			$_SESSION['colour_time'] == $arr['colour_time'];
+			$_SESSION['colour_time'] = $arr['colour_time'];
 			return(array('status' => 0, 'message' => 'Successfully logged in'));
 		} else
 			return (array('status' => 1, 'message' => 'Account not found in database'));
