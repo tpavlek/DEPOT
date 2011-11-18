@@ -122,17 +122,6 @@ echo (string)$page;
 <br>
 </div>
 <script type="text/javascript">
-	var alertFallback = true;
-   if (typeof console === "undefined" || typeof console.log === "undefined") {
-     console = {};
-     if (alertFallback) {
-         console.log = function(msg) {
-              alert(msg);
-         };
-     } else {
-         console.log = function() {};
-     }
-   }
 
 	var intervalBob;
 	
@@ -184,7 +173,7 @@ echo (string)$page;
 			$.post("api.php?type=sess&method=addToSession", {'colour_time' : 3000});
 		} else {
 			$('#colourChangePrefs').hide('fast');
-			$.post("api.php?type=sess&method=addToSession", {'colour_time':0}, function(data){console.log(data)});
+			$.post("api.php?type=sess&method=addToSession", {'colour_time':0});
 			clearInterval(intervalBob);
 		}
 	}
