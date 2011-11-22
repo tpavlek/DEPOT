@@ -101,7 +101,6 @@ function userDeletePost(evt) {
 		type: "POST",
 		dataType: "json",
 		success: hidePost,
-		error: errorPost,
 		data: {'pid': pid}
 	});
 }

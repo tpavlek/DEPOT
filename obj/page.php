@@ -109,8 +109,11 @@ class Page {
 			$post = new PostAction();
 			switch($method) {
 				case 'showForm': $this->html .= $post->showForm(); break;
+				case 'showEditForm': $this->html .= $post->showEditForm(); break;
 				case 'newReply': $result = $post->newReply(); 
 					$this->html .= "<span class='big'>" . $result['message'] ."</span>"; break;
+				case 'editPost': $result = $post->editPost();
+					$this->html .= "<span class='big'>" . $result['message'] . "</span>"; break;
 			}
 		}
 	}

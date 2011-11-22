@@ -83,11 +83,11 @@ if (isset($_GET['page'])) {
 		
 		case 'post': 
 			if (isset($_GET['method'])) {
-				switch ($_GET['method']) {
-					case 'newReply': $page->post("newReply"); break;
-				}
-			}
-			$page->post("showForm"); break;
+				$page->post($_GET['method']);
+			} else {
+				$page->post("showForm");
+			} 
+		break;
 	
 		case 'viewTopic': $page->viewTopic($_GET['tid']); break;
 

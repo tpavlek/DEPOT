@@ -51,7 +51,7 @@ class DB {
 		$i = 1;
 		foreach ($args['fields'] as $a => $v) {
 			$query .=  str_replace(":","",$a);
-			$query .= " = " . $v;
+			$query .= " = " . $a;
       if ($i < count($args['fields']))
         $query .= ", ";
       else $query .= " ";
@@ -61,12 +61,13 @@ class DB {
 		$query .= "WHERE ";
 		foreach ($args['where'] as $a => $v) {
 			$query .=  str_replace(":","",$a);
-			$query .= " = " . $v;
-      if ($i < count($args['fields']))
+			$query .= " = " . $a;
+      if ($i < count($args['where']))
         $query .= " AND ";
       else $query .= " ";
       $i++;
 		}
+		echo $query;
 		$queryPrepared = $this->pdo->prepare($query);
 		if ($queryPrepared->execute(array_merge($args['fields'], $args['where']))) 
 			return (array('status' => 0, 'message' => 'Successfully updated.'));
@@ -98,7 +99,30 @@ class DB {
 		}
 	}
 	
-	function addPost($args) { //TODO UPDATE POST COUNT
+	function updatePost($args) {
+		
+	}
+	
+	function editPost($args) {
+		if (!$this->isInDatabase(array('type' => 'post', 'value' => $args['where'][':pid'])))
+			return array('status' => 1, 'message' => "That post doesn't exist, gtfo");
+		else {
+			$ver1 = verifyString($args['fields'][':subject'], $GLOBALS['SUBJECT_MIN_LENGTH'], $GLOBALS['SUBJECT_MAX_LENGTH']);
+			$ver2 = verifyString($args['fields'][':message'], $GLOBALS['POST_MIN_LENGTH'], $GLOBALS['POST_MAX_LENGTH']);
+			if ($ver1['status'] == 1) {
+				$ver1['message'] = "Subject " . $ver1['message'];
+				return $ver1;
+			} else $args['fields'][':subject'] = validateString($args['fields'][':subject']);
+			if ($ver2['status'] == 1) {
+				$ver2['message'] = "Message " . $ver2['message'];
+				return $ver2;
+			} else $args['fields'][':message'] = validateString($args['fields'][':message']);
+			$args['fields'] = array_merge($args['fields'], array(':edit_count' => 'edit_count +1'));
+			return $this->update($args);
+		}
+	}
+	
+	function addPost($args) {
 		if (!$this->isInDatabase(array('type' => 'topic', 'value' => $args['fields'][':in_reply_to'])))
 			return array('status' => 1, 'message' => "That topic doesn't exist, you hobo");
 		else {
@@ -217,11 +241,12 @@ class DB {
 
 	function isInDatabase($args) {
 		switch ($args['type']) {
-			case 'email': $query= "SELECT id from user where email = :data"; break;
-			case 'username': $query="SELECT id from user where username = :data";
+			case 'email': $query = "SELECT id from user where email = :data"; break;
+			case 'username': $query = "SELECT id from user where username = :data";
 			break;
-			case 'topic': $query="SELECT tid from topics where tid = :data"; break;
-			case 'forum': $query="SELECT fid from forums where fid = :data"; break;
+			case 'topic': $query = "SELECT tid from topics where tid = :data"; break;
+			case 'forum': $query = "SELECT fid from forums where fid = :data"; break;
+			case 'post': $query = "SELECT pid from posts where pid = :data"; break;
 		}
 		$queryPrepared = $this->pdo->prepare($query);
 		$queryPrepared->bindParam(':data',$args['value']);
@@ -438,7 +463,6 @@ class DB {
 			$queryPrepared->bindParam(':uid', $uid);
 			$queryPrepared->execute();
 			$data = $queryPrepared->fetch();
-			print_r($data);
 			return ($data['rank'] == 'admin');
 		}
 	}

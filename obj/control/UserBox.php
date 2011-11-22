@@ -4,6 +4,7 @@ require_once('obj/forum/Post.php');
 require_once('obj/forum/Topic.php');
 require_once('obj/control/PostDeleteButton.php');
 require_once('obj/control/TopicDeleteButton.php');
+require_once('obj/control/PostEditButton.php');
 class UserBox {
 	private $user;
 	private $html;
@@ -15,14 +16,17 @@ class UserBox {
 		$this->html .= $this->buildUsername() . "<br />";
 		$this->html .= $this->buildUserPicture() . "<br />";
 		$this->html .= $this->buildPostCount() . "<br />";
+		$this->html .= "<div class='buttonrow'>";
 		if (key($id) == 'pid') {
 			$post = new Post($id['pid']);
 			$this->html .= new PostDeleteButton($post);
+			$this->html .= new PostEditButton($post);
 		} 
 		else if (key($id) == 'tid') {
 			$topic = new Topic($id['tid']);
 			$this->html .= new TopicDeleteButton($topic);
 		}
+		$this->html .= "</div>";
 		$this->html .= "</div>";
 		
 	}

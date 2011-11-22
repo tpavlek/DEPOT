@@ -6,8 +6,8 @@ class TopicDeleteButton extends Control {
 	
 	public function __construct($topic) {
 		parent::__construct();
+		$this->html = "";
 		$this->path = "assets/icons/del_sm.png";
-		$this->html = "<div class='buttonrow'>";
 		if (parent::permissions(array('permissions' => array('admin')))) {
 			$this->html .= "<img onClick='javascript:adminDeleteTopic(event)' height=10 src='" . $this->path . "' />";
 		}
@@ -18,7 +18,6 @@ class TopicDeleteButton extends Control {
 			}
 		}
 		}
-		$this->html .= "</div>";
 	}
 	
 	public function __toString() {
