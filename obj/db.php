@@ -67,12 +67,29 @@ class DB {
       else $query .= " ";
       $i++;
 		}
-		echo $query;
 		$queryPrepared = $this->pdo->prepare($query);
 		if ($queryPrepared->execute(array_merge($args['fields'], $args['where']))) 
 			return (array('status' => 0, 'message' => 'Successfully updated.'));
 		else
 			return (array('status' => 1, 'message' => 'Adding to database failed.'));
+	}
+	
+	function delete($args) {
+		$query = "DELETE from " . $args['table'];
+		$query .= " WHERE ";
+		$i = 1;
+    foreach ($args['fields'] as $a=>$v) {
+      $query .=  str_replace(":","",$a) . " = " . $a;
+      if ($i < count($args['fields'])) {
+        $query .= " AND ";
+      }
+      $i++;
+    }
+		$queryPrepared = $this->pdo->prepare($query);
+		if ($queryPrepared->execute($args['fields']))
+			return (array('status' => 0, 'message' => 'Successfully deleted from database'));
+		else
+			return (array('status' => 1, 'message' => 'Could not delete from database'));
 	}
 	
 	function addTopic($args) {
@@ -97,10 +114,6 @@ class DB {
 			}
 			return $result;
 		}
-	}
-	
-	function updatePost($args) {
-		
 	}
 	
 	function editPost($args) {
@@ -163,24 +176,6 @@ class DB {
 			return array('status' => 1, 'message' => 'Failed to update topic list'); 
 		
 	}
-
-	function delete($args) {
-		$query = "DELETE from " . $args['table'];
-		$query .= " WHERE ";
-		$i = 1;
-    foreach ($args['fields'] as $a=>$v) {
-      $query .=  str_replace(":","",$a) . " = " . $a;
-      if ($i < count($args['fields'])) {
-        $query .= " AND ";
-      }
-      $i++;
-    }
-		$queryPrepared = $this->pdo->prepare($query);
-		if ($queryPrepared->execute($args['fields']))
-			return (array('status' => 0, 'message' => 'Successfully deleted from database'));
-		else
-			return (array('status' => 1, 'message' => 'Could not delete from database'));
-	}
 	
 	function deleteTopic($tid) {
 		require_once('obj/forum/Topic.php');
@@ -233,6 +228,7 @@ class DB {
 	function isBanned($uid) {
 		$query = "SELECT rank from user where id = :uid";
 		$queryPrepared = $this->pdo->prepare($query);
+		
 		$queryPrepared->bindParam(':uid', $uid);
 		$queryPrepared->execute();
 		$arr = $queryPrepared->fetch();
