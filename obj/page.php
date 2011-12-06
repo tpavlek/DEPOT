@@ -8,6 +8,7 @@ class Page {
 	protected $db;
 
 	public function __construct() {
+		global $DATABASE;
 		$this->db = new DB($DATABASE['username'],$DATABASE['password'],$DATABASE['name'],$DATABASE['host']);
 		date_default_timezone_set('America/Edmonton');
 		$this->date = date("d-m-Y H:i:s");
