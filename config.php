@@ -1,4 +1,11 @@
 <?php
+$var1 = "hello";
+$DATABASE = array(
+	'username' => 'ebon',
+	'host' => 'localhost',
+	'password' => 'laIron00b',
+	'name' => 'depot'
+);
 
 $GLOBALS['TOPICS_PER_PAGE'] = 35;
 $POSTS_PER_PAGE = 35;

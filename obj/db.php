@@ -6,8 +6,8 @@ class DB {
 	private $pdo;
 
 	public function __construct($username, $password, $dbName, $host) {
-		$this->pdo = new 
-		PDO("mysql:host=localhost;dbname=depot","ebon","laIron00b");
+		global $DATABASE;
+		$this->pdo = new PDO("mysql:host=" . $host . ";dbname=" . $dbName,$username,$password);
 	}
 
 	static function getInstance() {
