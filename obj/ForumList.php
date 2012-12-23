@@ -13,7 +13,7 @@ class ForumList extends Page {
 	function showForums() {
 		$str = "<ul>";
 		foreach ($this->forumList as $forum) {
-			$str .= "<a href='?page=viewForum&fid=" . $forum['fid'] ."'>";
+			$str .= "<a href='?page=viewForum&fid=" . $forum['id'] ."'>";
 			$str .= "<li class='subject'>" . $forum['name'] . "</li></a>";
 			$str .= "<div class='author' style='text-align:right'><span><b>In Topic:</b> <a href='?page=viewTopic&tid=" . $forum['last_topic_id'] . "'>" . $forum['last_topic'] . "</a>";
 			$str .= "<br><span><b>By:</b><a href='?page=userProfile&uid=" . $forum['last_poster_id'] . "'> ". $forum['last_poster'] . "</span>";

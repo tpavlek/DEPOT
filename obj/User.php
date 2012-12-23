@@ -7,8 +7,6 @@ class User extends Page {
 	private $join_date;
 	private $rank;
 	private $postcount;
-	private $block;
-	private $points;
 	private $profilePic;
 
 	public function __construct($uid) {
@@ -19,8 +17,6 @@ class User extends Page {
 		$this->join_date = $arr['data']['join_date'];
 		$this->rank = $arr['data']['rank'];
 		$this->postcount = $arr['data']['postcount'];
-		$this->block = $arr['data']['block'];
-		$this->points = $arr['data']['points'];
 		$this->profilePic = $arr['data']['profile_pic'];
 	}
 
@@ -42,10 +38,6 @@ class User extends Page {
 	
 	function getPostcount() {
 		return $this->postcount;
-	}
-	
-	function getPoints() {
-		return $this->points;
 	}
 	
 	function getProfilePic() {

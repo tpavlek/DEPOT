@@ -1,5 +1,5 @@
 <?php
-require_once('obj/db.php');
+require_once('/home/ebon/DEPOT/obj/db.php');
 switch($_GET['type']) {
  	case 'post': require_once('api/post.php');
  		switch ($_GET['method']) {
@@ -13,7 +13,14 @@ switch($_GET['type']) {
  		} break;
  	case 'sess': require_once('api/apisess.php');
  		switch($_GET['method']) {
- 			case 'addToSession': print json_encode(APISess::addToSession()); break;
- 		} break;
+    case 'addToSession': print json_encode(APISess::addToSession()); break;
+    case 'logout': APISess::logout(); break;
+    case 'loginUser': print json_encode(APISess::loginUser()); break;
+    } break;
+
+  case 'register': require_once('api/register.php');
+    switch($_GET['method']) {
+    case 'registerUser': print json_encode(APIRegister::registerUser()); break;
+    } break;
  }
 ?>

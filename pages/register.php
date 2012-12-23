@@ -22,11 +22,6 @@ try {
 <input type="hidden" name="email" value=<?php echo $arr['contact/email']; ?> />
 <p><label for="username">Please choose a username: </label>
 <input class="textinput" type="text" name="username" size="30"> </p>
-<br><p><label for="block">Select your CS Block</label>
-<select name="block">
-<option value="2">2</option>
-<option value="3">3</option>
-</select></p>
 <input type="submit" value="Finish Registration">
 </form>
 </div>

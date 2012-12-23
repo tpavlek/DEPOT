@@ -105,6 +105,7 @@ function userDeletePost(evt) {
 	});
 }
 
+
 function showDropDown(evt) { //TODO make this re-usable
 	if (!$('#userControlDropDown').is(':visible')) {
 		$('#userControlDropDown').show('fast');

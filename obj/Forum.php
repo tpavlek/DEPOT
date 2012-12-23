@@ -15,10 +15,14 @@ class Forum extends Page {
 
 	function displayTopics() {
 		$str = "<ul>";
+		if ($this->topicList['status'] == 1) {
+			$str .= $this->topicList['message'];
+		} else {
 		foreach ($this->topicList['data'] as $topic) {
 			$str .= "<a href='?page=viewTopic&tid=" . $topic->getTid() . "'><li class='subject'>" . $topic->getSubject() . "</li></a>";
 			$str .= "<div class='author' style='text-align:right'><span><a href='?page=userProfile&uid=" . $topic->getLastReplyUID() . "'>" . $topic->getLastPoster() . "</a></span><br><span><a href='?page=viewTopic&tid=" . $topic->getTid() . "#pid_" . $topic->getLastReplyPID() . "'><img src='assets/icons/arrow_sm.png' height=10><a></span></div>";
 			$str .= "<hr>";
+		}
 		}
 		$str .= "</ul>";
 		return $str;

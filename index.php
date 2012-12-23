@@ -16,11 +16,10 @@ height=device-height, user-scalable=no" />
 <body>
 <div class='userinfo'>
 <div class="nav">
-	<a href="qod.php"><div><span class="mid">QoD</span></div></a>
-	<a href="?page=userList"><div><span class="mid">Leaderboard</span></div></a>
+	<a href="?page=userList"><div><span class="mid">Users</span></div></a>
 	<a href="?page=forum"><div><span>Forum</span></div></a>
+	<a href="?page=tekaef"><div><span>TEKAEF</span></div></a>
 </div>
-<a href="index.php"><span class="title">DEPOT!</span></a>
 <?php
 if (!isset($_SESSION['username'])) {
     echo "<span class='user'><a href='?page=login'>Login</a> / <a href='?page=register'>Register</a></span>";
@@ -95,6 +94,8 @@ if (isset($_GET['page'])) {
 		
 		case 'forum': $page->forum(); break;
 		
+		case 'tekaef': $page->tekaef(); break;
+
 		case 'userList': 
 			if (isset($_GET['orderBy'])) $page->userList($_GET['orderBy']);
 			else $page->userList("points"); 

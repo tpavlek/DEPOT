@@ -14,11 +14,14 @@ class UserList extends Page {
 		$str .= "<table cellspacing='0'><th><a href='?page=userlist&sort=orderBy'>Username</a></th>";
 		$str .= "<th><a href='?page=userList&orderBy=join_date'>Joined on</a></th>";
 		$str .= "<th><a href='?page=userList&orderBy=postcount'>Post Count</a></th>";
-		$str .= "<th><a href='?page=userList&orderBy=points'>Points</a></th>";
+		if ($this->userList['status'] == 1)
+			$str .= "<tr>" . $this->userList['message'] . "</tr>";
+		else {
 		foreach ($this->userList['data'] as $user) {
 			$str .= "<tr><td><a href='?page=userProfile&uid=".$user->getUID()."'>" 
   			. $user->getUsername(). "</td><td>" . $user->getJoinDate() . "</td><td>" 
-  			. $user->getPostcount() . "</td><td>" . $user->getPoints() . "</td></tr>";
+  			. $user->getPostcount() . "</td></tr>";
+		}
 		}
 		$str .= "</table>";
 		$str .= "</div>";

@@ -1,6 +1,6 @@
 <?php
-require_once('obj/db.php');
-require_once('config.php');
+require_once('/home/ebon/DEPOT/obj/db.php');
+require_once('/home/ebon/DEPOT/config.php');
 session_start();
 class Page {
 	public $date;
@@ -92,6 +92,14 @@ class Page {
 		require_once('obj/User.php');
 		$profile = new UserProfile(new User($uid));
 		$this->html .= $profile->showUser();
+	}
+
+
+	function tekaef() {
+		if (isset($_GET['old'])) {
+			include('tekaef/Old.php');
+		} else
+			include('tekaef/index.php');
 	}
 
 	function register($method) {

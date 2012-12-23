@@ -44,6 +44,7 @@ class Topic extends Page {
 	
 	function getReplies($args) {
 		$this->replies = $this->db->getRepliesInTopicByPage($this->tid, $args);
+		if ($this->replies['status'] == 1) return $this->replies['message'];
 		$str = "";
 		foreach ($this->replies['data'] as $post) {
 			$str .= "<ul id='pid_" . $post->getPID() . "'>";

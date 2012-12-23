@@ -12,6 +12,9 @@ background-color: #FFFF33;
 #main-content {
 }
 
+.menu_with_dropdown {
+inherit:none;
+}
 .title {
 	font-weight:bold;
 	font-size:120%;

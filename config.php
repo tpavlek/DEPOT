@@ -2,8 +2,8 @@
 $DATABASE = array (
 	'username' => 'ebon',
 	'host' => 'localhost',
-	'password' => 'green',
-	'name' => 'depot'
+	'password' => 'wubase',
+	'name' => 'ebon_depot'
 );
 
 

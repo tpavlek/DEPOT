@@ -27,15 +27,12 @@ $adventure=preg_replace('/_/',' ',$requestedadventure);
 <html>
 <head>
 		<title>TEKAEF</title>
-        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" type="text/css" href="happy.css">
 <meta name="HandheldFriendly" content="true" />
 <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no" />	
 </head>
 	<body>
 	
-<?php
-include("includes/header.php");
-?>
 <h1>The Epic Kitchen Adventures of Ebon and Friends</h1>
 <?php
 echo"
@@ -43,12 +40,11 @@ echo"
 ";
 $dir = glob($requestedadventure . '/*.jpg');
 foreach($dir as $file) {
-	echo "<img class=\"pics\" src=\"$file\" alt=\"$cap
-\"><br><br><div class=\"caption\">$cap[$i]</div><br>";
+	echo "<img class=\"pics\" src=\"$file\"><br><br><div class=\"caption\">$cap[$i]</div><br>";
         $i++;
 }
 echo"<p><br><br><a 
-href=\"Old.php\">Old Releases</a> 
+href=\"?page=tekaef&old=1\">Old Releases</a> 
 <br><a href=\"mailto:ebonwumon@depotwarehouse.net\">ebonwumon@depotwarehouse.net</a></p>";
 ?>
 </body>
