@@ -10,8 +10,9 @@ class DB {
 		$this->pdo = new PDO("mysql:host=" . $host . ";dbname=" . $dbName,$username,$password);
 	}
 
-	static function getInstance() {
-		return new DB("1","2","3","4");
+  static function getInstance() {
+    global $DATABASE;
+		return new DB($DATABASE['username'],$DATABASE['password'],$DATABASE['name'],$DATABASE['host']);
 	}
 	
 	function getPDO() {
@@ -137,7 +138,7 @@ class DB {
 		}
 	}
 	
-	function addPost($args) {
+  function addPost($args) {
 		if (!$this->isInDatabase(array('type' => 'topic', 'value' => $args['fields'][':in_reply_to'])))
 			return array('status' => 1, 'message' => "That topic doesn't exist, you hobo");
 		else {
@@ -161,7 +162,7 @@ class DB {
 				$this->updatePostCount($args['fields'][':author_uid']);
 			}
 			return $result;
-		}
+    }
 	}
 
 	function updateTopicList($post) {
@@ -293,12 +294,26 @@ class DB {
 		return $queryPrepared->fetch();
 	}
 
-	function getForumList() { //TODO status messages
-		$query = "SELECT * from forums ORDER by id";
+  function getForumList() { //TODO status messages
+    require_once('obj/Forum.php');
+		$query = "SELECT id from forums";
 		$queryPrepared = $this->pdo->prepare($query);
 		$queryPrepared->execute();
-		return $queryPrepared->fetchAll();
-	}
+    $arr = $queryPrepared->fetchAll();
+    $forumList = array();
+    foreach ($arr as $id) {
+      $forumList[] = new Forum($id['id']);
+    }
+    return $forumList;
+  }
+
+  function getForum($fid) {
+    $query = "SELECT * from forums where id = :fid";
+    $queryPrepared = $this->pdo->prepare($query);
+    $queryPrepared->bindParam(':fid', $fid);
+    $queryPrepared->execute();
+    return $queryPrepared->fetch();
+  }
 
 	function getUserList($args) { //TODO status messages and pagination
 		$query = "SELECT id from user ORDER BY ";
@@ -370,18 +385,18 @@ class DB {
 			return array('status' => 1, 'message' => 'Failed to update the profile picture in the database');
 	}
 
-	function getTopicsInForumByPage($fid, $args) {
+	function getTopicsInForumByPage($fid, $pageNum, $pageLimit) {
 		$query = "SELECT id from topics where in_forum = :fid ORDER by 
 			STR_TO_DATE(last_reply, '%d-%m-%Y %H:%i:%s')
-			DESC LIMIT " . ($args['pageNum'] * $args['pageLimit']) . ", " 
-			. $args['pageLimit'];
+			DESC LIMIT " . ($pageNum * $pageLimit) . ", " 
+			. $pageLimit;
 		$queryPrepared = $this->pdo->prepare($query);
 		$queryPrepared->bindParam(':fid', $fid);
 		if (!$queryPrepared->execute())
 			return array('status' => 1, 'message' => 'Could not retrieve 
-			topics <br> '. implode($queryPrepared->errorInfo()));
+			topics '. implode($queryPrepared->errorInfo()));
 		else {
-			require_once('obj/forum/Topic.php');
+			require_once('/home/ebon/DEPOT/obj/forum/Topic.php');
 			$arr = $queryPrepared->fetchAll();
 			$data = array();
 			foreach ($arr as $a) {
@@ -399,11 +414,11 @@ class DB {
 		else return array('status' => 0, 'data' => $queryPrepared);
 	}
 	
-	function getRepliesInTopicByPage($tid, $args) {
+	function getRepliesInTopicByPage($tid, $pageNum, $postsPerPage) {
 		$query = "SELECT id from posts where in_reply_to = :tid ORDER by 
 			STR_TO_DATE(date, '%d-%m-%Y %H:%i:%s')
-		  LIMIT " . ($args['pageNum'] * $args['postsPerPage']) . ", " 
-			. $args['postsPerPage'];
+		  LIMIT " . ($pageNum * $postsPerPage) . ", " 
+			. $postsPerPage;
 		$queryPrepared = $this->pdo->prepare($query);
 		$queryPrepared->bindParam(':tid', $tid);
 		if (!$queryPrepared->execute())
@@ -413,8 +428,8 @@ class DB {
 			require_once('obj/forum/Post.php');
 			$arr = $queryPrepared->fetchAll();
 			$data = array();
-			foreach ($arr as $a) {
-				$data[] = new Post($a['pid']);
+      foreach ($arr as $a) {
+				$data[] = new Post($a['id']);
 			}
 			return array('status' => 0, 'data' => $data);
 		}
@@ -473,7 +488,7 @@ class DB {
   }
 // TODO remove magic rank/profile_pic
   function registerUser($username, $email, $join_date) {
-    return $this->add(array('table' => 'user', 'fields' => array(':username' => $username, ':email' => $email, ':join_date' => $join_date, ':rank' => "user", ':profile_pic' => "uid_0.gif")));
+    return $this->add(array('table' => 'user', 'fields' => array(':username' => $username, ':email' => $email, ':join_date' => $join_date, ':rank' => "user", ':profile_pic' => "assets/profile/uid_0.gif")));
   }
 
 }

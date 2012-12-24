@@ -1,5 +1,5 @@
 <?php
-require_once('obj/page.php');
+require_once('/home/ebon/DEPOT/obj/page.php');
 class Post extends Page {
 
 	private $tid;
@@ -14,7 +14,7 @@ class Post extends Page {
 		parent::__construct();
 		$arr = $this->db->getPost($pid);
 		$this->tid = $arr['data']['in_reply_to'];
-		$this->pid = $arr['data']['pid'];
+		$this->pid = $arr['data']['id'];
 		$this->subject = $arr['data']['subject'];
 		$this->message = $arr['data']['message'];
 		$this->author = $arr['data']['author'];

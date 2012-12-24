@@ -2,18 +2,56 @@
 require_once('obj/page.php');
 class Forum extends Page {
 
-	private $fid;
+  private $fid;
+  private $name;
+  private $last_topic;
+  private $last_topic_tid;
+  private $last_poster;
+  private $last_poster_uid;
+  private $last_poster_pid;
 	private $topicList;
-	private $pageNum;
+  private $pageNum;
+  private $pageLimit;
 
-	public function __construct($fid,$args) {
-		parent::__construct();
-		$this->topicList = $this->db->getTopicsInForumByPage($fid, $args);
+	public function __construct($fid) {
+    parent::__construct();
+    $data = $this->db->getForum($fid);
+    $this->name = $data['name'];
+    $this->last_topic = $data['last_topic'];
+    $this->last_topic_tid = $data['last_topic_id'];
+    $this->last_poster = $data['last_poster'];
+    $this->last_poster_uid = $data['last_poster_id'];
+    $this->last_poster_pid = $data['last_poster_pid'];
 		$this->fid = $fid;
-		$this->pageNum = $args['pageNum'];
-	}
+  }
 
-	function displayTopics() {
+  public function getFid() {
+    return $this->fid;
+  }
+
+  function getName() {
+    return $this->name;
+  }
+
+  function getLastTopic() {
+    return $this->last_topic;
+  }
+
+  function getLastTopicTid() {
+    return $this->last_topic_tid;
+  }
+
+  function getTopics($pageNum, $pageLimit) {
+    $this->pageNum = $pageNum;
+    $this->pageLimit = $pageLimit;
+    $result = $this->db->getTopicsInForumByPage($this->fid, $this->pageNum, $this->pageLimit);
+    $this->topicList = $result['data'];
+    return $this->topicList;
+  }
+
+  //Todo GETTER FUNCTIONS
+
+	/*function displayTopics() {
 		$str = "<ul>";
 		if ($this->topicList['status'] == 1) {
 			$str .= $this->topicList['message'];
@@ -33,7 +71,7 @@ class Forum extends Page {
 			<a href='?page=newTopic&fid=" . $this->fid . "'><li class='big'>NEW TOPIC</li></a>
 			</ul>";
 		return $str;
-	}
+  }*/
 
 
 }

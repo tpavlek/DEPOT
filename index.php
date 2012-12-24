@@ -1,184 +1,105 @@
 <?php
-require_once("obj/page.php");
+require_once('obj/page.php');
+$page = new Page();
+$currentPage = (isset($_GET['page'])) ? $_GET['page'] : 'home.php';
 ?>
+
 <!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
-<meta name="HandheldFriendly" content="true" />
-<meta name="viewport" content="width=device-width, 
-height=device-height, user-scalable=no" />
-<script type="text/javascript" src="includes/jquery.js"></script>
-<script type="text/javascript" src="funcs/jsfuncs.js"></script>
-<link rel="stylesheet" type="text/css" href="style.css">
-<title>DEPOT WAREHOUSE!</title>
-</head>
-<body>
-<div class='userinfo'>
-<div class="nav">
-	<a href="?page=userList"><div><span class="mid">Users</span></div></a>
-	<a href="?page=forum"><div><span>Forum</span></div></a>
-	<a href="?page=tekaef"><div><span>TEKAEF</span></div></a>
-</div>
-<?php
-if (!isset($_SESSION['username'])) {
-    echo "<span class='user'><a href='?page=login'>Login</a> / <a href='?page=register'>Register</a></span>";
-    } else { ?>
-    <span class="user">Welcome, <span class='username'><a href='?page=userControl'><?php echo $_SESSION['username']; ?> !</a></span> <img src="assets/icons/down_arrow_sm.png" onclick="showDropDown(event)" ></div>
-    <div id="userControlDropDown" style="display:none">
-    	<span class="bold">Enable Colour Change:</span>
-    	<input type="checkbox" id="disableColourChange" 
-    	<?php 
-    			if ($_SESSION['colour_time'] != 0) echo "checked='yes'";
-    	?>
-    	 onchange="hideColourVariation()">
-    	<div id='colourChangePrefs' <?php if ($_SESSION['colour_time'] == 0) echo "style='display:none'" ?>>
-    		<input type="range" min="0" max="30000" value=
-    		<?php
-    			echo $_SESSION['colour_time'];
-    		?>
-    		class="obnoxiousColours" onchange="showNewValue()"/><button id="obnoxiousColoursGoButton" onclick="updateObnoxiousColours()"> </button> </div>
-    	<hr>
-    	<span class="bold"><a href="?page=userControl">User Control</a></span>
-    	<hr /> 
-    	<span class="bold"><a href="?page=userControl&method=logOut">Log out</a></span>
-    	</div>
-    	</span>
-<?php } ?>
+<html lang= "en">
+  <head>
+    <meta   charset=  "utf-8"  >
+    <title>  [FGT] Starcraft 2 Team  </title>  
+    <meta   name=  "viewport"   content=  "width=device-width, initial-scale=1.0"  >
+    <meta   name=  "description"   content=  ""  >
+    <meta   name=  "author"   content=  ""  >
+    <!-- Le styles -->  
+    <link   href=  "bootstrap/css/bootstrap.css"   rel=  "stylesheet">
+    <style>  
+      body   {
+        padding-top  : 60px  ; /* 60px to make the container go all the way to the bottom of the topbar */  
+      }
+    </style>  
+    <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+    <script src = "http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script> 
+    <script src = "bootstrap/js/bootstrap.min.js"></script>
+    <script src="funcs.js"></script>
+    <script type="text/javascript" src="http://yui.yahooapis.com/combo?2.6.0/build/yahoo/yahoo-min.js&2.6.0/build/event/event-min.js&2.6.0/build/connection/connection-min.js"></script>
 
-</div>
-<div id="main-content">
-<br /> <br />
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->  
+    <!--[if lt IE 9]>  
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>  
+    <![endif]-->  
 
-<?php
-if (isset($_SESSION['rank']) && $_SESSION['rank'] == 'admin') {
-	require_once('obj/AdminPage.php');
-	$page = new AdminPage();
-} else {
-	$page = new Page();
-}
-if (isset($_GET['page'])) {
-	switch ($_GET['page']) {
-		case 'login':
-			if (isset($_GET['method'])) {
-				$page->login($_GET['method']);
-			} else {
-			$page->login("showForm");
-			} break;
-		case 'register': 
-			if (isset($_GET['method'])) {
-				switch ($_GET['method']) {
-					case 'register': $page->register("register"); break;
-					case 'finishRegistration': $page->register("finishRegistration"); break;
-				}
-			} else $page->register("showForm"); break;
-		case 'userControl': 
-			if (isset($_GET['method'])) {
-				$page->userControl($_GET['method']);
-			} else {
-				$page->userControl("showForm"); 
-			} 
-		break;
-		
-		case 'post': 
-			if (isset($_GET['method'])) {
-				$page->post($_GET['method']);
-			} else {
-				$page->post("showForm");
-			} 
-		break;
-	
-		case 'viewTopic': $page->viewTopic($_GET['tid']); break;
+    <!-- Le fav and touch icons -->  
+    <link   rel=  "shortcut icon"   href=  "images/favicon.ico"  >
+    <link   rel=  "apple-touch-icon"   href=  "images/apple-touch-icon.png"  >
+    <link   rel=  "apple-touch-icon"   sizes=  "72x72"   href=  "images/apple-touch-icon-72x72.png"  >
+    <link   rel=  "apple-touch-icon"   sizes=  "114x114"   href=  "images/apple-touch-icon-114x114.png"  >
+  </head>  
+  <body>
+<div class="container">
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <a class="brand" href="index.php">Team [FGT]</a>
+      <ul class="nav">
+        <li class="active"><a href="index.php">Home</a></li> <!-- TODO make actives work -->
+        <li><a href="index.php?page=members.php">Members</a></li>
+        <li><a href="index.php?page=forum.php">Forum</a></li>
+      </ul>
+      <ul class="pull-right" style="padding-right:1em"> 
+        <?php if(!isset($_SESSION['username'])) { ?>
+        <div class="btn-group">
+          <a href="javascript:openGoogleWindow();" class="btn btn-success">Login</a>
+          <a href="#registerPopup" role="button" data-toggle="modal" class="btn btn-primary">Register</a>
+        </div> 
+        <?php } else { ?>
+        <div class="btn-group">
+          <a class="btn btn-primary" href="index.php?page=userProfile.php&uid=<?php echo $_SESSION['uid']?>">
+            <?php echo $_SESSION['username'];  ?>
+          </a>
+          <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li><a href="javascript:logout();">Logout</a></li>
+          </ul>
+        </div> <?php } ?>
+      </ul>
+    </div>
+  </div>
 
-		case 'viewForum': $page->viewForum($_GET['fid']); break;
-		
-		case 'forum': $page->forum(); break;
-		
-		case 'tekaef': $page->tekaef(); break;
+  <!-- Register popup -->
+  <div id="registerPopup" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="registerPopupLabel">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+      <h3 id="registerPopupLabel">Register With Google Account</h3>
+    </div>
+    <div class="modal-body">
+      <form class="form-horizontal" action="javascript:openGoogleWindow();">
+        <div class="control-group" id="inputUsernameControlGroup">
+          <label class="control-label" for="inputUsername">Username</label>
+          <div class="controls">
+            <input type="text" id="inputUsername" placeholder="Username">
+            <span class="help-inline" id="usernameError" style="display:none">Error signing up</span>
+          </div>
+        </div>
+        <div class="control-group">
+          <div class="controls">
+            <button type="submit" id="registerButton" class="btn btn-danger" href="javascript:openGoogleWindow();">Register with Google Account</button>
+          </div>
+        </div>
+      </form>
 
-		case 'userList': 
-			if (isset($_GET['orderBy'])) $page->userList($_GET['orderBy']);
-			else $page->userList("points"); 
-		break;
+    </div>
+    <div class="modal-footer">
+    </div>
+  </div>
+  <!-- Done with popup -->
 
-		case 'newTopic': 
-			if (isset($_GET['method'])) {
-				$page->newTopic($_GET['method']);
-			} else $page->newTopic("showForm"); 
-		break;
-			
-		case 'userProfile': if (!isset($_GET['uid'])) $page->redirect("userList");
-			else
-				$page->userProfile($_GET['uid']);
-			break;
-			
-		default: $page->fourohfour();
-	}
-} else {
-$page->blog();
-}
-echo "<br>";
-echo (string)$page;
-?>
-<br>
-</div>
-<script type="text/javascript">
 
-	var intervalBob;
-	
-	$(window).load(function(){
-
-		if($('#disableColourChange').is(':checked')) {
-			intervalBob = setInterval(randpage, $('.obnoxiousColours').val());
-			$('#obnoxiousColoursGoButton').text(($('.obnoxiousColours').val() / 1000) + "s");
-		}
-	});
-	
-	function rand_color() {
-		var letters = '0123456789ABCDEF'.split('');
-		var color = '#';
-		for (var i = 0; i < 6; i++) {
-			color += letters[Math.round(Math.random() * 15)];
-		}
-		return color;
-	}
-	
-	function randpage() {
-		$('body').css("background", rand_color());
-	}
-	
-	function showNewValue() {
-		$('#obnoxiousColoursGoButton').text(($('.obnoxiousColours').val() / 1000) + "s");
-	}	
-	
-	function updateObnoxiousColours() {
-		clearInterval(intervalBob);
-		intervalBob = setInterval(randpage,$('.obnoxiousColours').val());
-		$.ajax({
-			url: "api.php?type=sess&method=addToSession",
-			type: "POST",
-			data: {'colour_time': $('.obnoxiousColours').val()},
-			success: function(data) {
-			}
-		});
-	}
-	
-	function hideColourVariation() {
-		if($('#disableColourChange').is(':checked')) {
-			var ms = $('.obnoxiousColours').val();
-			if (ms == 0) ms = 3000;
-			$('.obnoxiousColours').val(ms);
-			$('#obnoxiousColoursGoButton').text(($('.obnoxiousColours').val() / 1000) + "s");
-			$('#colourChangePrefs').show('fast');
-			intervalBob = setInterval(randpage,ms);
-			$.post("api.php?type=sess&method=addToSession", {'colour_time' : 3000});
-		} else {
-			$('#colourChangePrefs').hide('fast');
-			$.post("api.php?type=sess&method=addToSession", {'colour_time':0});
-			clearInterval(intervalBob);
-		}
-	}
-
-</script>
+  <div   class=  "container"  >
+    <?php include "views/" . $currentPage; ?>
+  </div>
+</div>   <!-- /container -->  
 </body>
 </html>

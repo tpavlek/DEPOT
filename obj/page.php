@@ -4,7 +4,6 @@ require_once('/home/ebon/DEPOT/config.php');
 session_start();
 class Page {
 	public $date;
-	private $html;
 	protected $db;
 
 	public function __construct() {
@@ -12,10 +11,6 @@ class Page {
 		$this->db = new DB($DATABASE['username'],$DATABASE['password'],$DATABASE['name'],$DATABASE['host']);
 		date_default_timezone_set('America/Edmonton');
 		$this->date = date("d-m-Y H:i:s");
-	}
-
-	public function __toString() {
-		return (string)$this->html;	
 	}
 
 	function permissions($reqd) {
@@ -47,12 +42,13 @@ class Page {
 		$this->html = "<script src='http://feeds.feedburner.com/DepotWarehouseBlag?format=sigpro' type='text/javascript' ></script>";
 	}
 
-	function forum() {
+	function forumList() {
 		require_once('obj/ForumList.php');
 		$forumList = new ForumList();
-		if ($this->permissions("unbanned")) {
+    return $forumList;
+    /*if ($this->permissions("unbanned")) { permissions implementation
 			$this->html .= $forumList->showForums();
-		}
+    } */ 
 
 	}
 

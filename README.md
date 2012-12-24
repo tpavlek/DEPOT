@@ -1,3 +1,3 @@
-#DEPOT WAREHOUSE#
+#FGT Mainsite#
 
-A web-based forum and CMS solution in PHP with a (soon-to-be deprecated) frontend of piss-yellow
+A Starcraft II team site using the [DEPOT](http://github.com/Ebonwumon/DEPOT) backend for processing.

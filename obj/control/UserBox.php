@@ -1,10 +1,10 @@
 <?php
-require_once('obj/User.php');
-require_once('obj/forum/Post.php');
-require_once('obj/forum/Topic.php');
-require_once('obj/control/PostDeleteButton.php');
-require_once('obj/control/TopicDeleteButton.php');
-require_once('obj/control/PostEditButton.php');
+require_once('/home/ebon/DEPOT/obj/User.php');
+require_once('/home/ebon/DEPOT/obj/forum/Post.php');
+require_once('/home/ebon/DEPOT/obj/forum/Topic.php');
+require_once('/home/ebon/DEPOT/obj/control/PostDeleteButton.php');
+require_once('/home/ebon/DEPOT/obj/control/TopicDeleteButton.php');
+require_once('/home/ebon/DEPOT/obj/control/PostEditButton.php');
 class UserBox {
 	private $user;
 	private $html;

@@ -8,8 +8,13 @@ class ForumList extends Page {
 	public function __construct() {
 		parent::__construct();
 		$this->forumList = $this->db->getForumList();
-	}
+  }
 
+  function getForumList() {
+    return $this->forumList;
+  }
+
+/*jjjjjjjjjjjjjj
 	function showForums() {
 		$str = "<ul>";
 		foreach ($this->forumList as $forum) {
@@ -21,7 +26,7 @@ class ForumList extends Page {
 		}
 		$str .= "</ul>";
 		return $str;
-	}
+  } */
 }
 
 ?>

@@ -1,6 +1,6 @@
 <?php
-require_once('obj/page.php');
-require_once('obj/control/UserBox.php');
+require_once('/home/ebon/DEPOT/obj/page.php');
+require_once('/home/ebon/DEPOT/obj/control/UserBox.php');
 class Topic extends Page {
 
 	protected $fid;
@@ -28,7 +28,7 @@ class Topic extends Page {
 		$this->last_reply_pid = $arr['data']['last_reply_pid'];
 	}
 
-	function showTopic($args) {
+	/*function showTopic($args) {
 		$str = "<script src='funcs/lazyload.js'></script>";
 		$str .= "<div class='topic'>";
 		$str .= "<ul id='tid_" . $this->tid . "'><li class='subject'>" . $this->subject . "<hr></li>";
@@ -40,21 +40,13 @@ class Topic extends Page {
 		$str .= "<a href='?page=post&tid=" . $this->tid ."'>NEW REPLY</a>";
 		$str .= "</ul>";
 		return $str;
-	}
+  }*/
 	
-	function getReplies($args) {
-		$this->replies = $this->db->getRepliesInTopicByPage($this->tid, $args);
-		if ($this->replies['status'] == 1) return $this->replies['message'];
-		$str = "";
-		foreach ($this->replies['data'] as $post) {
-			$str .= "<ul id='pid_" . $post->getPID() . "'>";
-      $str .= "<li class='subject'>" . $post->getSubject() . "<hr></li>";
-      $str .= new UserBox($post->getAuthorUID(), array('pid' => $post->getPID()));
-      $str .= "<li class='message'>" . $post->getMessage() . "</li>";
-      $str .= "</ul>";
-		}
-		return $str;
-	}
+	function getReplies($pageNum, $postsPerPage) {//TODO handle result codes
+    $result = $this->db->getRepliesInTopicByPage($this->tid, $pageNum, $postsPerPage);
+    $this->replies = $result['data'];
+    return $this->replies;
+  }
 	
 	function isDeleted() {
 		return ($this->message == "[deleted]");

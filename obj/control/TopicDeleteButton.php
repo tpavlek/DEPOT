@@ -1,5 +1,5 @@
 <?php
-require_once('obj/control/Control.php');
+require_once('/home/ebon/DEPOT/obj/control/Control.php');
 class TopicDeleteButton extends Control {
 	private $path;
 	private $html;
