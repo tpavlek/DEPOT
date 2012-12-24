@@ -1,5 +1,6 @@
 <?php
 require_once('obj/forum/Topic.php');
+require_once('fragments/userBox.php');
 $topic = new Topic($_GET['tid']);
 $pageNum = (isset($_GET['pageNum'])) ? $_GET['pageNum'] : 0;
 $postsPerPage = 20; // TODO MAKE THIS LESS MAGIC
@@ -19,7 +20,11 @@ $replies = $topic->getReplies($pageNum, $postsPerPage);
       <?php echo $topic->getMessage(); ?>
     </div>
     <div class="span4">
-      <img class="pull-right" src="assets/profile/uid_0.gif" />
+      <div class="userBox pull-right">
+        <?php $userBox = new UserBox($topic->getAuthorUID());
+          print $userBox->getBox();
+        ?>
+      </div>
     </div>
   </div>
 </div>
@@ -32,7 +37,12 @@ $replies = $topic->getReplies($pageNum, $postsPerPage);
         <?php echo $post->getMessage(); ?>
       </div>
       <div class="span4">
-        <img class="pull-right" src="assets/profile/uid_0.gif" />
+        <div class="userBox pull-right">
+          <?php
+            $userBox = new UserBox($post->getAuthorUID());
+            print $userBox->getBox();
+          ?>
+        </div>
       </div>
     </div>
   </div>

@@ -1,0 +1,6 @@
+- implement post cooldown
+- fix js newtopic/newreply
+-lazy loading
+-pagination
+- navbar active selections
+-login permission checks for newtopic/newpost

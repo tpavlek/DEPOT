@@ -15,6 +15,22 @@ function newReply() {
   });
 }
 
+function newTopic() {
+  var fid= getURLParameter("fid");
+  $.ajax({
+    type: "POST",
+    dataType: "json",
+    url: "api.php?type=forum&method=newTopic&fid=" + fid,
+    data: {subject: $('#topicSubject').val(), message: $('#topicMessage').val()},
+    success: function(data) {
+      //ajax
+      console.log(data);
+    },
+    error: function(jqXHR) {
+      console.log(jqXHR);
+    }
+  });
+}
 function getLatestPosts() {
   var pids = [];
   $('#posts').find('div.post').each(function() { pids.push(this.id); });

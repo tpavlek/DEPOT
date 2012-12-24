@@ -13,7 +13,7 @@ class TopicAction extends Page {
 		return $str;
 	}
 	
-	function createTopic() {
+	function createTopic() { //TODO verify topic
 		require_once('funcs/verify.php');
 		if (!verifyString($_POST['subject'],3,100))
 			return array('status' => 1, 'message' => 'Subject is invalid');

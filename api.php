@@ -20,6 +20,7 @@ switch($_GET['type']) {
 
   case 'forum': require_once('api/forum.php'); require_once('api/apitopic.php');
     switch($_GET['method']) {
+    case 'newTopic': print json_encode(APIForum::newTopic()); break;
     case 'reply': print json_encode(APITopic::reply()); break;
     case 'getForums': print json_encode(APIForum::getForums()); break;
     case 'getTopicsInForumByPage': print json_encode(APIForum::getTopicsInForumByPage()); break;

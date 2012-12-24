@@ -24,7 +24,11 @@ class Page {
 					else return true;
 				} else return true; break;
 		}
-	}
+  }
+
+  function getDate() {
+    return $this->date;
+  }
 
 	function redirect($dest) {
 		$returnUrl = $_GET['page'];

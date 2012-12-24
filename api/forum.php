@@ -21,6 +21,18 @@ class APIForum {
     $db = DB::getInstance();
     return $db->getTopic($_GET['tid']);
   }
+
+  static function newTopic() {
+    $db = DB::getInstance();
+    //TODO verify login
+    $page = new Page(); // this seem slike a dirty hack TODO
+    $result = $db->addTopic(array('table' => 'topics', 'fields' => array(':subject' =>
+			$_POST['subject'], ':message' => nl2br($_POST['message']), ':author' => $_SESSION['username'], ':author_uid' =>
+			$_SESSION['uid'], ':last_poster' => $_SESSION['username'], ':date' => $page->getDate(), ':last_reply' =>
+			$page->getDate(), ':in_forum' => $_GET['fid'], ':last_reply_uid' => $_SESSION['uid'], ':last_reply_pid' => 0)));
+			return $result;
+
+  }
 }
 
 ?>

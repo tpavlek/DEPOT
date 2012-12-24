@@ -1,5 +1,5 @@
 <?php
-require_once('/home/ebon/DEPOT/obj/User.php');
+/*require_once('/home/ebon/DEPOT/obj/User.php');
 require_once('/home/ebon/DEPOT/obj/forum/Post.php');
 require_once('/home/ebon/DEPOT/obj/forum/Topic.php');
 require_once('/home/ebon/DEPOT/obj/control/PostDeleteButton.php');
@@ -50,6 +50,6 @@ class UserBox {
 		return $str;
 	}
 	
-}
+}*/
 
 ?>

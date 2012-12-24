@@ -1,5 +1,6 @@
 <?php
 require_once('obj/Forum.php');
+require_once('fragments/userBox.php');
 //TODO do pagenum right
 $pageNum = 0;
 $topicsPerPage = 25;
@@ -12,7 +13,7 @@ $topicList = $forum->getTopics($pageNum, $topicsPerPage);
     <h3><?php echo $forum->getName(); ?></h3>
   </div>
   <div class="span2">
-    <a href="#" class="btn btn-danger pull-right">New Topic</a>
+    <a href="#topicCreatePopup" role="button" data-toggle="modal" class="btn btn-danger pull-right">New Topic</a>
   </div>
 </div>
 </div>
@@ -41,7 +42,11 @@ $topicList = $forum->getTopics($pageNum, $topicsPerPage);
 echo $topic->getMessage();?>
           </div>
           <div class="span4">
-            <img class ="pull-right" src="assets/profile/uid_0.gif" /> <!-- todo profile sec -->
+            <div class="userBox pull-right">
+              <?php $userBox = new UserBox($topic->getAuthorUID());
+                print $userBox->getBox();
+              ?>
+            </div>
           </div>
         </div>
         <a class="btn btn-info" href="index.php?page=viewTopic.php&tid=<?php echo $topic->getTID();?>">View Thread</a>
@@ -51,4 +56,20 @@ echo $topic->getMessage();?>
 <?php } ?>
 </div>
 
-
+<!-- modal new topic button -->
+<div class="modal hide fade" role="dialog" tabindex="-1" id="topicCreatePopup" aria-labelledby="topicCreatePopupLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3 id="topicCreatePopupLabel">Topic Reply</h3>
+  </div>
+  <div class="modal-body">
+    <form action="javascript:newTopic();" style="text-align:center">
+    <input id="topicSubject" class="input-xxlarge" type="text" placeholder="Topic Subject..."><br>
+      <textarea id="topicMessage" class="input-xxlarge" rows="5" placeholder="Message..."></textarea>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn" data-dismiss="modal">Close</button>
+    <button type="submit" class="btn btn-success">Create Topic</button>
+  </form>
+  </div>
+</div>

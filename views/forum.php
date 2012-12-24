@@ -1,6 +1,7 @@
 <?php
 require_once('obj/page.php');
 require_once('obj/forum/Topic.php');
+require_once('fragments/userBox.php');
 $forumList = $page->forumList()->getForumList();
 ?>
 
@@ -29,7 +30,11 @@ $forumList = $page->forumList()->getForumList();
 echo $topic->getMessage();?>
           </div>
           <div class="span4">
-            <img class ="pull-right" src="assets/profile/uid_0.gif" /> <!-- todo profile sec -->
+            <div class="userBox pull-right">
+              <?php $userBox = new UserBox($topic->getAuthorUID());
+                print $userBox->getBox();
+              ?>
+            </div>
           </div>
         </div>
         <a class="btn btn-info" href="index.php?page=viewTopic.php&tid=<?php echo $topic->getTID();?>">View Thread</a>
