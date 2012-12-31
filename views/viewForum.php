@@ -1,17 +1,29 @@
 <?php
 require_once('obj/Forum.php');
 require_once('fragments/userBox.php');
-//TODO do pagenum right
-$pageNum = 0;
+$pageNum = (isset($_GET['pageNum'])) ? $_GET['pageNum'] - 1: 0;
 $topicsPerPage = 25;
 $forum = new Forum($_GET['fid']);
 $topicList = $forum->getTopics($pageNum, $topicsPerPage);
 ?>
 
 <div class="row-fluid">
-  <div class="span10">
+  <div class="span6">
     <h3><?php echo $forum->getName(); ?></h3>
   </div>
+  <div class ="span4">
+    <div class="pagination">
+      <ul>
+        <li><a href="#">«</a></li>
+        <?php $numPages = $forum->getForumPages($topicsPerPage); 
+          for ($i=1; $i <= $numPages; $i++) {
+            echo "<li><a href='index.php?page=viewForum.php&fid=" . $forum->getFid() ."&pageNum=". $i ."'>" . $i . "</a></li>"; 
+          }
+         ?>
+        <li><a href="#">»</a></li>
+        </ul>
+      </div>
+    </div>
   <div class="span2">
     <a href="#topicCreatePopup" role="button" data-toggle="modal" class="btn btn-danger pull-right">New Topic</a>
   </div>
@@ -30,7 +42,19 @@ $topicList = $forum->getTopics($pageNum, $topicsPerPage);
           </a>
         </div>
         <div class="span2">
-          <p><?php echo $topic->getAuthor(); ?></p>
+          Last Poster: 
+          <div class="btn-group">
+          <a class="btn btn-info" href="index.php?page=viewTopic.php&tid=<?php echo $topic->getTID() . '#' . $topic->getLastReplyPID() ?>"> 
+<?php echo $topic->getLastPoster(); ?></a>
+            <button class="btn btn-info btn-dropdown">
+              <span class="caret"</span>
+            </button>
+          </div>
+          <div class="dropdown-menu">
+            <ul>
+              <li><a>Hi</a></li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>

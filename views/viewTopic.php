@@ -2,13 +2,26 @@
 require_once('obj/forum/Topic.php');
 require_once('fragments/userBox.php');
 $topic = new Topic($_GET['tid']);
-$pageNum = (isset($_GET['pageNum'])) ? $_GET['pageNum'] : 0;
+$pageNum = (isset($_GET['pageNum'])) ? $_GET['pageNum'] - 1 : 0;
 $postsPerPage = 20; // TODO MAKE THIS LESS MAGIC
 $replies = $topic->getReplies($pageNum, $postsPerPage);
 ?>
 <div class="row-fluid">
-  <div class="span10" id="tid<?php echo $topic->getTID(); ?>">
+  <div class="span6" id="tid<?php echo $topic->getTID(); ?>">
     <h4><?php echo $topic->getSubject(); ?> </h4>
+  </div>
+  <div class="span4">
+    <div class="pagination">
+      <ul>
+        <li><a href="#">«</a></li>
+        <?php $numPages = $topic->getTopicPages($postsPerPage); 
+          for ($i=1; $i <= $numPages; $i++) {
+            echo "<li><a href='index.php?page=viewTopic.php&tid=" . $topic->getTID() ."&pageNum=". $i ."'>" . $i . "</a></li>"; 
+          }
+         ?>
+        <li><a href="#">»</a></li>
+      </ul>
+    </div>
   </div>
   <div class="span2">
     <a role="button" data-toggle="modal" href="#topicReplyPopup" class="btn btn-success pull-right">Reply</a>

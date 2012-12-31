@@ -404,7 +404,27 @@ class DB {
 			}
 			return array('status' => 0, 'data' => $data);
 		}
-	}
+  }
+
+  function getNumberOfTopicPages($tid, $pageLimit) {
+    $query = "SELECT id from posts where in_reply_to = :tid";
+    $queryPrepared = $this->pdo->prepare($query);
+    $queryPrepared->bindParam(':tid', $tid);
+    $queryPrepared->execute();
+    $num = $queryPrepared->rowCount() + 1; 
+    if ($num % $pageLimit == 0) return $num / $pageLimit;
+    else return (int)(($num / $pageLimit) + 1);
+  }
+
+  function getNumberOfForumPages($fid, $pageLimit) {
+    $query = "SELECT id from topics where in_forum = :fid";
+    $queryPrepared = $this->pdo->prepare($query);
+    $queryPrepared->bindParam(':fid', $fid);
+    $queryPrepared->execute();
+    $num = $queryPrepared->rowCount() + 1;
+    if ($num % $pageLimit == 0) return $num / $pageLimit;
+    else return (int)(($num / $pageLimit) + 1);
+  }
 	
 	function getRepliesAsPDOStatement($tid) {
 		$query = "SELECT id from posts where in_reply_to = :tid";

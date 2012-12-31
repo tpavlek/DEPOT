@@ -85,7 +85,11 @@ class Topic extends Page {
 	}
 	function getLastPoster() {
 		return $this->last_poster;
-	}
+  }
+
+  function getTopicPages($pageLimit) {
+    return $this->db->getNumberOfTopicPages($this->tid, $pageLimit);
+  }
 }
 
 ?>

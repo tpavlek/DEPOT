@@ -49,6 +49,10 @@ class Forum extends Page {
     return $this->topicList;
   }
 
+  function getForumPages($pageLimit) {
+    return $this->db->getNumberOfForumPages($this->fid, $pageLimit);
+  }
+
   //Todo GETTER FUNCTIONS
 
 	/*function displayTopics() {
