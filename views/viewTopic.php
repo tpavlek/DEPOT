@@ -1,13 +1,14 @@
 <?php
 require_once('obj/forum/Topic.php');
 require_once('fragments/userBox.php');
+require_once('fragments/replayBox.php');
 $topic = new Topic($_GET['tid']);
 $pageNum = (isset($_GET['pageNum'])) ? $_GET['pageNum'] - 1 : 0;
 $postsPerPage = 20; // TODO MAKE THIS LESS MAGIC
 $replies = $topic->getReplies($pageNum, $postsPerPage);
 ?>
 <div class="row-fluid">
-  <div class="span6" id="tid<?php echo $topic->getTID(); ?>">
+  <div class="span6"> 
     <h4><?php echo $topic->getSubject(); ?> </h4>
   </div>
   <div class="span4">
@@ -27,16 +28,22 @@ $replies = $topic->getReplies($pageNum, $postsPerPage);
     <a role="button" data-toggle="modal" href="#topicReplyPopup" class="btn btn-success pull-right">Reply</a>
   </div>
 </div>
-<div class="well">
+<div class="well topic" id="tid<?php echo $topic->getTID(); ?>">
   <div class="row-fluid">
     <div class="span8">
       <?php echo $topic->getMessage(); ?>
+      <?php $replayBox = new ReplayBox($topic->getReplay());
+print $replayBox->getBox();
+      ?>
     </div>
     <div class="span4">
       <div class="userBox pull-right">
         <?php $userBox = new UserBox($topic->getAuthorUID());
           print $userBox->getBox();
         ?>
+        <!--
+        <a role="button" data-toggle="modal" href="#postEditPopup" class="btn btn-caution" onclick="$(this).addClass('editing');">Edit</a>-->
+
       </div>
     </div>
   </div>
@@ -62,6 +69,7 @@ $replies = $topic->getReplies($pageNum, $postsPerPage);
 <?php } ?>
 </div>
 
+<iframe name='submit-iframe' id='submit-iframe-dood' style="display:none;"></iframe>
 <!-- modal reply button -->
 <div class="modal hide fade" role="dialog" tabindex="-1" id="topicReplyPopup" aria-labelledby="topicReplyPopupLabel" aria-hidden="true">
   <div class="modal-header">
@@ -69,13 +77,45 @@ $replies = $topic->getReplies($pageNum, $postsPerPage);
     <h3 id="topicReplyPopupLabel">Topic Reply</h3>
   </div>
   <div class="modal-body">
-    <form action="javascript:newReply();" style="text-align:center">
+    <form action="api.php?type=forum&method=reply" style="text-align:center" target='submit-iframe' method="POST" enctype="multipart/form-data">
     <input id="replySubject" class="input-xxlarge" type="text" placeholder="Reply Subject..." value="RE: <?php echo $topic->getSubject(); ?>"><br>
       <textarea id="replyMessage" class="input-xxlarge" rows="5" placeholder="Reply..."></textarea>
+      <div style="display:none; color:red;" class="error"></div>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn" data-dismiss="modal">Close</button>
-    <button type="submit" class="btn btn-success">Reply</button>
+    <button id="topicReplySubmitButton" type="submit" class="btn btn-success">Reply</button>
   </form>
   </div>
 </div>
+
+<!-- Modal edit buton-->
+<?php
+?>
+<div class="modal hide fade" role="dialog" tabindex="-1" id="postEditPopup" aria-labelledby="postEditPopupLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3 id="postEditPopupLabel">Post Edit</h3>
+  </div>
+  <div class="modal-body">
+    <form action="javascript:editPost();" style="text-align:center">
+    <input id="replySubject" class="input-xxlarge" type="text" placeholder="Reply Subject..." value="<?php echo $post->getSubject(); ?>"><br>
+    <textarea id="replyMessage" class="input-xxlarge" rows="5" placeholder="Reply..."><?php echo $post->getMessage(); ?></textarea>
+      <div style="display:none; color:red;" class="error"></div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn" data-dismiss="modal">Close</button>
+    <button id="postEditSubmitButton" type="submit" class="btn btn-success">Save edit</button>
+  </form>
+  </div>
+</div>
+<script>
+  $('#submit-iframe-dood').load(function() {
+    location.reload();
+    var result = JSON.parse($('#submit-iframe-dood').contents().find('body').html());
+    if (result.status) {
+      $('.error').html(result.message).show('fast');
+      $('#topicReplySubmitButton').removeClass('btn-success').addClass('btn-danger');
+    }
+  });
+</script>

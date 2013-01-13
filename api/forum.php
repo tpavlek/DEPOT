@@ -23,13 +23,20 @@ class APIForum {
   }
 
   static function newTopic() {
+    if (!(isset($_SESSION['uid']))) return array("status" => 1, "message" => "You must be logged in to do that");
     $db = DB::getInstance();
-    //TODO verify login
     $page = new Page(); // this seem slike a dirty hack TODO
-    $result = $db->addTopic(array('table' => 'topics', 'fields' => array(':subject' =>
+    $argArray = array('table' => 'topics', 'fields' => array(':subject' =>
 			$_POST['subject'], ':message' => nl2br($_POST['message']), ':author' => $_SESSION['username'], ':author_uid' =>
 			$_SESSION['uid'], ':last_poster' => $_SESSION['username'], ':date' => $page->getDate(), ':last_reply' =>
-			$page->getDate(), ':in_forum' => $_GET['fid'], ':last_reply_uid' => $_SESSION['uid'], ':last_reply_pid' => 0)));
+      $page->getDate(), ':in_forum' => $_GET['fid'], ':last_reply_uid' => $_SESSION['uid'], ':last_reply_pid' => 0));
+    if (isset($_FILES)) {
+       $replayPath =  "assets/replays/".$_SESSION['uid'] . "_" .date('YmdHis') .".SC2Replay";
+       move_uploaded_file($_FILES['replayUpload']['tmp_name'], $replayPath);
+       $argArray['fields'][':replay'] = $replayPath;
+    }
+    
+    $result = $db->addTopic($argArray);
 			return $result;
 
   }

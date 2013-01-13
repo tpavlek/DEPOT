@@ -12,7 +12,8 @@ class Topic extends Page {
 	private $author_uid;
 	private $replies;
 	private $last_reply_uid;
-	private $last_reply_pid;
+  private $last_reply_pid;
+  private $replay;
 
 	public function __construct($tid) {
 		parent::__construct();
@@ -25,7 +26,8 @@ class Topic extends Page {
 		$this->last_poster = $arr['data']['last_poster'];
 		$this->fid = $arr['data']['in_forum'];
 		$this->last_reply_uid = $arr['data']['last_reply_uid'];
-		$this->last_reply_pid = $arr['data']['last_reply_pid'];
+    $this->last_reply_pid = $arr['data']['last_reply_pid'];
+    $this->replay = $arr['data']['replay'];
 	}
 
 	/*function showTopic($args) {
@@ -89,6 +91,10 @@ class Topic extends Page {
 
   function getTopicPages($pageLimit) {
     return $this->db->getNumberOfTopicPages($this->tid, $pageLimit);
+  }
+
+  function getReplay() {
+    return $this->replay;
   }
 }
 

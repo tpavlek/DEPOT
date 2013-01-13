@@ -26,7 +26,10 @@ switch($_GET['type']) {
     case 'getTopicsInForumByPage': print json_encode(APIForum::getTopicsInForumByPage()); break;
     case 'getTopic': print json_encode(APIForum::getTopic()); break;
     } break;
-
+  case 'user': require_once('api/user.php'); 
+    switch($_GET['method']) {
+    case 'changePic': print json_encode(APIUser::changePic()); break;
+    } break;
   case 'register': require_once('api/register.php');
     switch($_GET['method']) {
     case 'registerUser': print json_encode(APIRegister::registerUser()); break;

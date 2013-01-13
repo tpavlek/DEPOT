@@ -9,22 +9,35 @@ function newReply() {
     url: myurl,
     data: {subject:mysubject , message: mymessage},
     success: function(data) {
-      //todo ajax loading
-      console.log(data);
+      if (data.status == 1) {
+        $('#topicReplySubmitButton').removeClass('btn-success').addClass('btn-danger');
+        $('#resultWarning').html(data.message).show('fast');
+      } else {
+        location.reload();
+      }
+    },
+    error: function(jqXHR) {
+      console.log(jqXHR);
     }
   });
 }
 
 function newTopic() {
   var fid= getURLParameter("fid");
+  var formData = new FormData($('form')[0]);
+  console.log(formData);
   $.ajax({
     type: "POST",
     dataType: "json",
     url: "api.php?type=forum&method=newTopic&fid=" + fid,
     data: {subject: $('#topicSubject').val(), message: $('#topicMessage').val()},
     success: function(data) {
-      //ajax
-      console.log(data);
+      if (data.status == 1) {
+        $('#createTopicSubmitButton').removeClass('btn-success').addClass('btn-danger');
+        $('#resultWarning').html(data.message).show('fast');
+      } else {
+        location.reload();
+      }
     },
     error: function(jqXHR) {
       console.log(jqXHR);

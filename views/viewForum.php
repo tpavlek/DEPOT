@@ -80,20 +80,34 @@ echo $topic->getMessage();?>
 <?php } ?>
 </div>
 
-<!-- modal new topic button -->
+  <!-- modal new topic button -->
+<iframe name='submit-iframe' id="submit-iframe-dood" style="display:none;" ></iframe>
 <div class="modal hide fade" role="dialog" tabindex="-1" id="topicCreatePopup" aria-labelledby="topicCreatePopupLabel" aria-hidden="true">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
     <h3 id="topicCreatePopupLabel">Topic Reply</h3>
   </div>
   <div class="modal-body">
-    <form action="javascript:newTopic();" style="text-align:center">
-    <input id="topicSubject" class="input-xxlarge" type="text" placeholder="Topic Subject..."><br>
-      <textarea id="topicMessage" class="input-xxlarge" rows="5" placeholder="Message..."></textarea>
+  <form action="api.php?type=forum&method=newTopic&fid=<?php echo $forum->getFID(); ?>" style="text-align:center" enctype="multipart/form-data" target='submit-iframe' method="POST">
+    <input id="topicSubject" name="subject" class="input-xxlarge" type="text" placeholder="Topic Subject..."><br>
+    <textarea id="topicMessage" name="message" class="input-xxlarge" rows="5" placeholder="Message..."></textarea>
+    <div style="display:none; font-color:red" id="resultWarning"></div>  
+    <label for='replayUpload'>Replay (Optional)</label><input name='replayUpload' type='file'>
+    <div class="error" style="display:none; color:red;"></div>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn" data-dismiss="modal">Close</button>
-    <button type="submit" class="btn btn-success">Create Topic</button>
+    <button id="createTopicSubmitButton" type="submit" class="btn btn-success">Create Topic</button>
   </form>
   </div>
 </div>
+  <script>
+  $('#submit-iframe-dood').load(function() {
+    var result = JSON.parse($('#submit-iframe-dood').contents().find('body').html());
+    if (result.status) {
+      $('.error').html(result.message).show('fast');
+      $('#createTopicSubmitButton').removeClass('btn-success').addClass('btn-danger');
+    }
+       });
+  </script>
+

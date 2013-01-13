@@ -1,11 +1,8 @@
-<html>
-<script type="text/javascript" src="includes/jquery.js"></script>
-<body>
 <?php
-$arr = array('arr1' => array('desu', 'two'), 'arr2' => array('key' => 'value'));
-$other = array('key2' => 'val2');
-print_r(array_merge($arr['arr2'], $other));
-?>
-</body>
-</html>
+require_once('battleNetParser.php');
 
+$bnet = new BattleNetParser('http://us.battle.net/sc2/en/profile/2275201/1/FGTlllllllll/');
+print $bnet->get_user();
+print $bnet->get_race();
+print_r ($bnet->get_1v1_league());
+?>

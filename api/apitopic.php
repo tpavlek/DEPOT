@@ -22,14 +22,15 @@ class APITopic {
   }*/
 
   static function reply() {
-    $db = DB::getInstance();
-    if (!isset($_SESSION['uid'])) return false; // todo actually return valuable
+    $db = DB::getInstance(); //TODO I don't think I need this
+    $page = new Page();
+    if (!isset($_SESSION['uid'])) return array('status' => 1, "message" => "You must be logged in to do that"); 
     $author = $_SESSION['username'];
     $author_uid = $_SESSION['uid'];
     $subject = $_POST['subject'];
     $message = nl2br($_POST['message']);
     $tid = $_GET['tid'];
-    $result = $db->addPost(array('table' => 'posts', 'fields' => array(':author' => $author, ':author_uid' => $author_uid, ':subject' => $subject, ':message' => $message, ':in_reply_to' => $tid, ':date' => date("d-m-Y H:i:s"))));
+    $result = $db->addPost(array('table' => 'posts', 'fields' => array(':author' => $author, ':author_uid' => $author_uid, ':subject' => $subject, ':message' => $message, ':in_reply_to' => $tid, ':date' => $page->getDate())));
     return($result);
   }
 }

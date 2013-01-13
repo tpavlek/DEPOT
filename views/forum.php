@@ -2,7 +2,9 @@
 require_once('obj/page.php');
 require_once('obj/forum/Topic.php');
 require_once('fragments/userBox.php');
-$forumList = $page->forumList()->getForumList();
+require_once('obj/ForumList.php');
+$forumList = new ForumList();
+$forumList = $forumList->getForumList();
 ?>
 
 <div class="accordion" id="forumList">

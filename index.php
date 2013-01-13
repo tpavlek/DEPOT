@@ -21,8 +21,8 @@ $currentPage = (isset($_GET['page'])) ? $_GET['page'] : 'home.php';
     </style>  
     <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
     <script src = "http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script> 
-    <script src = "bootstrap/js/bootstrap.min.js"></script>
-    <script src="funcs.js"></script>
+    <script type="text/javascript" src = "bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="funcs.js"></script>
     <script type="text/javascript" src="http://yui.yahooapis.com/combo?2.6.0/build/yahoo/yahoo-min.js&2.6.0/build/event/event-min.js&2.6.0/build/connection/connection-min.js"></script>
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->  
@@ -45,6 +45,7 @@ $currentPage = (isset($_GET['page'])) ? $_GET['page'] : 'home.php';
         <li class="active"><a href="index.php">Home</a></li> <!-- TODO make actives work -->
         <li><a href="index.php?page=members.php">Members</a></li>
         <li><a href="index.php?page=forum.php">Forum</a></li>
+        <li><a href="index.php?page=viewTournament.php&tourn_id=0">[FGT] Open</a></li>
       </ul>
       <ul class="pull-right" style="padding-right:1em"> 
         <?php if(!isset($_SESSION['username'])) { ?>
@@ -61,6 +62,7 @@ $currentPage = (isset($_GET['page'])) ? $_GET['page'] : 'home.php';
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu">
+            <li><a href="?page=editProfile.php">Edit Profile</a></li>
             <li><a href="javascript:logout();">Logout</a></li>
           </ul>
         </div> <?php } ?>

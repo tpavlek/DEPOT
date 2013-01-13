@@ -168,11 +168,11 @@ class DB {
 	function updateTopicList($post) {
 		$query = "UPDATE topics set last_poster = :last_poster, replies = replies + 1, last_reply = :last_reply, last_reply_uid = :last_reply_uid, last_reply_pid = :last_reply_pid where id = :tid";
 		$queryPrepared = $this->pdo->prepare($query);
-		$queryPrepared->bindParam(':last_poster', $post->getAuthor());
-		$queryPrepared->bindParam(':last_reply', $post->getDate());
-		$queryPrepared->bindParam(':last_reply_uid', $post->getAuthorUID());
-		$queryPrepared->bindParam(':last_reply_pid', $post->getPID());
-		$queryPrepared->bindParam(':tid', $post->getTID());
+		$queryPrepared->bindValue(':last_poster', $post->getAuthor());
+		$queryPrepared->bindValue(':last_reply', $post->getDate());
+		$queryPrepared->bindValue(':last_reply_uid', $post->getAuthorUID());
+		$queryPrepared->bindValue(':last_reply_pid', $post->getPID());
+		$queryPrepared->bindValue(':tid', $post->getTID());
 		if ($queryPrepared->execute())
 			return array('status' => 0, 'message' => 'Successfully updated topic list');
 		else
@@ -215,7 +215,7 @@ class DB {
 	function getLastReply($tid) {
 		$query = "SELECT id from posts where in_reply_to = :tid ORDER BY STR_TO_DATE(date, '%d-%m-%Y %H:%i:%s') DESC LIMIT 0,1";
 		$queryPrepared = $this->pdo->prepare($query);
-		$queryPrepared->bindParam(':tid', $tid);
+		$queryPrepared->bindValue(':tid', $tid);
 		if (!$queryPrepared->execute()) return array('status' => 1, 'message' => 'Could not get last post');
 		return array('status' => 0, 'data' => $queryPrepared->fetch());
 	}
@@ -223,7 +223,7 @@ class DB {
 	function getLastTopic($fid) {
 		$query = "SELECT id from topics where in_forum = :fid ORDER BY STR_TO_DATE(date, '%d-%m-%Y %H:%i:%s') DESC";
 		$queryPrepared = $this->pdo->prepare($query);
-		$queryPrepared->bindParam(':fid', $fid);
+		$queryPrepared->bindValue(':fid', $fid);
 		if (!$queryPrepared->execute()) return array('status' => 1, 'message' => 'Could not get last topic');
 		else return array('status' => 0, 'data' => $queryPrepared->fetch());
 	}
@@ -232,7 +232,7 @@ class DB {
 		$query = "SELECT rank from user where id = :uid";
 		$queryPrepared = $this->pdo->prepare($query);
 		
-		$queryPrepared->bindParam(':uid', $uid);
+		$queryPrepared->bindValue(':uid', $uid);
 		$queryPrepared->execute();
 		$arr = $queryPrepared->fetch();
 		return ($arr['rank'] == "banned");
@@ -248,7 +248,7 @@ class DB {
 			case 'post': $query = "SELECT id from posts where id = :data"; break;
 		}
 		$queryPrepared = $this->pdo->prepare($query);
-		$queryPrepared->bindParam(':data',$args['value']);
+		$queryPrepared->bindValue(':data',$args['value']);
 		$queryPrepared->execute();
 		if ($queryPrepared->rowCount() != 0) return true;
 		else return false;
@@ -257,7 +257,7 @@ class DB {
 	function isTopicAuthor($tid, $uid) {
 		$query = "SELECT author_uid from topics where id = :tid";
 		$queryPrepared = $this->pdo->prepare($query);
-		$queryPrepared->bindParam(':tid', $tid);
+		$queryPrepared->bindValue(':tid', $tid);
 		$queryPrepared->execute();
 		$data = $queryPrepared->fetch();
 		return ($data['author_uid'] == $uid);
@@ -266,7 +266,7 @@ class DB {
 	function isPostAuthor($pid, $uid) {
 		$query = "SELECT author_uid from posts where id = :pid";
 		$queryPrepared = $this->pdo->prepare($query);
-		$queryPrepared->bindParam(':pid', $pid);
+		$queryPrepared->bindValue(':pid', $pid);
 		$queryPrepared->execute();
 		$data = $queryPrepared->fetch();
 		return ($data['author_uid'] == $uid);
@@ -286,7 +286,7 @@ class DB {
 		}
 		$query .= "from user where email = :email";
 		$queryPrepared = $this->pdo->prepare($query);
-		$queryPrepared->bindParam(':email', $email);
+		$queryPrepared->bindValue(':email', $email);
 		$queryPrepared->execute();
 		if ($queryPrepared->rowCount() == 0) {
 			return (array('status' => 1, 'message' => "User not found in database"));
@@ -310,7 +310,7 @@ class DB {
   function getForum($fid) {
     $query = "SELECT * from forums where id = :fid";
     $queryPrepared = $this->pdo->prepare($query);
-    $queryPrepared->bindParam(':fid', $fid);
+    $queryPrepared->bindValue(':fid', $fid);
     $queryPrepared->execute();
     return $queryPrepared->fetch();
   }
@@ -339,7 +339,7 @@ class DB {
 	function getUser($uid) {
 		$query = "SELECT id, username, rank, email, join_date, postcount, profile_pic from user WHERE id = :uid";
     $queryPrepared = $this->pdo->prepare($query);
-		$queryPrepared->bindParam(':uid', $uid);
+		$queryPrepared->bindValue(':uid', $uid);
 		if (!$queryPrepared->execute()) 
 			return array('status' => 1, 'message' => 'Could not read user data');
 		else
@@ -351,12 +351,12 @@ class DB {
 			:last_topic_id, last_poster = :last_poster, last_poster_id = 
 			:last_poster_id, last_poster_pid = :last_poster_pid where id = :fid";
 		$queryPrepared = $this->pdo->prepare($query);
-		$queryPrepared->bindParam(':last_topic', $topic->getSubject());
-		$queryPrepared->bindParam(':last_topic_id', $topic->getTid());
-		$queryPrepared->bindParam(':last_poster', $topic->getAuthor());
-		$queryPrepared->bindParam(':last_poster_id', $topic->getAuthorUID());
-		$queryPrepared->bindParam(':last_poster_pid', $topic->getLastReplyPID());
-		$queryPrepared->bindParam(':fid', $topic->getFID());
+		$queryPrepared->bindValue(':last_topic', $topic->getSubject());
+		$queryPrepared->bindValue(':last_topic_id', $topic->getTid());
+		$queryPrepared->bindValue(':last_poster', $topic->getAuthor());
+		$queryPrepared->bindValue(':last_poster_id', $topic->getAuthorUID());
+		$queryPrepared->bindValue(':last_poster_pid', $topic->getLastReplyPID());
+		$queryPrepared->bindValue(':fid', $topic->getFID());
 		if ($queryPrepared->execute())
 			return array('status' => 0, 'message' => 'Successfully updated forum list');
 		else
@@ -366,8 +366,8 @@ class DB {
 	function updatePostCount($uid, $num=1) {
 		$query = "UPDATE user set postcount = postcount + :num where id = :uid";
 		$queryPrepared = $this->pdo->prepare($query);
-		$queryPrepared->bindParam(':num', $num);
-		$queryPrepared->bindParam(':uid', $uid);
+		$queryPrepared->bindValue(':num', $num);
+		$queryPrepared->bindValue(':uid', $uid);
 		if($queryPrepared->execute())
 			return array('status' => 0, 'message' => 'Post count updated successfully');
 		else
@@ -377,8 +377,8 @@ class DB {
 	function updateProfilePic($uid, $path) {
 		$query = "UPDATE user set profile_pic = :profile_pic where id = :uid";
 		$queryPrepared = $this->pdo->prepare($query);
-		$queryPrepared->bindParam(':profile_pic', $path);
-		$queryPrepared->bindParam(':uid', $uid);
+		$queryPrepared->bindValue(':profile_pic', $path);
+		$queryPrepared->bindValue(':uid', $uid);
 		if ($queryPrepared->execute())
 			return array('status' => 0, 'message' => 'Successfully changed profile picture');
 		else
@@ -391,7 +391,7 @@ class DB {
 			DESC LIMIT " . ($pageNum * $pageLimit) . ", " 
 			. $pageLimit;
 		$queryPrepared = $this->pdo->prepare($query);
-		$queryPrepared->bindParam(':fid', $fid);
+		$queryPrepared->bindValue(':fid', $fid);
 		if (!$queryPrepared->execute())
 			return array('status' => 1, 'message' => 'Could not retrieve 
 			topics '. implode($queryPrepared->errorInfo()));
@@ -409,7 +409,7 @@ class DB {
   function getNumberOfTopicPages($tid, $pageLimit) {
     $query = "SELECT id from posts where in_reply_to = :tid";
     $queryPrepared = $this->pdo->prepare($query);
-    $queryPrepared->bindParam(':tid', $tid);
+    $queryPrepared->bindValue(':tid', $tid);
     $queryPrepared->execute();
     $num = $queryPrepared->rowCount() + 1; 
     if ($num % $pageLimit == 0) return $num / $pageLimit;
@@ -419,7 +419,7 @@ class DB {
   function getNumberOfForumPages($fid, $pageLimit) {
     $query = "SELECT id from topics where in_forum = :fid";
     $queryPrepared = $this->pdo->prepare($query);
-    $queryPrepared->bindParam(':fid', $fid);
+    $queryPrepared->bindValue(':fid', $fid);
     $queryPrepared->execute();
     $num = $queryPrepared->rowCount() + 1;
     if ($num % $pageLimit == 0) return $num / $pageLimit;
@@ -429,7 +429,7 @@ class DB {
 	function getRepliesAsPDOStatement($tid) {
 		$query = "SELECT id from posts where in_reply_to = :tid";
 		$queryPrepared = $this->pdo->prepare($query);
-		$queryPrepared->bindParam(':tid', $tid);
+		$queryPrepared->bindValue(':tid', $tid);
 		if (!$queryPrepared->execute()) return array('status' => 1, 'message' => 'Could not retrieve posts');
 		else return array('status' => 0, 'data' => $queryPrepared);
 	}
@@ -440,7 +440,7 @@ class DB {
 		  LIMIT " . ($pageNum * $postsPerPage) . ", " 
 			. $postsPerPage;
 		$queryPrepared = $this->pdo->prepare($query);
-		$queryPrepared->bindParam(':tid', $tid);
+		$queryPrepared->bindValue(':tid', $tid);
 		if (!$queryPrepared->execute())
 			return array('status' => 1, 'message' => 'Could not retrieve posts 
 			<br> ' . implode($queryPrepared->errorInfo()));
@@ -458,7 +458,7 @@ class DB {
 	function getPost($pid) {
 		$query = "SELECT id, author, subject, message, in_reply_to, date, author_uid from posts where id = :pid";
 		$queryPrepared = $this->pdo->prepare($query);
-		$queryPrepared->bindParam(':pid', $pid);
+		$queryPrepared->bindValue(':pid', $pid);
 		if (!$queryPrepared->execute())
 			return array('status' => 1, 'message' => 'could not get post');
 		else {
@@ -468,10 +468,10 @@ class DB {
 
 	function getTopic($tid) {
     $query = "SELECT subject, author, last_poster, id, author_uid, 
-    message, in_forum, last_reply_uid, last_reply_pid from 
+    message, in_forum, last_reply_uid, last_reply_pid, replay from 
 			topics WHERE id = :tid";
     $queryPrepared = $this->pdo->prepare($query);
-		$queryPrepared->bindParam(':tid', $tid);
+		$queryPrepared->bindValue(':tid', $tid);
 		if (!$queryPrepared->execute()) 
 			return array('status' => 1, 'message' => 'Could not read topic from database');
 		else
@@ -481,7 +481,7 @@ class DB {
 	function getTopicSubject($tid) {
 		$query = "SELECT subject from topics WHERE id = :tid";
     $queryPrepared = $this->pdo->prepare($query);
-		$queryPrepared->bindParam(':tid', $tid);
+		$queryPrepared->bindValue(':tid', $tid);
 		if (!$queryPrepared->execute()) 
 			return "";
 		else {
@@ -496,7 +496,7 @@ class DB {
 		else {
 			$query = "SELECT rank from user where id = :uid";
 			$queryPrepared = $this->pdo->prepare($query);
-			$queryPrepared->bindParam(':uid', $uid);
+			$queryPrepared->bindValue(':uid', $uid);
 			$queryPrepared->execute();
 			$data = $queryPrepared->fetch();
 			return ($data['rank'] == 'admin');
@@ -509,6 +509,22 @@ class DB {
 // TODO remove magic rank/profile_pic
   function registerUser($username, $email, $join_date) {
     return $this->add(array('table' => 'user', 'fields' => array(':username' => $username, ':email' => $email, ':join_date' => $join_date, ':rank' => "user", ':profile_pic' => "assets/profile/uid_0.gif")));
+  }
+
+  function getTournament($tourn_id) {
+    $query = "SELECT * from tournaments where id = :tourn_id";
+    $queryPrepared = $this->pdo->prepare($query);
+    $queryPrepared->bindValue(':tourn_id', $tourn_id);
+    $queryPrepared->execute();
+    return $queryPrepared->fetch();
+  }
+
+  function getMapByName($name) {
+    $query = "SELECT * from maps where name = :name";
+    $queryPrepared = $this->pdo->prepare($query);
+    $queryPrepared->bindValue(':name', $name);
+    $queryPrepared->execute();
+    return $queryPrepared->fetch();
   }
 
 }
