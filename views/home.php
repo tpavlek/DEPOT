@@ -27,7 +27,7 @@ outcome. That brings us to today. Next, the world.
       </div>
     </div>
     <div class="span4"><h2>Mission Statement</h2>
-      <p>Dicking around is a good skill toi have</p>
+      <p>Solving starcraft is a good skill toi have</p>
     </div>
   </div>
 </section>
