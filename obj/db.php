@@ -73,8 +73,10 @@ class DB {
 		$queryPrepared = $this->pdo->prepare($query);
 		if ($queryPrepared->execute(array_merge($args['fields'], $args['where']))) 
 			return (array('status' => 0, 'message' => 'Successfully updated.'));
-		else
-			return (array('status' => 1, 'message' => 'Adding to database failed.'));
+    else {
+      print_r($queryPrepared->errorInfo());
+      return (array('status' => 1, 'message' => 'Adding to database failed.'));
+    }
 	}
 	
 	function delete($args) {
@@ -119,21 +121,21 @@ class DB {
 		}
 	}
 	
-	function editPost($args) {
-		if (!$this->isInDatabase(array('type' => 'post', 'value' => $args['where'][':pid'])))
+  function editPost($pid, $subject, $message) {
+		if (!$this->isInDatabase(array('type' => 'post', 'value' => $pid)))
 			return array('status' => 1, 'message' => "That post doesn't exist, gtfo");
 		else {
-			$ver1 = verifyString($args['fields'][':subject'], $GLOBALS['SUBJECT_MIN_LENGTH'], $GLOBALS['SUBJECT_MAX_LENGTH']);
-			$ver2 = verifyString($args['fields'][':message'], $GLOBALS['POST_MIN_LENGTH'], $GLOBALS['POST_MAX_LENGTH']);
+			$ver1 = verifyString($subject, $GLOBALS['SUBJECT_MIN_LENGTH'], $GLOBALS['SUBJECT_MAX_LENGTH']);
+			$ver2 = verifyString($message, $GLOBALS['POST_MIN_LENGTH'], $GLOBALS['POST_MAX_LENGTH']);
 			if ($ver1['status'] == 1) {
 				$ver1['message'] = "Subject " . $ver1['message'];
 				return $ver1;
-			} else $args['fields'][':subject'] = validateString($args['fields'][':subject']);
+			} else $args['fields'][':subject'] = validateString($subject);
 			if ($ver2['status'] == 1) {
 				$ver2['message'] = "Message " . $ver2['message'];
 				return $ver2;
-			} else $args['fields'][':message'] = validateString($args['fields'][':message']);
-			$args['fields'] = array_merge($args['fields'], array(':edit_count' => 'edit_count +1'));
+      } else $args['fields'][':message'] = validateString($message);
+      $args = array('table' => 'posts', 'fields' => array(':subject' => $subject, ':message' => $message), 'where' => array(':id' => $pid)); 
 			return $this->update($args);
 		}
 	}
@@ -186,14 +188,14 @@ class DB {
 		if ($result['status'] == 1) return $result;
 		$data = $result['data'];
 		$topic = new Topic($tid);
-		$result = $this->delete(array('table' => 'topics', 'fields' => array(':tid' => $tid)));
+		$result = $this->delete(array('table' => 'topics', 'fields' => array(':id' => $tid)));
 		if ($result['status'] == 1) return $result;
 		else $this->updatePostCount($topic->getAuthorUID(), -1);
 		while ($item = $data->fetch()) {
-			$this->deletePost($item['pid']);
+			$this->deletePost($item['id']);
 		}
 		$newTid = $this->getLastTopic($topic->getFID());
-		$this->updateForumList(new Topic($newTid['data']['tid']));
+		$this->updateForumList(new Topic($newTid['data']['id']));
 		return array('status' => 0, 'message' => 'Everything is gone');
 	}
 	
@@ -201,7 +203,7 @@ class DB {
 		require_once('obj/forum/Post.php');
 		require_once('obj/forum/Topic.php');
 		$post = new Post($pid);
-		$result = $this->delete(array('table' => 'posts', 'fields' => array(':pid' => $pid)));
+		$result = $this->delete(array('table' => 'posts', 'fields' => array(':id' => $pid)));
 		if ($result['status'] == 1) return $result;
 		$this->updatePostCount($post->getAuthorUID(), -1);
 		$topic = new Topic($post->getTID());
@@ -218,7 +220,16 @@ class DB {
 		$queryPrepared->bindValue(':tid', $tid);
 		if (!$queryPrepared->execute()) return array('status' => 1, 'message' => 'Could not get last post');
 		return array('status' => 0, 'data' => $queryPrepared->fetch());
-	}
+  }
+
+  function hasReplies($tid) {
+    $query = "SELECT id from posts where in_reply_to = :tid";
+		$queryPrepared = $this->pdo->prepare($query);
+    $queryPrepared->bindValue(':tid', $tid);
+    $queryPrepared->execute();
+    if ($queryPrepared->rowCount() > 0) return true;
+    else return false;
+  }
 	
 	function getLastTopic($fid) {
 		$query = "SELECT id from topics where in_forum = :fid ORDER BY STR_TO_DATE(date, '%d-%m-%Y %H:%i:%s') DESC";

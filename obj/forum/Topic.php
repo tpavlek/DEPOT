@@ -96,6 +96,11 @@ class Topic extends Page {
   function getReplay() {
     return $this->replay;
   }
+
+  function hasReplies() {
+    $result = $this->db->hasReplies($this->tid);  
+    return $result;
+  }
 }
 
 ?>

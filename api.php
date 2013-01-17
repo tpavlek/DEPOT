@@ -25,6 +25,9 @@ switch($_GET['type']) {
     case 'getForums': print json_encode(APIForum::getForums()); break;
     case 'getTopicsInForumByPage': print json_encode(APIForum::getTopicsInForumByPage()); break;
     case 'getTopic': print json_encode(APIForum::getTopic()); break;
+    case 'editPost': print json_encode(APIForum::editPost()); break;
+    case 'deletePost': print json_encode(APIForum::deletePost()); break;
+    case 'deleteTopic': print json_encode(APIForum::deleteTopic()); break;
     } break;
   case 'user': require_once('api/user.php'); 
     switch($_GET['method']) {

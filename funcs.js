@@ -119,3 +119,37 @@ function handleOpenIDResponse(obj) {
   }
 }
 
+function deletePost(myPid) {
+  $.ajax({
+    type: "POST",
+    url: "api.php?type=forum&method=deletePost",
+    dataType: "json",
+    data: {pid: myPid},
+    success: function(data) {
+      if (data.status) {
+        //TODO ERRORS
+      } else {
+        $('#pid'+myPid).hide('fast');
+      }
+    },
+    error: function(jqXHR) { console.log(jqXHR)}
+  });
+}
+
+function deleteTopic(myTid) {
+  $.ajax({
+    type: "POST",
+    url: "api.php?type=forum&method=deleteTopic",
+    dataType: "json",
+    data: {tid: myTid},
+    success: function(data, stat, jqXHR) {
+      if (data.status) {
+        //TODO ERRORS
+      } else {
+        $('tid'+myTid).html('[deleted]');
+      }
+    },
+    error: function(jqXHR) { console.log(jqXHR); },
+  });
+}
+

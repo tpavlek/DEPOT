@@ -12,9 +12,18 @@ class Page {
     date_default_timezone_set('America/Edmonton');
 		$this->date = date("d-m-Y H:i:s");
 	}
+  
+  function permissions($reqd) {
+    foreach ($reqd as $perm) {
+      switch ($perm) {
+        case 'loggedIn': return (isset($_SESSION['uid'])); break;
+        case 'admin': return (isset($_SESSION['uid']) && $_SESSION['rank'] == 'admin');
+      }
+    }
+  }
 
 
-  /* maybe I should fix this? */
+  /* maybe I should fix this? 
 	function permissions($reqd) {
 		switch ($reqd) {
 			case 'loggedIn': 
@@ -26,10 +35,14 @@ class Page {
 					else return true;
 				} else return true; break;
 		}
-  }
+  }*/
 
   function getDate() {
     return $this->date;
+  }
+
+  function getDB() {
+    return $this->db;
   }
 
 }

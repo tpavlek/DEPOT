@@ -81,7 +81,7 @@ echo $topic->getMessage();?>
 </div>
 
   <!-- modal new topic button -->
-<iframe name='submit-iframe' id="submit-iframe-dood" style="display:none;" ></iframe>
+<iframe style="display:none;" name='submit-iframe' id="submit-iframe-dood"  ></iframe>
 <div class="modal hide fade" role="dialog" tabindex="-1" id="topicCreatePopup" aria-labelledby="topicCreatePopupLabel" aria-hidden="true">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -107,7 +107,8 @@ echo $topic->getMessage();?>
     if (result.status) {
       $('.error').html(result.message).show('fast');
       $('#createTopicSubmitButton').removeClass('btn-success').addClass('btn-danger');
+    } else {
+      location.reload();
     }
        });
   </script>
-
