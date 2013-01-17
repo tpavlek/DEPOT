@@ -32,7 +32,7 @@ $replies = $topic->getReplies($pageNum, $postsPerPage);
 </div>
 <div class="well topic" id="tid<?php echo $topic->getTID(); ?>">
   <div class="row-fluid">
-    <div class="span8">
+    <div class="span8 topicMessage">
       <?php echo $topic->getMessage(); ?>
 <?php if($topic->getReplay()) {
         $replayBox = new ReplayBox($topic->getReplay());
@@ -122,7 +122,7 @@ $replies = $topic->getReplies($pageNum, $postsPerPage);
 </div>
 
 <!-- Modal edit buton-->
-<?php
+<?php if ($topic->hasReplies()) {
 ?>
 <div class="modal hide fade" role="dialog" tabindex="-1" id="postEditPopup" aria-labelledby="postEditPopupLabel" aria-hidden="true">
   <div class="modal-header">
@@ -141,6 +141,7 @@ $replies = $topic->getReplies($pageNum, $postsPerPage);
   </form>
   </div>
 </div>
+<?php } ?>
 <script>
     $('#submit-iframe-dood').load(function() {
     //location.reload();
@@ -157,13 +158,13 @@ $replies = $topic->getReplies($pageNum, $postsPerPage);
 </script>
 <script>
   console.log('This only works when the topic has at least one reply');
- /*   $('.postControlEdit').click(function() {
+   $('.postControlEdit').click(function() {
       var act = $('#postEditPopup form').attr('action') + $(this).closest('.post').attr('id').replace("pid","");
       $('#postEditPopup form').attr('action', act);
   });
   $('.postControlDelete').click(function() {
     deletePost($(this).closest('.post').attr('id').replace("pid",""));
-});*/
+});
     $('.topicControlDelete').click(function() {
     deleteTopic($(this).closest('.topic').attr('id').replace("tid",""));
     });
