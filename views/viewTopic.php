@@ -157,7 +157,6 @@ $replies = $topic->getReplies($pageNum, $postsPerPage);
   });
 </script>
 <script>
-  console.log('This only works when the topic has at least one reply');
    $('.postControlEdit').click(function() {
       var act = $('#postEditPopup form').attr('action') + $(this).closest('.post').attr('id').replace("pid","");
       $('#postEditPopup form').attr('action', act);

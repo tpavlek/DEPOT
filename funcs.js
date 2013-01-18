@@ -146,7 +146,7 @@ function deleteTopic(myTid) {
       if (data.status) {
         //TODO ERRORS
       } else {
-        $('tid'+myTid).find('.topicMessage').html('[deleted]');
+        $('#tid'+myTid).html('[deleted]');
       }
     },
     error: function(jqXHR) { console.log(jqXHR); },
