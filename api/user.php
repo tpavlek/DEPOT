@@ -15,6 +15,22 @@ class APIUser {
 		    return array('status' => 0, 'message' => 'Profile Image changed successfully');
       }
   }
+
+  static function setBnet() {
+    $page = new Page();
+    $db = $page->getDB();
+    if (!($page->permissions(array("loggedIn")) || $page->permissions(array("admin")))) {
+      return array('status' => 1, 'message' => "Insufficient Permissions");
+    }
+
+    $result = $db->updateBnetId($_SESSION['uid'], $_POST['bnet_id']);
+    if ($result['status']) return $result;
+    $result = $db->updateBnetName($_SESSION['uid'], $_POST['bnet_name']);
+    if ($result['status']) return $result;
+    $result = $db->updateBnetCharCode($_SESSION['uid'], $_POST['char_code']);
+    if ($result['status']) return $result;
+    return array('status' => 0);
+  }
 }  
 	
 

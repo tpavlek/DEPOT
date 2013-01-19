@@ -26,8 +26,9 @@ outcome. That brings us to today. Next, the world.
       <div class="thumbnail"><img src="img/kinder.jpg" />
       </div>
     </div>
-    <div class="span4"><h2>Mission Statement</h2>
-      <p>Solving starcraft is a good skill toi have</p>
+    <div class="span4"><h2>[FGT] News</h2>
+      <script src='http://feeds.feedburner.com/depotwarehouse/fiDO?format=sigpro' type="text/javascript"> </script>
+      <a class="btn btn-success btn-block btn-large" href="http://eepurl.com/ucHgD">Subscribe to [FGT] Mail</a>
     </div>
   </div>
 </section>

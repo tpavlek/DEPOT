@@ -69,18 +69,7 @@ class="well"><h3>League:<small>Masters</small></h3><blockquote>I'm an eggplant!<
 Parish</small></blockquote><div class="row-fluid"><div class="span3"><a href="http://sc2ranks.com/us/1662338/Icekommander"><img src="img/icons/sc2-icon.png" width="50" 
 /></a></div></div></div></div></div>
 		<hr>
- <div class="row"><div class="span6"><div
-class="row"><div
-class="span0.1"><img
-src="img/icons/protoss-decal.png" width="20"/></div><div
-class="span5.9"><h2>FGTminiwheat<small>Evan Schulenborg</small></h2></div></div><ul
-class="thumbnails"><li class="span4"><div class="thumbnail"><img
-width="300" src="img/profile/evan.jpg" /></div></li></ul></div>
-                <div class="span5 offset1"><div 
-class="well"><h3>League:<small>Silver</small></h3><blockquote>Thinking is a 
-choice<small>Evan Schulenborg</small></blockquote></div></div></div>
-                <hr>
- <div class="row"><div class="span6"><div
+  <div class="row"><div class="span6"><div
 class="row"><div
 class="span0.1"><img
 src="img/icons/protoss-decal.png" width="20"/></div><div

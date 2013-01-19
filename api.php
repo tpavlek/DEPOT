@@ -32,6 +32,7 @@ switch($_GET['type']) {
   case 'user': require_once('api/user.php'); 
     switch($_GET['method']) {
     case 'changePic': print json_encode(APIUser::changePic()); break;
+    case 'setBnet': print json_encode(APIUser::setBnet()); break;
     } break;
   case 'register': require_once('api/register.php');
     switch($_GET['method']) {

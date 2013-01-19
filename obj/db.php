@@ -348,7 +348,7 @@ class DB {
 	}
 	
 	function getUser($uid) {
-		$query = "SELECT id, username, rank, email, join_date, postcount, profile_pic from user WHERE id = :uid";
+		$query = "SELECT id, username, rank, email, join_date, postcount, profile_pic, bnet_id, bnet_name, char_code from user WHERE id = :uid";
     $queryPrepared = $this->pdo->prepare($query);
 		$queryPrepared->bindValue(':uid', $uid);
 		if (!$queryPrepared->execute()) 
@@ -536,6 +536,18 @@ class DB {
     $queryPrepared->bindValue(':name', $name);
     $queryPrepared->execute();
     return $queryPrepared->fetch();
+  }
+
+  function updateBnetId($uid, $bid) {
+    return $this->update(array('table' => 'user', 'fields' => array(':bnet_id' => $bid), 'where' => array(':id' => $uid)));
+  }
+
+  function updateBnetName($uid, $bname) {
+    return $this->update(array('table' => 'user', 'fields' => array(':bnet_name' => $bname), 'where' => array(':id' => $uid)));
+  }
+
+  function updateBnetCharCode($uid, $ccode) {
+    return $this->update(array('table' => 'user', 'fields' => array(':char_code' => $ccode), 'where' => array(':id' => $uid)));
   }
 
 }

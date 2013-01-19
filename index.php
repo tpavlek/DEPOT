@@ -20,6 +20,7 @@ $currentPage = (isset($_GET['page'])) ? $_GET['page'] : 'home.php';
       }
     </style>  
     <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="assets/feed.css" rel="stylesheet">
     <script src = "http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script> 
     <script type="text/javascript" src = "bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="funcs.js"></script>
@@ -42,7 +43,7 @@ $currentPage = (isset($_GET['page'])) ? $_GET['page'] : 'home.php';
     <div class="navbar-inner">
       <a class="brand" href="index.php">Team [FGT]</a>
       <ul class="nav">
-        <li class="active"><a href="index.php">Home</a></li> <!-- TODO make actives work -->
+        <li><a href="index.php">Home</a></li> <!-- TODO make actives work -->
         <li><a href="index.php?page=members.php">Members</a></li>
         <li><a href="index.php?page=forum.php">Forum</a></li>
         <li><a href="index.php?page=viewTournament.php&tourn_id=0">[FGT] Open</a></li>

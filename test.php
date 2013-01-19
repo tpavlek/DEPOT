@@ -1,8 +1,8 @@
 <?php
-require_once('battleNetParser.php');
+require_once('sc2replay/mpqfile.php');
 
-$bnet = new BattleNetParser('http://us.battle.net/sc2/en/profile/2275201/1/FGTlllllllll/');
-print $bnet->get_user();
-print $bnet->get_race();
-print_r ($bnet->get_1v1_league());
+$mpqfile = new MPQFile("assets/replays/meowth.SC2Replay");
+$replay = $mpqfile->parseReplay();
+print_r($replay);
+
 ?>

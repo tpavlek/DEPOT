@@ -7,7 +7,10 @@ class User extends Page {
 	private $join_date;
 	private $rank;
 	private $postcount;
-	private $profilePic;
+  private $profilePic;
+  private $bnet_id;
+  private $bnet_name;
+  private $char_code;
 
 	public function __construct($uid) {
 		parent::__construct();
@@ -17,7 +20,10 @@ class User extends Page {
 		$this->join_date = $arr['data']['join_date'];
 		$this->rank = $arr['data']['rank'];
 		$this->postcount = $arr['data']['postcount'];
-		$this->profilePic = $arr['data']['profile_pic'];
+    $this->profilePic = $arr['data']['profile_pic'];
+    $this->bnet_id = $arr['data']['bnet_id'];
+    $this->bnet_name = $arr['data']['bnet_name'];
+    $this->char_code = $arr['data']['char_code'];
 	}
 
 	function getUsername() {
@@ -42,7 +48,19 @@ class User extends Page {
 	
 	function getProfilePic() {
 		return $this->profilePic;
-	}
+  }
+
+  function getBnetID() {
+    return $this->bnet_id;
+  }
+
+  function getBnetName() {
+    return $this->bnet_name;
+  }
+
+  function getCharCode() {
+    return $this->char_code;
+  }
 }
 
 
