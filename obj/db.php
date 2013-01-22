@@ -355,7 +355,19 @@ class DB {
 			return array('status' => 1, 'message' => 'Could not read user data');
 		else
 			return array('status' => 0, 'data' => $queryPrepared->fetch());
-	}
+  }
+
+  function getUserIdByBnetId($bid) {
+    $query = "SELECT id from user where bnet_id = :bid";
+    $queryPrepared = $this->pdo->prepare($query);
+    $queryPrepared->bindValue(':bid', $bid);
+    $queryPrepared->execute();
+    if ($queryPrepared->rowCount() == 0) {
+      return array('status' => 1, 'message' => 'No user for that id');
+    } // TODO CHECK FOR MULTIPLE COPIES OF BNET ID
+    else 
+      return array('status' => 0, 'data' => $queryPrepared->fetch());
+  }
 
 	function updateForumList($topic) {
 		$query = "UPDATE forums set last_topic = :last_topic, last_topic_id =

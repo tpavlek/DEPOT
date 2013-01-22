@@ -1,6 +1,6 @@
 
 <?php
-if (!$page->permissions(array("loggedIn"))) { } //TODO ACTUALLY DO SHIT;
+if (!$page->permissions(array("loggedIn"))) { echo "<script>window.location = 'index.php';</script>";} //TODO ACTUALLY DO SHIT;
 require_once('obj/User.php');
 $user = new User($_SESSION['uid']);
 
@@ -9,10 +9,20 @@ $user = new User($_SESSION['uid']);
 <p>Mustbe 100px by 100px or less</p>
 <iframe name='submit-iframe' id='user-submit-iframe' style="display:none;"><body></body></iframe>
 <form enctype='multipart/form-data' action="api.php?type=user&method=changePic" target="submit-iframe" method="POST">
-<input type="file" name="profile_pic_upload" onchange="this.form.submit()"/>
+<input type="file" style="display:none;" name="profile_pic_upload" />
+<div class="form-horizontal">
+  <div class="control-group">
+    <label class="control-label">Profile Pic:</label>
+    <div class="controls">
+      <a class="btn btn-primary" onclick="$('input[name=profile_pic_upload]').click();">Select File</a>
+      <input type="text" disabled placeholder="Filename..." />
+      <input type="submit" class="btn btn-success" value="Save" />
+    </div>   
+  </div>
+</div>
 </form>
 <!-- TODO check for bad inputs before submit -->
-<br>
+<hr>
 <form action="api.php?type=user&method=setBnet" method="POST" target="submit-iframe" class="form-horizontal" onsubmit="return validateMyForm();">
   <div class="control-group">
     <label class="control-label" for="bnet_id">Battle.net Profile URL:</label>

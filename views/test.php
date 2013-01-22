@@ -3,7 +3,7 @@
 ?>
 
 <script>
-$.getJSON("https://api.twitch.tv/kraken/channels/cortstar?callback=hi&jsonp=?");
+$.getJSON("https://api.twitch.tv/kraken/chat/ebonwumon?callback=hi&jsonp=?");
 
 function hi(json) {
   console.log(json);

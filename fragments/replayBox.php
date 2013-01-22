@@ -1,6 +1,7 @@
 <?php
 require_once('sc2replay/mpqfile.php');
 require_once('obj/Map.php');
+require_once('obj/db.php');
 class replayBox {
 
   private $mpqfile;
@@ -12,14 +13,19 @@ class replayBox {
  
 
   public function __construct($path) {
+    $db = DB::getInstance();
     $this->mpqfile = new MPQfile($path);
     $this->replay = $this->mpqfile->parseReplay();
     $players = $this->replay->getPlayers();
     foreach ($players as $player) {
       if (isset($player['won'])) {
-        $this->winner = $player['name'];
+        $this->winner = array('name' => $player['name'], 'bnet_id' => $player['uid']);
+        $inDB = $db->getUserIdByBnetId($this->winner['bnet_id']);
+        if (!$inDB['status']) $this->winner['uid'] = $inDB['data']['id'];
       } else {
-        $this->loser = $player['name'];
+        $this->loser = array('name' => $player['name'], 'bnet_id' => $player['uid']);
+        $inDB = $db->getUserIdByBnetId($this->loser['bnet_id']);
+        if (!$inDB['status']) $this->loser['uid'] = $inDB['data']['id'];
       }
     }
     $map = new Map($this->replay->getMapName());
@@ -31,8 +37,13 @@ class replayBox {
     $str = "
     <div class='well'>
       <div class='row-fluid'>
-        <div class='span3' >
-          <button class='btn btn-success' >" .$this->winner . "</button>
+        <div class='span3' >";
+    if (isset($this->winner['uid'])) {
+      $str .= "<a href='?page=userProfile.php&uid=". $this->winner['uid'] . "' class='btn btn-success'>". $this->winner['name'] ."</a>";
+    } else {
+      $str .= "<button class='btn btn-success'>" .$this->winner['name'] . "</button>";
+    }
+    $str .= "
         </div>
         <div class='span6' style='text-align:center;'>
           <ul class='thumbnails'>
@@ -51,8 +62,13 @@ class replayBox {
             </li>
           </ul>
         </div>
-        <div class='span3'>
-          <button class='btn btn-danger pull-right'>" . $this->loser . "</button>
+        <div class='span3'>";
+    if (isset($this->loser['uid'])) {
+      $str .= "<a href='?page=userProfile.php&uid=" . $this->loser['uid'] . "' class='btn btn-danger'>".$this->loser['name']."</a>";
+    } else {
+      $str .= "<button class='btn btn-danger pull-right'>" . $this->loser['name'] . "</button>";
+    }
+    $str .= "
         </div>
         </div>
       </div>";
