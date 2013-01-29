@@ -20,6 +20,7 @@ class Tournament extends Page {
     $this->num_rounds = $data['num_rounds'];
     $this->current_round = $data['current_round'];
     $this->info = $data['info'];
+
   }
 
   function getName() {
@@ -44,6 +45,10 @@ class Tournament extends Page {
     return $this->db->isInTournament($uid, $this->tourn_id);
   }
 
+  function getRegisteredNum() {
+    return sizeof($this->registered);
+  }
+
   function getInfo() {
     return $this->info;
   }
@@ -57,7 +62,7 @@ class Tournament extends Page {
   }
 
   function getProgressAsPercent() {
-    return (($this->current_round / $this->num_rounds) * 100);
+    return ((($this->num_rounds - $this->current_round) / $this->num_rounds) * 100);
   }
 }
 

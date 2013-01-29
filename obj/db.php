@@ -643,7 +643,7 @@ class DB {
     $overflow = $participants_num - pow(2, $ro - 1);
     $tourn_update = array('table' =>'tournaments', 'fields' => array(':current_round' => $ro, ':num_rounds' => $ro), 'where' => array(':id' => $tourn_id)); 
     if ($overflow) {
-      $tourn_update['fields'][':current_round'] = $ro -1;
+      $tourn_update['fields'][':current_round'] = $ro - 1;
     }
     $this->update($tourn_update);
     return $this->seedBracket($tourn_id, $ro, $overflow);

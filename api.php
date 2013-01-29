@@ -36,6 +36,8 @@ switch($_GET['type']) {
     case 'uploadReplay': print json_encode(APITournament::uploadReplay()); break;
     case 'generateBracket': print json_encode(APITournament::generateBracket()); break;
     case 'editMatch': print json_encode(APITournament::editMatch()); break;
+    case 'getBracket': print json_encode(APITournament::getBracket()); break;
+    case 'reportWin': print json_encode(APITournament::reportWin()); break;
     } break;
 
   case 'user': require_once('api/user.php'); 

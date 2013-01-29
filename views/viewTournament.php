@@ -57,6 +57,7 @@ if ($page->permissions(array('admin'))) {
 } ?> 
 </div> <!-- End of the unstarted tournament -->   
 <?php if ($tournament->hasStarted()) { ?>
+<div style="display:none;" id="tournamentNumRounds"><?php echo $tournament->getNumRounds(); ?></div>
 <div class="row-fluid">
   <div class="span8">
     <h3><?php echo $tournament->getName();?> Bracket</h3>
@@ -82,8 +83,18 @@ if ($page->permissions(array('admin'))) {
 <?php
   }
 }?>
+<?php if ($tournament->getNumRounds() > 4) { ?>
 <div class="row-fluid">
-<?php for ($i = $tournament->getNumRounds(); $i > 0; $i--) {
+  <div class="span2"><p><button onclick="javascript:reverseBracket();" class="btn btn-info">Previous</button></p></div>
+  <div class="span8"></div>
+  <div class="span2"><p><button onclick="javascript:advanceBracket()" class="btn btn-info 
+    pull-right">Next</button></p></div>
+</div>
+<?php } ?>
+
+<div class="row-fluid">
+<?php
+  for ($i = $tournament->getNumRounds(); $i > $tournament->getNumRounds() - 4; $i--) {
   $brackety = $bracket->getBracket($i);
 ?>
   <div class="span3 matchColumn" id="ro<?php echo $i; ?>">
@@ -96,7 +107,8 @@ if ($page->permissions(array('admin'))) {
       }
     ?>
   </div>
-<?php } ?>
+<?php 
+} ?>
 </div>
 <div class="progress progress-striped">
 <div class="bar" style="width:<?php echo $tournament->getProgressAsPercent(); ?>%;"></div>
@@ -130,7 +142,18 @@ if ($page->permissions(array('admin'))) {
       </label>
       <input type="submit" class="btn btn-success" value="Move" />
     </form>
-      
+    <form action="api.php?type=tournament&method=reportWin" method="POST" target="submit-iframe"
+      class="form-inline">
+      <input type="hidden" name="match_id" />
+      <label class="radio inline">
+        <input type="radio" name="report_winner" checked value="1" />Player 1</input>
+      </label>
+      <label class="radio inline">
+        <input type="radio" name="report_winner" value="2" />Player 2</input>
+      </label>
+      <input type="submit" value="Report" class="btn btn-success" />
+     </form> 
+    <div class="error"></div>
   </div> 
   <div class="modal-footer">
     <button type="button" class="btn" data-dismiss="modal">Close</button>
@@ -156,6 +179,7 @@ $('#submit-iframe-dood').load( function() {
 $('[name=matchEditButton]').click(function() {
   var match_id = $(this).parents().closest('.match').attr('id').replace('mid', '');
   $('#editMatchModal').find('form:first').children('[name=match_id]').val(match_id);
+  $('#editMatchModal').find('form:last').children('[name=match_id]').val(match_id);
   var round = $(this).parents().closest('.matchColumn').attr('id').replace('ro', '');
   $('#editMatchModal').find('form:first').children('[name=round]').val(round);
   var numMatch= $(this).parents().closest('.matchColumn').children('.match').size();
@@ -164,6 +188,71 @@ $('[name=matchEditButton]').click(function() {
       "<option value=" + i + ">Match " + i + "</option>");
   }
 });
+
+function advanceBracket() {
+  var num = parseInt($('body').find('.matchColumn:visible:first').attr('id').replace('ro', ""));
+  if (num > 4) {
+    for (var i = num; i > (num -3); i--) {
+      $('#ro' + i).html($('#ro' + (i -1)).html());
+    }
+    arr = $('body').find('.matchColumn:visible').toArray();
+    for (var i in arr) {
+      var mynum = parseInt($(arr[i]).attr('id').replace('ro', ''));
+      $(arr[i]).attr('id', 'ro' + (mynum-1));
+  }
+    $.ajax({
+      type: "GET",
+      url: "api.php?type=tournament&method=getBracket&ro="+(num-4)+"&tourn_id="+getURLParameter("tourn_id"),
+      dataType: "json",
+      data: "json",
+      success: function(data) { addColumn(data); },
+      error: function(jqxhr) {console.log(jqxhr); }
+
+    });
+  }
+
+}
+
+function reverseBracket() {
+  var num = parseInt($('body').find('.matchColumn:visible:first').attr('id').replace('ro', ""));
+  var totalRounds = $('#tournamentNumRounds').html();
+  if (num < totalRounds) {
+    for (var i = num -3; i < num; i++) {
+      $('#ro' + i).html($('#ro' + (i+1)).html());
+    }
+    arr = $('body').find('.matchColumn:visible').toArray();
+    for (var i in arr) {
+      var mynum = parseInt($(arr[i]).attr('id').replace('ro', ''));
+      $(arr[i]).attr('id', 'ro' + (mynum + 1));
+    }
+    $.ajax({
+      type: "GET",
+      url: "api.php?type=tournament&method=getBracket&ro="+(num+1)+"&tourn_id="+getURLParameter("tourn_id"),
+      dataType:"json",
+      data: "json",
+      success: function(data) { removeColumn(data); },
+      error: function(jqxhr) { console.log(jqxhr); }
+    });
+  }
+}
+
+function removeColumn(data) {
+  var toAppend = "";
+  for (var str in data) {
+    toAppend += data[str];
+  }
+  var selector = $('.matchColumn').parents().children().find('.matchColumn:first');
+  selector.html(toAppend);
+}
+
+function addColumn(data) {
+  var toAppend = "";
+  for (var str in data) {
+    toAppend += data[str];
+  }
+  var selector = $('.matchColumn').parents().children().find('.matchColumn:last');
+  selector.html(toAppend);
+}
 
 function processReplayUpload() {
   var search = $('input[type="file"]').val().search(".SC2Replay");

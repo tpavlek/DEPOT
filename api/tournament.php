@@ -94,6 +94,27 @@ class APITournament {
 
   }
 
+  static function getBracket() {
+    require_once('obj/tournaments/Bracket.php');
+    require_once('fragments/Match.php');
+    $bracket = new Bracket($_GET['tourn_id']);
+    $brackety = $bracket->getBracket($_GET['ro']);
+    foreach ($brackety as $match) {
+      $box = new MatchBox($match);
+      $data[] = $box->getBox();
+    }
+    return $data;
+  }
+
+  static function reportWin() {
+    require_once('obj/tournaments/Match.php');
+    $page = new Page();
+    $db = $page->getDB();
+    $match = new Match($_POST['match_id']);
+    $uid = ($_POST['report_winner'] == 1) ? $match->getPlayer1() : $match->getPlayer2();
+    return $db->reportGameWin($_POST['match_id'], $uid);
+  }
+
 }
 
 ?>
