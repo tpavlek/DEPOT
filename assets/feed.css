@@ -16,3 +16,13 @@ ul li div {
 #creditfooter {
   display:none;
 }
+
+/* TODO GET THIS OUT */
+
+.error {
+  color: red;
+}
+
+#submit-iframe-dood {
+  display:none;
+}

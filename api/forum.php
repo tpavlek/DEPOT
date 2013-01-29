@@ -58,7 +58,6 @@ class APIForum {
 			$_SESSION['uid'], ':last_poster' => $_SESSION['username'], ':date' => $page->getDate(), ':last_reply' =>
       $page->getDate(), ':in_forum' => $_GET['fid'], ':last_reply_uid' => $_SESSION['uid'], ':last_reply_pid' => 0));
     if (!($_FILES['replayUpload']['error'])) {
-       print_r($_FILES);
        $replayPath =  "assets/replays/".$_SESSION['uid'] . "_" .date('YmdHis') .".SC2Replay";
        move_uploaded_file($_FILES['replayUpload']['tmp_name'], $replayPath);
        $argArray['fields'][':replay'] = $replayPath;

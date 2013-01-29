@@ -29,6 +29,15 @@ switch($_GET['type']) {
     case 'deletePost': print json_encode(APIForum::deletePost()); break;
     case 'deleteTopic': print json_encode(APIForum::deleteTopic()); break;
     } break;
+
+  case 'tournament': require_once('api/tournament.php');
+    switch($_GET['method']) {
+    case 'register': print json_encode(APITournament::register()); break;
+    case 'uploadReplay': print json_encode(APITournament::uploadReplay()); break;
+    case 'generateBracket': print json_encode(APITournament::generateBracket()); break;
+    case 'editMatch': print json_encode(APITournament::editMatch()); break;
+    } break;
+
   case 'user': require_once('api/user.php'); 
     switch($_GET['method']) {
     case 'changePic': print json_encode(APIUser::changePic()); break;

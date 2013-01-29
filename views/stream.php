@@ -1,10 +1,10 @@
 
 <div class="row">
 <div class="span8">
-<h3>[FGT] Presents: C-Weekly</h3>
+<h3>[FGT]bonywonix streaming!</h3>
 </div>
 <div class="span4">
-<a class="btn btn-info pull-right" 
+<a style="display:none;" class="btn btn-info pull-right" 
 href="http://www.z33k.com/games/starcraft2/tournaments/9978-fgt-hosts-c-weekly-1/brackets">Brackets</a>
 </div>
 </div>

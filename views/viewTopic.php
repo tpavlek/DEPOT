@@ -53,7 +53,7 @@ $replies = $topic->getReplies($pageNum, $postsPerPage);
     <div class="span4">
       <div class="topicBox pull-right">
 <?php
-            if ($page->permissions(array('admin')) || $topic->getAuthorUID() == $_SESSION['uid']) {
+            if ($page->permissions(array('admin')) || isset($_SESSION['uid']) && $topic->getAuthorUID() == $_SESSION['uid']) {
               $topicBox = new TopicControlBox($topic->getTID());
               print $topicBox->getBox();
             }
@@ -101,7 +101,6 @@ $replies = $topic->getReplies($pageNum, $postsPerPage);
 <?php } ?>
 </div>
 <?php } ?>
-<iframe style="display:none;" name='submit-iframe' id='submit-iframe-dood' ></iframe>
 <!-- modal reply button -->
 <div class="modal hide fade" role="dialog" tabindex="-1" id="topicReplyPopup" aria-labelledby="topicReplyPopupLabel" aria-hidden="true">
   <div class="modal-header">
@@ -144,9 +143,8 @@ $replies = $topic->getReplies($pageNum, $postsPerPage);
 <?php } ?>
 <script>
     $('#submit-iframe-dood').load(function() {
-    //location.reload();
       var result = JSON.parse($('#submit-iframe-dood').contents().find('body').html());
-      console.log(result.status);
+    console.log(result);  
     if (result.status) {
       $('.error').html(result.message).show('fast');
       $('#topicReplySubmitButton').removeClass('btn-success').addClass('btn-danger');

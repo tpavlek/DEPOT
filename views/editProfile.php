@@ -7,7 +7,6 @@ $user = new User($_SESSION['uid']);
 ?>
 <h3>Change Profile Pic</h3>
 <p>Mustbe 100px by 100px or less</p>
-<iframe name='submit-iframe' id='user-submit-iframe' style="display:none;"><body></body></iframe>
 <form enctype='multipart/form-data' action="api.php?type=user&method=changePic" target="submit-iframe" method="POST">
 <input type="file" style="display:none;" name="profile_pic_upload" />
 <div class="form-horizontal">

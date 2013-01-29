@@ -101,6 +101,7 @@ $currentPage = (isset($_GET['page'])) ? $_GET['page'] : 'home.php';
 
 
   <div   class=  "container"  >
+    <iframe name="submit-iframe" id="submit-iframe-dood"></iframe>
     <?php include "views/" . $currentPage; ?>
   </div>
 </div>   <!-- /container -->  

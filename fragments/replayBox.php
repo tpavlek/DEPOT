@@ -75,6 +75,34 @@ class replayBox {
     return $str;
   }
 
+  function getWinnerUID() {
+    if (isset($this->winner['uid']))
+      return $this->winner['uid'];
+    else return 0;
+  }
+
+  function getLoserUID() {
+    if (isset($this->winner['uid'])) {
+      return $this->winner['uid'];
+    } else return 0;
+  }
+
+  function getWinnerName() {
+    return $this->winner['name'];
+  }
+
+  function getWinnerBnetID() {
+    return $this->winner['bnet_id'];
+  }
+
+  function getLoserName() {
+    return $this->loser['name'];
+  }
+
+  function getLoserBnetID() {
+    return $this->loser['bnet_id'];
+  }
+
 }
 
 ?>

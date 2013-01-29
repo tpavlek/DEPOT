@@ -70,7 +70,7 @@ class DB {
       else $query .= " ";
       $i++;
 		}
-		$queryPrepared = $this->pdo->prepare($query);
+    $queryPrepared = $this->pdo->prepare($query);
 		if ($queryPrepared->execute(array_merge($args['fields'], $args['where']))) 
 			return (array('status' => 0, 'message' => 'Successfully updated.'));
     else {
@@ -247,16 +247,51 @@ class DB {
 		$queryPrepared->execute();
 		$arr = $queryPrepared->fetch();
 		return ($arr['rank'] == "banned");
-	}
+  }
 
-	function isInDatabase($args) {
+  function isInTournament($uid, $tourn_id) {
+    $query = "SELECT uid from tournament_registered where tourn_id = :tourn_id AND uid = :uid";
+    $queryPrepared = $this->pdo->prepare($query);
+    $queryPrepared->bindValue(':tourn_id', $tourn_id);
+    $queryPrepared->bindValue(':uid', $uid);
+    $queryPrepared->execute();
+    if ($queryPrepared->rowCount() != 0) {
+      return true;
+    } else return false;
+  }
+
+  function isInMatch($uid, $tourn_id) {
+    require_once('obj/tournaments/Match.php');
+    $query = "SELECT matches.player_1, matches.player_2, matches.match_id 
+      from bracket, matches where bracket.match_id = matches.match_id
+      AND (matches.player_1 = :uid OR matches.player_2 = :uid) 
+      AND bracket.in_tournament = matches.in_tournament ORDER by bracket.ro";
+    $queryPrepared = $this->pdo->prepare($query);
+    $queryPrepared->bindValue(':tourn_id', $tourn_id);
+    $queryPrepared->bindValue(':uid', $uid);
+    $queryPrepared->execute();
+    if ($queryPrepared->rowCount() == 0) {
+      return false;
+    }
+    $result = $queryPrepared->fetch();
+    if ($result['player_1'] == $uid || $result['player_2'] == $uid) {
+      $match = new Match($result['match_id']);
+      if (!$match->hasWinner()) {
+        return $result['match_id'];
+      }
+    }
+    return false;
+
+  }
+
+	function isInDatabase($args) { //TODO decouple args
 		switch ($args['type']) {
 			case 'email': $query = "SELECT id from user where email = :data"; break;
 			case 'username': $query = "SELECT id from user where username = :data";
 			break;
 			case 'topic': $query = "SELECT id from topics where id = :data"; break;
 			case 'forum': $query = "SELECT id from forums where id = :data"; break;
-			case 'post': $query = "SELECT id from posts where id = :data"; break;
+      case 'post': $query = "SELECT id from posts where id = :data"; break;
 		}
 		$queryPrepared = $this->pdo->prepare($query);
 		$queryPrepared->bindValue(':data',$args['value']);
@@ -541,6 +576,189 @@ class DB {
     $queryPrepared->execute();
     return $queryPrepared->fetch();
   }
+
+  function getMatch($mid) {
+    $query = "SELECT in_tournament, player_1, player_2, replay, winner, match_id from matches where match_id = :mid";
+    $queryPrepared = $this->pdo->prepare($query);
+    $queryPrepared->bindValue(':mid', $mid);
+    $queryPrepared->execute();
+    return $queryPrepared->fetch();
+  }
+
+  function getBracket($tourn_id, $round) {
+    require_once('obj/tournaments/Match.php');
+    $query = "SELECT match_id, position, bo, game_num from bracket where in_tournament = :tourn_id and ro = :round ORDER by POSITION";
+    $queryPrepared = $this->pdo->prepare($query);
+    $queryPrepared->bindValue(':tourn_id', $tourn_id);
+    $queryPrepared->bindValue(':round', $round);
+    $queryPrepared->execute();
+    if ($queryPrepared->rowCount() == 0) {
+      return array('status' => 1, 'message' => "There's nothing here");
+    }
+    $brackets = $queryPrepared->fetchAll();
+    foreach ($brackets as $b) {
+      $bracket[] = new Match($b['match_id']);
+    }
+    return $bracket; //TODO THIS MIGHT NOT WORK
+  }
+
+  function registerInTournament($uid, $tourn_id) {
+    return $this->add(array('table' => 'tournament_registered', 'fields' => array(':uid' => $uid, ':tourn_id' => $tourn_id)));
+  }
+
+  function getTournamentRegisteredList($tourn_id) {
+    require_once('obj/User.php');
+    $query = "SELECT uid from tournament_registered where tourn_id = :tourn_id";
+    $queryPrepared = $this->pdo->prepare($query);
+    $queryPrepared->bindValue(':tourn_id', $tourn_id);
+    $queryPrepared->execute();
+    if ($queryPrepared->rowCount() == 0) {
+      return array('status' => 1, 'message' => "There is no one here");
+    }
+    $result = $queryPrepared->fetchAll();
+    foreach ($result as $id) {
+      $users[] = new User($id['uid']);
+    }
+    return array('status' => 0, 'data' => $users);
+  }
+
+  function getTournamentRegisteredNum($tourn_id) {
+    $query = "SELECT uid from tournament_registered where tourn_id = :tourn_id";
+    $queryPrepared = $this->pdo->prepare($query);
+    $queryPrepared->bindValue(':tourn_id', $tourn_id);
+    $queryPrepared->execute();
+    return $queryPrepared->rowCount();
+  }
+
+  function generateBracket($tourn_id) {
+    $participants_num = $this->getTournamentRegisteredNum($tourn_id);
+    $ro = 0;
+    $i = 1;
+    while (!$ro) {
+      if ($participants_num <= pow(2,$i)) {
+        $ro = $i;
+      }
+      $i++;
+    }
+    $overflow = $participants_num - pow(2, $ro - 1);
+    $tourn_update = array('table' =>'tournaments', 'fields' => array(':current_round' => $ro, ':num_rounds' => $ro), 'where' => array(':id' => $tourn_id)); 
+    if ($overflow) {
+      $tourn_update['fields'][':current_round'] = $ro -1;
+    }
+    $this->update($tourn_update);
+    return $this->seedBracket($tourn_id, $ro, $overflow);
+  }
+
+  function processByes($tourn_id, $round) {
+    $bracket = $this->getBracket($tourn_id, $round);
+    foreach ($bracket as $match) {
+      if ($match->getPlayer1() < 0) {
+        $this->reportGameWin($match->getMID(), $match->getPlayer2());
+      } else if ($match->getPlayer2() < 0) {
+        $this->reportGameWin($match->getMID(), $match->getPlayer1());
+      }
+    }
+  }
+
+  function seedBracket($tourn_id, $rounds, $overflow) { //TODO skip seeding
+    $users = $this->getTournamentRegisteredList($tourn_id)['data'];
+    $j = 0; 
+
+    //first we seed in players into round 1
+    for ($i = 0; ($i < pow(2, $rounds - 1)); $i++) {
+      $add = array('table' => 'matches', 'fields' => array(':in_tournament' => $tourn_id, ':player_1' => $users[$i]->getUID()));
+      if ($j < $overflow || $overflow == 0) {
+        $add['fields'][':player_2'] = $users[$j + pow(2, $rounds -1)]->getUID();
+      }
+      $this->add($add);
+      $this->add(array('table' => 'bracket', 'fields' => array(':match_id' => $this->getLastInsertId(), ':position' => $i, ':in_tournament' => $tourn_id, ':ro' => $rounds)));
+      $j++;
+    }
+    //If there's overflow we set byes to -1. We must do this before generating remaining matches
+    if ($overflow) {
+      $query = "UPDATE matches set player_2 = -1 where in_tournament = :tourn_id and player_2 = 0";
+      $queryPrepared = $this->pdo->prepare($query);
+      $queryPrepared->bindValue(':tourn_id', $tourn_id);
+      $queryPrepared->execute();
+    }
+    //next we create all remaining matches/bracket
+    for ($i = $rounds -1; $i > 0; $i--) {
+      for ($k = 0; ($k < pow(2, $i - 1)); $k++) {
+        $add = array('table' => 'matches', 'fields' => array(':in_tournament' => $tourn_id));
+        $this->add($add);
+        $this->add(array('table' => 'bracket', 'fields' => array(':match_id' => $this->getLastInsertId(), ':position' => $k, ':in_tournament' => $tourn_id, ':ro' => $i)));
+      }
+    }
+    if ($overflow) {
+      $this->processByes($tourn_id, $rounds);
+    }
+    $this->update(array('table' => 'tournaments', 'fields' => array(':started' => 1), 'where' => array(':id' => $tourn_id)));
+    return array('status' => 0);
+  }
+
+  function reportGameWin($mid, $uid) {
+    $this->advanceBracket($uid, $mid);
+    return $this->update(array('table' => 'matches', 'fields' => array(':winner' => $uid), 'where' => array(':match_id' => $mid)));
+  }
+
+  function bracketRoExists($tourn_id, $position) {
+    $query = "SELECT match_id from bracket where tourn_id = :tourn_id and position = :position";
+    $queryPrepared = $this->pdo->prepare($query);
+    $queryPrepared->bindValue(':tourn_id', $tourn_id);
+    $queryPrepared->bindValue('position', $position);
+    $queryPrepared->execute();
+    if ($queryPrepared->rowCount() > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  function getMidFromBracketByPosition($tourn_id, $position, $round) {
+    $query = "SELECT match_id from bracket where in_tournament = :in_tournament and position = :position and ro = :round";
+    $queryPrepared = $this->pdo->prepare($query);
+    $queryPrepared->bindValue(':in_tournament', $tourn_id);
+    $queryPrepared->bindValue(':position', $position);
+    $queryPrepared->bindValue(':round', $round);
+    if(!$queryPrepared->execute())
+      print_r($queryPrepared->errorInfo());
+    if ($queryPrepared->rowCount() == 0) return false;
+    return($queryPrepared->fetch());
+  }
+
+  function switchMatchPlayers($mid1, $uid1, $mid2, $uid2, $source, $destination) {
+    $result = $this->update(array('table' => 'matches', 'fields' => array(':player_'.$source => $uid2),
+      'where' => array(':match_id' => $mid1)));
+    if ($result['status']) return $result;
+    $result = $this->update(array('table' => 'matches', 'fields' => array(':player_'.$destination => $uid1),
+      'where' => array(':match_id' => $mid2)));
+    if ($result['status']) return $result;
+    return array('status' => 0);
+  }
+
+  function advanceBracket($uid, $mid) {
+    $query = "SELECT * from bracket where match_id = :mid"; //TODO SELECT *
+    $queryPrepared = $this->pdo->prepare($query);
+    $queryPrepared->bindValue(':mid', $mid);
+    $queryPrepared->execute();
+    $data = $queryPrepared->fetch();
+    $add = array ('table' => 'matches', 'fields' => array());
+    if (($data['position'] / 2) > floor($data['position'] / 2)) {
+      $add['fields'][':player_2'] = $uid;
+    } else {
+      $add['fields'][':player_1'] = $uid;
+    }
+    $midFromBrack = $this->getMidFromBracketByPosition($data['in_tournament'], floor($data['position']/2), $data['ro'] - 1);
+    $add['where'] = array(':match_id' => $midFromBrack['match_id']);
+    $this->update($add);
+    return (array('status' => 0));
+  }
+
+  function addMatchReplay($match_id, $replay) {
+    return ($this->update(array('table' => 'matches', 'fields' => array(':replay' => $replay), 
+      'where' => array(':match_id' => $match_id))));
+  }
+    
 
   function getMapByName($name) {
     $query = "SELECT * from maps where name = :name";

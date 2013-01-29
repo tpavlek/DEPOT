@@ -1,13 +1,12 @@
 <?php
- echo "hello";
+require_once('obj/db.php');
+$db =  DB::getInstance();
+print_r($db->isInMatch(17, 0));
+print_r($_SERVER);
 ?>
 
 <script>
-$.getJSON("https://api.twitch.tv/kraken/chat/ebonwumon?callback=hi&jsonp=?");
 
-function hi(json) {
-  console.log(json);
-}
 /*($.get({
   data: {channel: "FGTcortstar"},
   url: "http://api.justin.tv/api/stream/list.json",

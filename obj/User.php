@@ -24,7 +24,11 @@ class User extends Page {
     $this->bnet_id = $arr['data']['bnet_id'];
     $this->bnet_name = $arr['data']['bnet_name'];
     $this->char_code = $arr['data']['char_code'];
-	}
+  }
+
+  public function __toString() {
+    return $this->uid;
+  }
 
 	function getUsername() {
 		return $this->username;
@@ -60,6 +64,16 @@ class User extends Page {
 
   function getCharCode() {
     return $this->char_code;
+  }
+
+  function hasBnet() {
+    if ($this->bnet_name && $this->bnet_id) {
+      return true;
+    } else return false;
+  }
+
+  function isInMatch($tourn_id) {
+    return $this->db->isInMatch($this->uid, $tourn_id);
   }
 }
 
