@@ -38,6 +38,9 @@ switch($_GET['type']) {
     case 'editMatch': print json_encode(APITournament::editMatch()); break;
     case 'getBracket': print json_encode(APITournament::getBracket()); break;
     case 'reportWin': print json_encode(APITournament::reportWin()); break;
+    case 'getMapList': print json_encode(APITournament::getMapList()); break;
+    case 'editTournament': print json_encode(APITournament::editTournament()); break;
+    case 'deleteTournament': print json_encode(APITournament::deleteTournament()); break;
     } break;
 
   case 'user': require_once('api/user.php'); 

@@ -2,7 +2,7 @@
 require_once('obj/tournaments/Tournament.php');
 require_once('obj/tournaments/Bracket.php');
 require_once('fragments/Match.php');
-$tourn_id = isset($_GET['tourn_id']) ? $_GET['tourn_id'] : 0;
+$tourn_id = isset($_GET['tourn_id']) ? $_GET['tourn_id'] : 1;
 $tournament = new Tournament($tourn_id);
 $users = $tournament->getUserList(); 
 $bracket = new Bracket($tourn_id);
@@ -94,11 +94,31 @@ if ($page->permissions(array('admin'))) {
 
 <div class="row-fluid">
 <?php
-  for ($i = $tournament->getNumRounds(); $i > $tournament->getNumRounds() - 4; $i--) {
-  $brackety = $bracket->getBracket($i);
+  $end = ($tournament->getNumRounds() > 4) ? $tournament->getNumRounds() - 4 : 0;
+  for ($i = $tournament->getNumRounds(); $i > $end; $i--) {
+    $brackety = $bracket->getBracket($i);
+    $bracket_bo = $bracket->getBo($i);
 ?>
   <div class="span3 matchColumn" id="ro<?php echo $i; ?>">
-    <?php
+<?php $content = "";
+for ($j = 1; $j <= $bracket_bo; $j++) {
+  $map = $bracket->getMap($i, $j);
+  $content .= "<p>Game " . $j . ": " . $map['name'] ."</p>";
+} ?>
+  <div class="mapListPopover" data-html="true" data-content = "<?php echo $content; ?>" rel="popover" data-placement="bottom"><a href="#">
+      <h3>Round <?php echo $i; ?> (bo<?php echo $bracket_bo; ?>):</h3>
+      </a></div>
+<?php
+    if ($bracket_bo > 1) {
+      foreach($brackety as $match) { ?>
+          <div class='match' id='mid<?php echo $match->getCurrentMatch(); ?>'> <?php
+          $box = new BoMatchBox($match);
+          print $box->getBox();
+          echo "</div>";
+          echo "</div>";
+        }
+        break;
+      }
       foreach ($brackety as $match) {
         ?><div class='match' id='mid<?php echo $match->getMID(); ?>'> <?php
         $box = new MatchBox($match);
@@ -161,10 +181,14 @@ if ($page->permissions(array('admin'))) {
 </div>
 <?php } ?>
 
-<script>
+  <script>
+
+  $('.mapListPopover').popover();
+
 function validateTournamentRegister() {
   return true; // TODO checks and balances
 }
+
 
 $('#submit-iframe-dood').load( function() {
   var result = JSON.parse($('#submit-iframe-dood').contents().find('body').html());

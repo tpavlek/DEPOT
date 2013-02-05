@@ -86,12 +86,33 @@ class APITournament {
     $position = $_POST['match_move_num'];
     $mid1 = $_POST['match_id'];
     $match = new Match($mid1);
-    $mid2 = $db->getMidFromBracketByPosition($tourn_id, $position, $round)['match_id'];
+    $mid2 = $db->getMidFromBracketByPosition($tourn_id, $position, $round)[0];
     $match2 = new Match($mid2);
     $uid1 = ($source == 1) ? $match->getPlayer1() : $match->getPlayer2();
     $uid2 = ($destination == 1) ? $match2->getPlayer1() : $match2->getPlayer2();
     return $db->switchMatchPlayers($mid1, $uid1, $mid2, $uid2, $source, $destination);
 
+  }
+
+  static function editTournament() {
+    $page = new Page();
+    $db = $page->getDB();
+    if (isset($_POST['name'])) {
+      $tournadd['fields'][':name'] = $_POST['name'];
+    }
+    foreach ($_POST as $post) {
+      switch ($post) {
+      }
+    }
+  }
+
+  static function deleteTournament() {
+    $page = new Page();
+    $db = $page->getDB();
+    if (!$page->permissions(array("admin")) {
+      return array('status' => 1, 'message' => 'Insufficient privs');
+    }
+    return $db->deleteTournament($_POST['tourn_id']);
   }
 
   static function getBracket() {
@@ -113,6 +134,12 @@ class APITournament {
     $match = new Match($_POST['match_id']);
     $uid = ($_POST['report_winner'] == 1) ? $match->getPlayer1() : $match->getPlayer2();
     return $db->reportGameWin($_POST['match_id'], $uid);
+  }
+
+  static function getMapList() {
+    $page = new Page();
+    $db = $page->getDB();
+    return $db->getMapList();
   }
 
 }

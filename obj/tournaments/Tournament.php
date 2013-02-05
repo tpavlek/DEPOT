@@ -62,6 +62,7 @@ class Tournament extends Page {
   }
 
   function getProgressAsPercent() {
+    if ($this->current_round == 0) return 100;
     return ((($this->num_rounds - $this->current_round) / $this->num_rounds) * 100);
   }
 }

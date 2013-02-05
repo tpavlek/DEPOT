@@ -11,6 +11,7 @@ class User extends Page {
   private $bnet_id;
   private $bnet_name;
   private $char_code;
+  private $bnet_league;
 
 	public function __construct($uid) {
 		parent::__construct();
@@ -24,6 +25,7 @@ class User extends Page {
     $this->bnet_id = $arr['data']['bnet_id'];
     $this->bnet_name = $arr['data']['bnet_name'];
     $this->char_code = $arr['data']['char_code'];
+    $this->bnet_league = $arr['data']['bnet_league'];
   }
 
   public function __toString() {
@@ -64,6 +66,10 @@ class User extends Page {
 
   function getCharCode() {
     return $this->char_code;
+  }
+
+  function getLeague() {
+    return $this->bnet_league; 
   }
 
   function hasBnet() {

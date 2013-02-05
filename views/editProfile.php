@@ -26,6 +26,7 @@ $user = new User($_SESSION['uid']);
   <div class="control-group">
     <label class="control-label" for="bnet_id">Battle.net Profile URL:</label>
     <div class="controls">
+      <input type="hidden" name="bnet_url" />
       <input type="text" name="bnet_id" value="<?php echo $user->getBnetID(); ?>"/>
     </div>
     <br />
@@ -39,6 +40,7 @@ $user = new User($_SESSION['uid']);
 </form>
 <script>
 function validateMyForm() {
+  $('input[name=bnet_url]').val($('input[name=bnet_id]').val());
   var idarr = $('input[name=bnet_id]').val().split("/");
   $('input[name=bnet_id]').val(idarr[6]);
   $('input[name=bnet_name]').val(idarr[8]);

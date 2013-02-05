@@ -46,7 +46,7 @@ $currentPage = (isset($_GET['page'])) ? $_GET['page'] : 'home.php';
         <li><a href="index.php">Home</a></li> <!-- TODO make actives work -->
         <li><a href="index.php?page=members.php">Members</a></li>
         <li><a href="index.php?page=forum.php">Forum</a></li>
-        <li><a href="index.php?page=viewTournament.php&tourn_id=0">[FGT] Open</a></li>
+        <li><a href="index.php?page=viewTournament.php&tourn_id=2">[FGT] Open</a></li>
       </ul>
       <ul class="pull-right" style="padding-right:1em"> 
         <?php if(!isset($_SESSION['username'])) { ?>

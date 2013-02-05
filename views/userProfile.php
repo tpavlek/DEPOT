@@ -15,6 +15,10 @@ $user = new User($_GET['uid']);
   <div class="span8">
     <div class="well">
       Latest posts and other info will go here
+      <?php if ($user->hasBnet()) { ?>
+      <p>League: <img src="assets/icons/<?php echo $user->getLeague();?>.png" 
+        width="50px" /></p>
+      <?php } ?>
     </div>
   </div>
 </div>
