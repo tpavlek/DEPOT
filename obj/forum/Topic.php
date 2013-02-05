@@ -1,6 +1,6 @@
 <?php
-require_once('/home/ebon/DEPOT/obj/page.php');
-require_once('/home/ebon/DEPOT/obj/control/UserBox.php');
+require_once('obj/page.php');
+require_once('obj/control/UserBox.php');
 class Topic extends Page {
 
 	protected $fid;
