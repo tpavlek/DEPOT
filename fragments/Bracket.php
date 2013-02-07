@@ -28,7 +28,7 @@ class BracketRender extends Page {
       $map = $this->bracket->getMap($this->ro, $j);
       $content .= "<p>Game " . $j . ": " . $map['name'] ."</p>";
     }
-    $str .= "<div class='mapListPopover' data-html='true' data-content = '" . $content . "' rel='popover'
+    $str .= "<div class='mapListPopover' data-trigger='hover' data-html='true' data-content = '" . $content . "' rel='popover'
       data-placement='bottom'>
         <a>
             <h3>Round " . $this->ro . " (bo" . $this->bo ."):</h3>

@@ -99,7 +99,9 @@ if ($page->permissions(array('admin'))) {
   for ($i = $tournament->getNumRounds(); $i > $end; $i--) {
     $matchCol = new BracketRender($tourn_id, $i);
     print $matchCol->getBox();
-} ?>
+  }
+  ?>
+
 </div>
 <div class="progress progress-striped">
 <div class="bar" style="width:<?php echo $tournament->getProgressAsPercent(); ?>%;"></div>
@@ -185,6 +187,7 @@ $('[name=matchEditButton]').click(function() {
 });
 
 function advanceBracket() {
+  $('.mapListPopover').popover('hide');
   var num = parseInt($('body').find('.matchColumn:visible:first').attr('id').replace('ro', ""));
   if (num > 4) {
     for (var i = num; i > (num -3); i--) {
@@ -209,6 +212,7 @@ function advanceBracket() {
 }
 
 function reverseBracket() {
+  $('.mapListPopover').popover('hide');
   var num = parseInt($('body').find('.matchColumn:visible:first').attr('id').replace('ro', ""));
   var totalRounds = $('#tournamentNumRounds').html();
   if (num < totalRounds) {
@@ -236,18 +240,17 @@ function removeColumn(data) {
   for (var str in data) {
     toAppend += data[str];
   }
-  var selector = $('.matchColumn').parents().children().find('.matchColumn:first');
-  selector.html(toAppend);
+  var selector = $('.matchColumn:first').replaceWith(toAppend);
   $('.mapListPopover').popover();
 }
 
 function addColumn(data) {
+  $('.mapListPopover').popover('hide');
   var toAppend = "";
   for (var str in data) {
     toAppend += data[str];
   }
-  var selector = $('.matchColumn').parents().children().find('.matchColumn:last');
-  selector.html(toAppend);
+  var selector = $('.matchColumn:last').replaceWith(toAppend);
   $('.mapListPopover').popover();
 }
 

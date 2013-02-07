@@ -638,6 +638,10 @@ class DB {
     return $this->add(array('table' => 'tournament_registered', 'fields' => array(':uid' => $uid, ':tourn_id' => $tourn_id)));
   }
 
+  /**
+   * Takes a $tourn_id
+   * returns an array with 'status' and 'data' containing an array of User objects.
+   */
   function getTournamentRegisteredList($tourn_id) {
     require_once('obj/User.php');
     $query = "SELECT uid from tournament_registered where tourn_id = :tourn_id";
@@ -654,6 +658,10 @@ class DB {
     return array('status' => 0, 'data' => $users);
   }
 
+  /**
+   * takes a tournament id
+   * returns a nonnegative integer with the number of registered participants
+   */
   function getTournamentRegisteredNum($tourn_id) {
     $query = "SELECT uid from tournament_registered where tourn_id = :tourn_id";
     $queryPrepared = $this->pdo->prepare($query);
@@ -662,8 +670,7 @@ class DB {
     return $queryPrepared->rowCount();
   }
 
-  function generateBracket($tourn_id) {
-    $participants_num = $this->getTournamentRegisteredNum($tourn_id);
+  function determineNumberOfRounds($participants_num) {
     $ro = 0;
     $i = 1;
     while (!$ro) {
@@ -672,6 +679,12 @@ class DB {
       }
       $i++;
     }
+    return $ro;
+  }
+
+  function generateBracket($tourn_id) {
+    $participants_num = $this->getTournamentRegisteredNum($tourn_id);
+    $ro = $this->determineNumberOfRounds($participants_num);
     $overflow = $participants_num - pow(2, $ro - 1);
     $tourn_update = array('table' =>'tournaments', 'fields' => array(':current_round' => $ro, ':num_rounds' => $ro), 'where' => array(':id' => $tourn_id)); 
     if ($overflow) {
@@ -697,7 +710,24 @@ class DB {
     $queryPrepared = $this->pdo->prepare($query);
     $queryPrepared->bindValue(':tourn_id', $tourn_id);
     $queryPrepared->execute();
-    return $queryPrepared->fetchAll();
+    $data = $queryPrepared->fetchAll();
+    $ro = $this->determineNumberOfRounds($this->getTournamentRegisteredNum($tourn_id));
+    $sentinel = true;
+    for ($i = $ro; $i > 0; $i-- ) {
+      foreach($data as $bo) {
+        if($bo['ro'] == $i) {
+          $add = array('ro' => $bo['ro'], 'bo' => $bo['bo']);
+          $return[] = $add;
+          $sentinel = false;
+        }
+      }
+      if ($sentinel) {
+        $add = array('ro' => $i, 'bo' => 1);
+        $return[] = $add;
+      }
+      $sentinel = true;
+    }
+    return $return;
   }
 
   function seedBracket($tourn_id, $rounds, $overflow) { //TODO skip seeding

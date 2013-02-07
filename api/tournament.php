@@ -115,29 +115,11 @@ class APITournament {
     return $db->deleteTournament($_POST['tourn_id']);
  }*/
 
-  static function getBracket() {
+  static function getBracket() { //TODO $_GET checking
     require_once('obj/tournaments/Bracket.php');
-    require_once('fragments/Match.php');
-    $bracket = new Bracket($_GET['tourn_id']);
-    $brackety = $bracket->getBracket($_GET['ro']);
-    $bracket_bo = $bracket->getBo($_GET['ro']);
-    $content = "";
-    for ($j = 1; $j <= $bracket_bo; $j++) {
-    $map = $bracket->getMap($_GET['ro'], $j);
-    $content .= "<p>Game " . $j . ": " . $map['name'] ."</p>";
-    }
-    $data[0] = "
-      <div class='mapListPopover' data-html='true' data-content =' " . $content . "' rel='popover' data-placement='bottom'>
-        <a>
-          <h3>Round " . $_GET['ro'] ." (bo" . $bracket_bo . "):</h3>
-        </a>
-      </div>
-      ";
-    foreach ($brackety as $match) {
-      $box = new MatchBox($match);
-      $data[] = $box->getBox();
-    }
-    return $data;
+    require_once('fragments/Bracket.php');
+    $matchCol = new BracketRender($_GET['tourn_id'], $_GET['ro']);
+    return $matchCol->getBox();
   }
 
   static function reportWin() {
