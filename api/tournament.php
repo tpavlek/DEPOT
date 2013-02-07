@@ -94,7 +94,7 @@ class APITournament {
 
   }
 
-  static function editTournament() {
+  /*static function editTournament() {
     $page = new Page();
     $db = $page->getDB();
     if (isset($_POST['name'])) {
@@ -104,16 +104,16 @@ class APITournament {
       switch ($post) {
       }
     }
-  }
+  }*/
 
-  static function deleteTournament() {
+ /* static function deleteTournament() {
     $page = new Page();
     $db = $page->getDB();
     if (!$page->permissions(array("admin")) {
       return array('status' => 1, 'message' => 'Insufficient privs');
     }
     return $db->deleteTournament($_POST['tourn_id']);
-  }
+ }*/
 
   static function getBracket() {
     require_once('obj/tournaments/Bracket.php');

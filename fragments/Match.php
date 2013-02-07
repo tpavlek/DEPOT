@@ -26,7 +26,7 @@ class MatchBox extends Page {
             $class='btn-primary';
           }
           $user = new User($uid);
-          $name = $user->getBnetName(); 
+          $name = $user->getBnetName() . "." . $user->getCharCode(); 
           $href= '?page=userProfile.php&uid=' . $uid; break;
     }
     return "<a class='player" . $i ." btn " . $class . "' href='" . $href . "'>".$name . "</a>";

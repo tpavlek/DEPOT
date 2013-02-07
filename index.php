@@ -1,7 +1,25 @@
 <?php
 require_once('obj/page.php');
 $page = new Page();
-$currentPage = (isset($_GET['page'])) ? $_GET['page'] : 'home.php';
+if (isset($_GET['page'])) {
+  switch ($_GET['page']) {
+  case 'adminTournament.php': $currentPage= 'adminTournament.php'; break;
+  case 'editProfile.php': $currentPage= 'editProfile.php'; break;
+  case 'forum.php': $currentPage = 'forum.php'; break;
+  case 'home.php': $currentPage = 'home.php'; break;
+  case 'members.php': $currentPage = 'members.php'; break;
+  case 'replayAnalyzer.php': $currentPage = 'replayAnalyzer.php'; break;
+  case 'stream.php': $currentPage = 'stream.php'; break;
+  case 'userProfile.php': $currentPage = 'userProfile.php'; break;
+  case 'viewForum.php': $currentPage = 'viewForum.php'; break;
+  case 'viewTopic.php': $currentPage = 'viewTopic.php'; break;
+  case 'viewTournament.php': $currentPage = 'viewTournament.php'; break;
+  default: $currentPage = 'home.php'; break;
+  }
+} else {
+  $currentPage = 'home.php';
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -46,7 +64,7 @@ $currentPage = (isset($_GET['page'])) ? $_GET['page'] : 'home.php';
         <li><a href="index.php">Home</a></li> <!-- TODO make actives work -->
         <li><a href="index.php?page=members.php">Members</a></li>
         <li><a href="index.php?page=forum.php">Forum</a></li>
-        <li><a href="index.php?page=viewTournament.php&tourn_id=2">[FGT] Open</a></li>
+        <li><a href="index.php?page=viewTournament.php&tourn_id=3">[FGT] Open</a></li>
       </ul>
       <ul class="pull-right" style="padding-right:1em"> 
         <?php if(!isset($_SESSION['username'])) { ?>
