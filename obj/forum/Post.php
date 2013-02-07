@@ -1,5 +1,5 @@
 <?php
-require_once('/home/ebon/DEPOT/obj/page.php');
+require_once('obj/page.php');
 class Post extends Page {
 
 	private $tid;

@@ -1,5 +1,5 @@
 <?php
-require_once('obj/page.php');
+require_once(__DIR__.'/obj/page.php');
 $page = new Page();
 if (isset($_GET['page'])) {
   switch ($_GET['page']) {

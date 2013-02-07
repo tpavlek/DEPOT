@@ -1,6 +1,6 @@
 <?php
-require_once('/home/ebon/DEPOT/obj/db.php');
-require_once('/home/ebon/DEPOT/config.php');
+require_once('obj/db.php');
+require_once('config.php');
 session_start();
 class Page {
 	public $date;

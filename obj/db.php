@@ -1,6 +1,6 @@
 <?php
-require_once('/home/ebon/DEPOT/funcs/verify.php');
-require_once('/home/ebon/DEPOT/config.php');
+require_once('funcs/verify.php');
+require_once('config.php');
 class DB {
 
 	private $pdo;
