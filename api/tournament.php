@@ -120,6 +120,19 @@ class APITournament {
     require_once('fragments/Match.php');
     $bracket = new Bracket($_GET['tourn_id']);
     $brackety = $bracket->getBracket($_GET['ro']);
+    $bracket_bo = $bracket->getBo($_GET['ro']);
+    $content = "";
+    for ($j = 1; $j <= $bracket_bo; $j++) {
+    $map = $bracket->getMap($_GET['ro'], $j);
+    $content .= "<p>Game " . $j . ": " . $map['name'] ."</p>";
+    }
+    $data[0] = "
+      <div class='mapListPopover' data-html='true' data-content =' " . $content . "' rel='popover' data-placement='bottom'>
+        <a>
+          <h3>Round " . $_GET['ro'] ." (bo" . $bracket_bo . "):</h3>
+        </a>
+      </div>
+      ";
     foreach ($brackety as $match) {
       $box = new MatchBox($match);
       $data[] = $box->getBox();

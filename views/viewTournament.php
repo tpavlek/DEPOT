@@ -2,6 +2,7 @@
 require_once('obj/tournaments/Tournament.php');
 require_once('obj/tournaments/Bracket.php');
 require_once('fragments/Match.php');
+require_once('fragments/Bracket.php');
 $tourn_id = isset($_GET['tourn_id']) ? $_GET['tourn_id'] : 1;
 $tournament = new Tournament($tourn_id);
 $users = $tournament->getUserList(); 
@@ -96,38 +97,8 @@ if ($page->permissions(array('admin'))) {
 <?php
   $end = ($tournament->getNumRounds() > 4) ? $tournament->getNumRounds() - 4 : 0;
   for ($i = $tournament->getNumRounds(); $i > $end; $i--) {
-    $brackety = $bracket->getBracket($i);
-    $bracket_bo = $bracket->getBo($i);
-?>
-  <div class="span3 matchColumn" id="ro<?php echo $i; ?>">
-<?php $content = "";
-for ($j = 1; $j <= $bracket_bo; $j++) {
-  $map = $bracket->getMap($i, $j);
-  $content .= "<p>Game " . $j . ": " . $map['name'] ."</p>";
-} ?>
-  <div class="mapListPopover" data-html="true" data-content = "<?php echo $content; ?>" rel="popover" data-placement="bottom"><a href="#">
-      <h3>Round <?php echo $i; ?> (bo<?php echo $bracket_bo; ?>):</h3>
-      </a></div>
-<?php
-    if ($bracket_bo > 1) {
-      foreach($brackety as $match) { ?>
-          <div class='match' id='mid<?php echo $match->getCurrentMatch(); ?>'> <?php
-          $box = new BoMatchBox($match);
-          print $box->getBox();
-          echo "</div>";
-          echo "</div>";
-        }
-        break;
-      }
-      foreach ($brackety as $match) {
-        ?><div class='match' id='mid<?php echo $match->getMID(); ?>'> <?php
-        $box = new MatchBox($match);
-        print $box->getBox();
-        echo "</div>";
-      }
-    ?>
-  </div>
-<?php 
+    $matchCol = new BracketRender($tourn_id, $i);
+    print $matchCol->getBox();
 } ?>
 </div>
 <div class="progress progress-striped">
@@ -185,9 +156,9 @@ for ($j = 1; $j <= $bracket_bo; $j++) {
 
   $('.mapListPopover').popover();
 
-function validateTournamentRegister() {
-  return true; // TODO checks and balances
-}
+  function validateTournamentRegister() {
+    return true; // TODO checks and balances
+  }
 
 
 $('#submit-iframe-dood').load( function() {
@@ -267,6 +238,7 @@ function removeColumn(data) {
   }
   var selector = $('.matchColumn').parents().children().find('.matchColumn:first');
   selector.html(toAppend);
+  $('.mapListPopover').popover();
 }
 
 function addColumn(data) {
@@ -276,6 +248,7 @@ function addColumn(data) {
   }
   var selector = $('.matchColumn').parents().children().find('.matchColumn:last');
   selector.html(toAppend);
+  $('.mapListPopover').popover();
 }
 
 function processReplayUpload() {

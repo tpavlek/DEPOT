@@ -1,5 +1,5 @@
 <?php
-require_once('/home/ebon/DEPOT/obj/db.php');
+require_once('obj/db.php');
 switch($_GET['type']) {
  	case 'post': require_once('api/post.php');
  		switch ($_GET['method']) {
