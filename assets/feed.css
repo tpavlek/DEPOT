@@ -1,9 +1,12 @@
 .feedTitle {
   display:none;
 }
-#depotwarehouse/fiDO3dl93m368i7lomkje1aga4g4o0 {
-  
+.accordion-body.in {
+    overflow:visible;
 }
+
+
+
 
 ul,li {
   list-style-type: none;

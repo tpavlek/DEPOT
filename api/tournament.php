@@ -137,6 +137,31 @@ class APITournament {
     return $db->getMapList();
   }
 
+  static function createTournament() { //TODO $_GET checking, rank
+    $page = new Page();
+    $db = $page->getDB();
+    if (!$page->permissions(array("admin"))) {
+      return array('status' => 1, 'message' => 'Insufficient Permissions');
+    }
+
+    $ro = $_POST['max_rounds'];
+    $name = $_POST['name'];
+    $channel = $_POST['channel'];
+    $info = $_POST['info'];
+
+    $result = $db->addTournament($name, $channel, $info);
+
+    if ($result['status']) return $result;
+    $tourn_id = $result['data'];
+
+    for ($i = $ro; $i > 0; $i--) {
+      $result = $db->addBo($tourn_id, $i, $_POST['rd'.$i.'_bo'], $_POST["map_".$i]);
+      if ($result['status']) return $result;
+    }
+    return array('status' => 0);
+
+  }
+
 }
 
 ?>

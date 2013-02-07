@@ -20,27 +20,28 @@ switch($_GET['type']) {
 
   case 'forum': require_once('api/forum.php'); require_once('api/apitopic.php');
     switch($_GET['method']) {
-    case 'newTopic': print json_encode(APIForum::newTopic()); break;
-    case 'reply': print json_encode(APITopic::reply()); break;
-    case 'getForums': print json_encode(APIForum::getForums()); break;
-    case 'getTopicsInForumByPage': print json_encode(APIForum::getTopicsInForumByPage()); break;
-    case 'getTopic': print json_encode(APIForum::getTopic()); break;
-    case 'editPost': print json_encode(APIForum::editPost()); break;
-    case 'deletePost': print json_encode(APIForum::deletePost()); break;
-    case 'deleteTopic': print json_encode(APIForum::deleteTopic()); break;
+      case 'newTopic': print json_encode(APIForum::newTopic()); break;
+      case 'reply': print json_encode(APITopic::reply()); break;
+      case 'getForums': print json_encode(APIForum::getForums()); break;
+      case 'getTopicsInForumByPage': print json_encode(APIForum::getTopicsInForumByPage()); break;
+      case 'getTopic': print json_encode(APIForum::getTopic()); break;
+      case 'editPost': print json_encode(APIForum::editPost()); break;
+      case 'deletePost': print json_encode(APIForum::deletePost()); break;
+      case 'deleteTopic': print json_encode(APIForum::deleteTopic()); break;
     } break;
 
   case 'tournament': require_once('api/tournament.php');
     switch($_GET['method']) {
-    case 'register': print json_encode(APITournament::register()); break;
-    case 'uploadReplay': print json_encode(APITournament::uploadReplay()); break;
-    case 'generateBracket': print json_encode(APITournament::generateBracket()); break;
-    case 'editMatch': print json_encode(APITournament::editMatch()); break;
-    case 'getBracket': print json_encode(APITournament::getBracket()); break;
-    case 'reportWin': print json_encode(APITournament::reportWin()); break;
-    case 'getMapList': print json_encode(APITournament::getMapList()); break;
-    case 'editTournament': print json_encode(APITournament::editTournament()); break;
-    case 'deleteTournament': print json_encode(APITournament::deleteTournament()); break;
+      case 'register': print json_encode(APITournament::register()); break;
+      case 'uploadReplay': print json_encode(APITournament::uploadReplay()); break;
+      case 'generateBracket': print json_encode(APITournament::generateBracket()); break;
+      case 'editMatch': print json_encode(APITournament::editMatch()); break;
+      case 'getBracket': print json_encode(APITournament::getBracket()); break;
+      case 'reportWin': print json_encode(APITournament::reportWin()); break;
+      case 'getMapList': print json_encode(APITournament::getMapList()); break;
+      case 'editTournament': print json_encode(APITournament::editTournament()); break;
+      case 'deleteTournament': print json_encode(APITournament::deleteTournament()); break;
+      case 'createTournament': print json_encode(APITournament::createTournament()); break;
     } break;
 
   case 'user': require_once('api/user.php'); 

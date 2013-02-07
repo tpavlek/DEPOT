@@ -705,6 +705,11 @@ class DB {
     }
   }
 
+  function addBo($tourn_id, $round, $bo, $map) {
+    return $this->add(array('table' => 'bo_tournament', 'fields' => array(':tourn_id' => $tourn_id,
+      ':ro' => $round, ':bo' => $bo, ':map' => $map)));
+  }
+
   function getBoFromTournament($tourn_id) {
     $query = "SELECT ro, bo from bo_tournament where tourn_id = :tourn_id ORDER by ro";
     $queryPrepared = $this->pdo->prepare($query);
@@ -713,7 +718,7 @@ class DB {
     $data = $queryPrepared->fetchAll();
     $ro = $this->determineNumberOfRounds($this->getTournamentRegisteredNum($tourn_id));
     $sentinel = true;
-    for ($i = $ro; $i > 0; $i-- ) {
+    for ($i = 1; $i <= $ro; $i++ ) {
       foreach($data as $bo) {
         if($bo['ro'] == $i) {
           $add = array('ro' => $bo['ro'], 'bo' => $bo['bo']);
@@ -762,9 +767,15 @@ class DB {
     }
     //If there's overflow we set byes to -1. We must do this before generating remaining matches
     if ($overflow ) {
-      $query = "UPDATE matches set player_2 = -1 where in_tournament = :tourn_id and player_2 = 0";
+      $query = "UPDATE matches
+        LEFT JOIN bracket
+        ON matches.match_id = bracket.match_id
+        SET player_2 = -1
+        where matches.in_tournament = :tourn_id and matches.player_2 = 0
+        AND bracket.ro = :rounds";
       $queryPrepared = $this->pdo->prepare($query);
       $queryPrepared->bindValue(':tourn_id', $tourn_id);
+      $queryPrepared->bindValue(':rounds', $rounds);
       $queryPrepared->execute();
     }
     //next we create all remaining matches/bracket
@@ -792,6 +803,13 @@ class DB {
     } else {
       return false;
     }
+  }
+
+  function addTournament($name, $channel, $info) {
+    $result = $this->add(array('table' => 'tournaments', 'fields' => array(':name' => $name, ':channel' => $channel,
+      ':info' => $info)));
+    $result['data'] = $this->getLastInsertId();
+    return $result;
   }
 
   function getMidFromBracketByPosition($tourn_id, $position, $round) {
