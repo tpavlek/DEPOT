@@ -14,7 +14,7 @@ $user = new User($_SESSION['uid']);
     <label class="control-label">Profile Pic:</label>
     <div class="controls">
       <a class="btn btn-primary" onclick="$('input[name=profile_pic_upload]').click();">Select File</a>
-      <input type="text" disabled placeholder="Filename..." />
+      <input type="text" name="filename" disabled placeholder="Filename..." />
       <input type="submit" class="btn btn-success" value="Save" />
     </div>   
   </div>
@@ -26,8 +26,8 @@ $user = new User($_SESSION['uid']);
   <div class="control-group">
     <label class="control-label" for="bnet_id">Battle.net Profile URL:</label>
     <div class="controls">
-      <input type="hidden" name="bnet_url" />
-      <input type="text" name="bnet_id" value="<?php echo $user->getBnetID(); ?>"/>
+      <input type="hidden" name="bnet_id" value="<?php echo $user->getBnetID(); ?>"/>
+      <input type="text" name="bnet_url" value="<?php echo $user->getBnetUrl(); ?>"/>
     </div>
     <br />
     <label class="control-label" for="char_code">Character Code</label>
@@ -38,16 +38,26 @@ $user = new User($_SESSION['uid']);
     </div>
   </div>
 </form>
+  <div class="error"></div>
 <script>
+  $('input[name=profile_pic_upload]').change(function() {
+    console.log();
+    $('input[name=filename]').val(this.files[0].name);
+  });
+
 function validateMyForm() {
-  $('input[name=bnet_url]').val($('input[name=bnet_id]').val());
-  var idarr = $('input[name=bnet_id]').val().split("/");
+  var idarr = $('input[name=bnet_url]').val().split("/");
   $('input[name=bnet_id]').val(idarr[6]);
   $('input[name=bnet_name]').val(idarr[8]);
   return true;
 }
 $('#user-submit-iframe').load(function() {
-  location.reload(); //TODO errors
+  var result = JSON.parse($('#submit-iframe-dood').contents().find('body').html());
+  if (result.status) {
+    $('.error').show('fast').html(result.message);
+  } else {
+    location.reload(); //TODO errors
+  }
   });
 </script>
 

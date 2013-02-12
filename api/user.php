@@ -48,6 +48,8 @@ class APIUser {
     if ($result['status']) return $result;
     $result = $db->updateBnetCharCode($_SESSION['uid'], $_POST['char_code']);
     if ($result['status']) return $result;
+    $result = $db->updateBnetUrl($_SESSION['uid'], $_POST['bnet_url']);
+    if ($result['status']) return $result;
     return array('status' => 0);
   }
 }  

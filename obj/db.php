@@ -383,7 +383,9 @@ class DB {
 	}
 	
 	function getUser($uid) {
-		$query = "SELECT id, username, rank, email, join_date, postcount, profile_pic, bnet_id, bnet_name, char_code, bnet_league from user WHERE id = :uid";
+		$query = "SELECT id, username, rank, email, join_date, postcount, profile_pic,
+		  bnet_id, bnet_name, char_code, bnet_league, bnet_url
+		  FROM user WHERE id = :uid";
     $queryPrepared = $this->pdo->prepare($query);
 		$queryPrepared->bindValue(':uid', $uid);
 		if (!$queryPrepared->execute()) 
@@ -932,7 +934,8 @@ class DB {
   }
 
   function updateBnetId($uid, $bid) {
-    return $this->update(array('table' => 'user', 'fields' => array(':bnet_id' => $bid), 'where' => array(':id' => $uid)));
+    return $this->update(array('table' => 'user', 'fields' => array(':bnet_id' => $bid),
+      'where' => array(':id' => $uid)));
   }
 
   function updateBnetLeague($uid, $rank) {
@@ -941,11 +944,18 @@ class DB {
   }
 
   function updateBnetName($uid, $bname) {
-    return $this->update(array('table' => 'user', 'fields' => array(':bnet_name' => $bname), 'where' => array(':id' => $uid)));
+    return $this->update(array('table' => 'user', 'fields' => array(':bnet_name' => $bname),
+      'where' => array(':id' => $uid)));
   }
 
   function updateBnetCharCode($uid, $ccode) {
-    return $this->update(array('table' => 'user', 'fields' => array(':char_code' => $ccode), 'where' => array(':id' => $uid)));
+    return $this->update(array('table' => 'user', 'fields' => array(':char_code' => $ccode),
+      'where' => array(':id' => $uid)));
+  }
+
+  function updateBnetUrl($uid, $url) {
+    return $this->update(array('table' => 'user', 'fields' => array(':bnet_url' => $url),
+      'where' => array(':id' => $uid)));
   }
 
 }
