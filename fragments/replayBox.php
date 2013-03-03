@@ -10,30 +10,37 @@ class replayBox {
   private $loser;
   private $map;
   private $replayPath;
+  private $version;
  
 
   public function __construct($path) {
     $db = DB::getInstance();
     $this->mpqfile = new MPQfile($path);
-    $this->replay = $this->mpqfile->parseReplay();
-    $players = $this->replay->getPlayers();
-    foreach ($players as $player) {
-      if (isset($player['won'])) {
-        $this->winner = array('name' => $player['name'], 'bnet_id' => $player['uid']);
-        $inDB = $db->getUserIdByBnetId($this->winner['bnet_id']);
-        if (!$inDB['status']) $this->winner['uid'] = $inDB['data']['id'];
-      } else {
-        $this->loser = array('name' => $player['name'], 'bnet_id' => $player['uid']);
-        $inDB = $db->getUserIdByBnetId($this->loser['bnet_id']);
-        if (!$inDB['status']) $this->loser['uid'] = $inDB['data']['id'];
+    $this->version = $this->mpqfile->getVersion();
+    if ($this->version < 2) {
+      $this->replay = $this->mpqfile->parseReplay();
+      $players = $this->replay->getPlayers();
+      foreach ($players as $player) {
+        if (isset($player['won'])) {
+          $this->winner = array('name' => $player['name'], 'bnet_id' => $player['uid']);
+          $inDB = $db->getUserIdByBnetId($this->winner['bnet_id']);
+          if (!$inDB['status']) $this->winner['uid'] = $inDB['data']['id'];
+        } else {
+          $this->loser = array('name' => $player['name'], 'bnet_id' => $player['uid']);
+          $inDB = $db->getUserIdByBnetId($this->loser['bnet_id']);
+          if (!$inDB['status']) $this->loser['uid'] = $inDB['data']['id'];
+        }
       }
+      $map = new Map($this->replay->getMapName());
+      $this->map = $map;
     }
-    $map = new Map($this->replay->getMapName());
-    $this->map = $map;
     $this->replayPath = $path;
   }
 
   function getBox() {
+    if ($this->version >= 2) {
+      return $this->getErrorBox();
+    }
     $str = "
     <div class='well'>
       <div class='row-fluid'>
@@ -72,6 +79,25 @@ class replayBox {
         </div>
         </div>
       </div>";
+    return $str;
+  }
+
+  function getErrorBox() {
+    $str = "
+      <div class='well'>
+        <p>Replay processing does not currently work for patch 2.0.4 and higher</p>
+        <div class='btn-group'>
+          <button class='btn btn-primary'>Click arrow to download</button>
+          <button class='btn btn-primary dropdown-toggle' data-toggle='dropdown'>
+            <span class='caret'></span>
+          </button>
+          <ul class='dropdown-menu'>
+            <li><a href=". $this->replayPath . ">Download</a></li>
+          </ul>    
+        </div>
+
+        </div>
+        ";
     return $str;
   }
 
