@@ -958,5 +958,13 @@ class DB {
       'where' => array(':id' => $uid)));
   }
 
+  function getStream($uid) {
+      $query = "SELECT title, description, twitch_user from streams where streamer = :uid";
+      $queryPrepared = $this->pdo->prepare($query);
+      $queryPrepared->bindValue(':uid', $uid);
+      $queryPrepared->execute();
+      return $queryPrepared->fetch();
+  }
+
 }
 ?>
