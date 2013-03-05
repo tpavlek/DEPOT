@@ -20,9 +20,15 @@ $stream = new Stream($stream);
     <label for='title'>Title: </label>
     <input type='text' name='title' value='<?php echo $stream->getTitle(); ?>' />
     <label for='description'>Description: </label>
-    <textara name='description'><?php echo $stream->getDescription(); ?></textara>
+    <textarea name='description'><?php echo $stream->getDescription(); ?></textarea>
     <label for='twitch_user'>Twitch Username: </label>
-    <input type='text' name='twitch_user' />
+    <input type='text' name='twitch_user' value='<?php echo $stream->getTwitchUser();?>' />
     <input type='hidden' name='uid' value='<?php echo $_SESSION['uid']; ?>' />
     <input class='btn btn-success' type="submit" value="Save">
 </form>
+
+<script>
+$('#submit-iframe-dood').load(function() {
+  location.reload();
+});
+</script>

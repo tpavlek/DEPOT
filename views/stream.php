@@ -1,5 +1,5 @@
 <?php
-require_once('obj/stream.php');
+require_once('obj/Stream.php');
     if (isset($_GET['user'])) {
         switch($_GET['user']) {
             case 17: $streamer = 17; break;

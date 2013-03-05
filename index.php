@@ -10,6 +10,7 @@ if (isset($_GET['page'])) {
   case 'members.php': $currentPage = 'members.php'; break;
   case 'replayAnalyzer.php': $currentPage = 'replayAnalyzer.php'; break;
   case 'stream.php': $currentPage = 'stream.php'; break;
+  case 'editStream.php': $currentPage = 'editStream.php'; break;
   case 'userProfile.php': $currentPage = 'userProfile.php'; break;
   case 'viewForum.php': $currentPage = 'viewForum.php'; break;
   case 'viewTopic.php': $currentPage = 'viewTopic.php'; break;

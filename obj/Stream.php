@@ -8,6 +8,7 @@ class Stream extends Page {
     private $twitch_user;
 
     public function __construct($uid) {
+        parent::__construct();
         $this->streamer = $uid;
         $data = $this->db->getStream($uid);
         $this->title = $data['title'];
@@ -20,7 +21,7 @@ class Stream extends Page {
     }
 
     function getDescription() {
-        return $this->description;
+        return $this->desc;
     }
 
     function getTwitchUser() {

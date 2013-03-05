@@ -30,7 +30,7 @@ switch($_GET['type']) {
       case 'deleteTopic': print json_encode(APIForum::deleteTopic()); break;
     } break;
 
-    case 'stream': require_once('api/stream.php');
+    case 'stream': require_once('api/apistream.php');
         switch($_GET['method']) {
             case 'editStream': print json_encode(APIStream::editStream()); break;
         } break;
