@@ -25,17 +25,17 @@
         <div class="span8">
             <h2>The Team</h2>
             Team [FGT] started in Wings of Liberty as a clan designed to sweep the entire Starcraft II scene by storm.
-            The teams roster boasts some of the best players available in the respective homes of the players that are
+            The team's roster boasts some of the best players available in the respective homes of the players that are
             on the team, and that's saying something, probably. Further the times that the players have are greater than
-            or equal two the times that they would have if they weren't on the team in most cases, except the cases where
+            or equal to the times that they would have if they weren't on the team in most cases, except the cases where
             this lemma does not hold.
             <p>
-            <blockquote>
-                Most assuredly the team has had some success as measured against the metrics posted by similar teams
-                named [FGT] in the Greater Edmonton Area in the fiscal quarters that the team named [FGT] has existed
-                under the current management that is boasting of this success.
-                <small>Troy "bonywonix" Pavlek, 2013</small>
-            </blockquote>
+                <blockquote>
+                    Most assuredly the team has had some success as measured against the metrics posted by similar teams
+                    named [FGT] in the Greater Edmonton Area in the fiscal quarters that the team named [FGT] has existed
+                    under the current management which is boasting of this success.
+                    <small>Troy "bonywonix" Pavlek, 2013</small>
+                </blockquote>
             </p>
 
             We are coming. Expect us. Fear us. Please don't take our ladder points.
