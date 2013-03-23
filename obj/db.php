@@ -888,9 +888,27 @@ class DB {
     return ($this->update(array('table' => 'matches', 'fields' => array(':replay' => $replay), 
       'where' => array(':match_id' => $match_id))));
   }
-    
 
-  function getMapByName($name) {
+    function getReplay($rid) {
+        $query = "SELECT path from replays where id = :rid";
+        $queryPrepared = $this->pdo->prepare($query);
+        $queryPrepared->bindValue(':rid',  $rid);
+        $queryPrepared->execute();
+        return $queryPrepared->fetch();
+    }
+
+
+    function __call($name, $arguments)
+    {
+        // TODO: Implement __call() method.
+    }
+
+    public static function __callStatic($name, $arguments)
+    {
+        // TODO: Implement __callStatic() method.
+    }
+
+    function getMapByName($name) {
     $query = "SELECT * from maps where name = :name";
     $queryPrepared = $this->pdo->prepare($query);
     $queryPrepared->bindValue(':name', $name);
