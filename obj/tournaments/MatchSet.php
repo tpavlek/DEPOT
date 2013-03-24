@@ -26,18 +26,18 @@ class MatchSet {
     foreach ($this->matchset as $match) {
       if ($match->hasWinner()) {
         $this->game_num++;
-        if ($match->getWinner() == $match->getPlayer1()) {
+        if ($match->getWinner() == $this->player1) {
           $this->player_1_score++;
-          if ($this->player_1_score > ($this->bo / 2)) {
-            $this->winner = $match->getPlayer1();
-          }
         } else {
-          $this->player_2_score++;
-          if ($this->player_2_score > ($this->bo / 2)) {
-            $this->winner = $match->getPlayer2();
-          }
+          $this->player_2_score++;  
         }
       }
+    }
+    if ($this->player_1_score >= ceil($this->bo / 2)) {
+      $this->winner = $match->getPlayer1();
+    }
+    if ($this->player_2_score >= ceil($this->bo / 2)) {
+      $this->winner = $match->getPlayer2();
     }
   }
 
@@ -64,10 +64,21 @@ class MatchSet {
   function getGameNum() {
     return $this->game_num;
   }
+  
+  /* if OBJ is true, it will return the current match object,
+   * else, default, it will return the current match ID
+   */
+  function getCurrentMatch($obj = FALSE) {
+    if ($this->game_num == ($this->bo +1)) {
+      $return = $this->matchset[$this->bo -1];
+    } else if ($this->hasWinner()) { 
+      $return = $this->matchset[$this->game_num -2];
+    } else {
+      $return = $this->matchset[$this->game_num -1];
+    }
 
-  function getCurrentMatch() {
-    if ($this->game_num == ($this->bo +1)) return $this->matchset[$this->bo -1]->getMID();
-    return($this->matchset[$this->game_num -1]->getMID());
+    if ($obj) return $return;
+    else return $return->getMID();
   }
 }
 

@@ -196,6 +196,7 @@ class DB {
         }
         $newTid = $this->getLastTopic($topic->getFID());
         $this->updateForumList(new Topic($newTid['data']['id']));
+        
         return array('status' => 0, 'message' => 'Everything is gone');
     }
 
@@ -265,7 +266,9 @@ class DB {
         $query = "SELECT matches.player_1, matches.player_2, matches.match_id
       from bracket, matches where bracket.match_id = matches.match_id
       AND (matches.player_1 = :uid OR matches.player_2 = :uid) 
-      AND bracket.in_tournament = matches.in_tournament ORDER by bracket.ro";
+      AND bracket.in_tournament = matches.in_tournament 
+      AND matches.in_tournament = :tourn_id
+      ORDER by bracket.ro";
         $queryPrepared = $this->pdo->prepare($query);
         $queryPrepared->bindValue(':tourn_id', $tourn_id);
         $queryPrepared->bindValue(':uid', $uid);
@@ -926,13 +929,19 @@ class DB {
         return $this->delete(array('table' => 'tournaments', 'fields' => array(':id' => $tourn_id)));
     }
 
+    function addReplay($uid, $path) {
+      $add = array('table' => 'replays', 'fields' => array(':submitter' => $uid, ':path' => $path));
+      return $this->add($add);
+    }
+
     function addMatchReplay($match_id, $replay) {
-        return ($this->update(array('table' => 'matches', 'fields' => array(':replay' => $replay),
+      $this->addReplay($uid, $replay);
+        return ($this->update(array('table' => 'matches', 'fields' => array(':replay' => $this->lastInsertId()),
             'where' => array(':match_id' => $match_id))));
     }
 
     function getReplay($rid) {
-        $query = "SELECT path from replays where id = :rid";
+        $query = "SELECT submitter, path from replays where id = :rid";
         $queryPrepared = $this->pdo->prepare($query);
         $queryPrepared->bindValue(':rid',  $rid);
         $queryPrepared->execute();

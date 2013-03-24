@@ -53,10 +53,12 @@
                 /** invokes the latest replay for embedding on the main page
                  For the time being the SC2 Replays forum is hardcoded with the FID of 4
                  */
-                require_once('obj/forum/Topic.php');
+require_once('obj/forum/Topic.php');
+require_once('obj/Replay.php');
                 require_once('fragments/replayBox.php');
                 $latestReplay = new Topic($page->getDB()->getLastTopic(4)['data']['id']);
-                $replayBox = new replayBox($latestReplay->getReplay());
+                $replayObj = new Replay($latestReplay->getReplay());
+                $replayBox = new replayBox($replayObj->getPath());
                 ?>
                 <h1>Latest Replay</h1>
                 <p>

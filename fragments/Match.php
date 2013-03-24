@@ -40,6 +40,14 @@ class MatchBox extends Page {
     }
   }
 
+  function getReplay($match) {
+    if ($match->getReplay()) {
+      return "<p><a href='?page=viewReplay&rid=" . $match->getReplay() . "' class='btn pull-left'>
+          <i class='icon-play'></i>
+        </a></p>";
+    }
+  }
+
   function getBox() {
     $str = "
      <div class='well'>
@@ -49,8 +57,15 @@ class MatchBox extends Page {
     $str .= "
       </div>
       ";
+    $str .= "<div class='row-fluid'>
+      <div class='span6'>";
+    $str .= $this->getReplay($this->match);
+    $str .= "</div>
+      <div class='span6'>";
     $str .= $this->getWrench();
     $str .= " </div>";
+    $str .= "</div>";
+    $str .=" </div>";
     return $str;
   }
 }
@@ -76,9 +91,15 @@ class BoMatchBox extends MatchBox {
     $str .= "<a class='btn' disabled>" . $this->matchset->getPlayer2Score() . "</a>";
     $str .= "  </div>
       </div>";
-
+    $str .= "<div class='row-fluid'>
+      <div class='span6'>";
+    $str .= parent::getReplay($this->matchset->getCurrentMatch(TRUE));
+    $str .= "</div>
+      <div class='span6'>";
     $str .= parent::getWrench(); 
     $str .= "</div>";
+    $str .="</div>";
+    $str .="</div>";
     return $str;
   }
 

@@ -25,7 +25,7 @@ $bracket = new Bracket($tourn_id);
 </div>
 <div class="row-fluid">
   <div class="span5">
-    <h3>Registered Users:</h3>
+    <h3>Registered Users (<?php echo count($users);?>):</h3>
     <div class="well">
       <?php 
         if ($users['status']) {
@@ -53,10 +53,13 @@ if ($page->permissions(array('admin'))) {
   <form action="api.php?type=tournament&method=generateBracket&tourn_id=<?php echo $tourn_id; ?>" method="POST" target="submit-iframe">
     <input type="submit" class="btn btn-warning" value="Generate Brackets" />
   </form>
+  <a class="btn btn-primary" href="?page=adminTournament.php&tourn_id=<?php echo $tourn_id;?>">Modify Tournament</a>
 <?php
   }
 } ?> 
 </div> <!-- End of the unstarted tournament -->   
+
+
 <?php if ($tournament->hasStarted()) { ?>
 <div style="display:none;" id="tournamentNumRounds"><?php echo $tournament->getNumRounds(); ?></div>
 <div class="row-fluid">
@@ -202,6 +205,9 @@ if ($page->permissions(array('admin'))) {
 <?php } ?>
 
   <script>
+  $(document).ready(function() {
+    bindMatchButtonEvent();
+  });
 
   $('.mapListPopover').popover();
 
@@ -220,18 +226,20 @@ $('#submit-iframe-dood').load( function() {
     }
 });
 
-$('[name=matchEditButton]').click(function() {
-  var match_id = $(this).parents().closest('.match').attr('id').replace('mid', '');
-  $('#editMatchModal').find('form:first').children('[name=match_id]').val(match_id);
-  $('#editMatchModal').find('form:last').children('[name=match_id]').val(match_id);
-  var round = $(this).parents().closest('.matchColumn').attr('id').replace('ro', '');
-  $('#editMatchModal').find('form:first').children('[name=round]').val(round);
-  var numMatch= $(this).parents().closest('.matchColumn').children('.match').size();
-  for (var i = 0; i < numMatch; i++) {
-    $('#editMatchModal').find('form:first').children('[name=match_move_num]').append(
-      "<option value=" + i + ">Match " + i + "</option>");
-  }
-});
+function bindMatchButtonEvent() {
+  $('[name=matchEditButton]').click(function() {
+    var match_id = $(this).parents().closest('.match').attr('id').replace('mid', '');
+    $('#editMatchModal').find('form:first').children('[name=match_id]').val(match_id);
+    $('#editMatchModal').find('form:last').children('[name=match_id]').val(match_id);
+    var round = $(this).parents().closest('.matchColumn').attr('id').replace('ro', '');
+    $('#editMatchModal').find('form:first').children('[name=round]').val(round);
+    var numMatch= $(this).parents().closest('.matchColumn').children('.match').size();
+    for (var i = 0; i < numMatch; i++) {
+      $('#editMatchModal').find('form:first').children('[name=match_move_num]').append(
+        "<option value=" + i + ">Match " + i + "</option>");
+    }
+  });
+}
 
 function advanceBracket() {
   $('.mapListPopover').popover('hide');
@@ -299,6 +307,7 @@ function addColumn(data) {
   }
   var selector = $('.matchColumn:last').replaceWith(toAppend);
   $('.mapListPopover').popover();
+  bindMatchButtonEvent();
 }
 
 function processReplayUpload() {

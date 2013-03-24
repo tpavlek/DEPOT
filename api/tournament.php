@@ -124,6 +124,12 @@ class APITournament {
 
     if (isset($_POST['max_rounds'])) {
       $tournadd['fields'][':num_rounds'] = $_POST['max_rounds'];
+      // We must ensure to delete any rounds that may have existed before
+      $delete = "DELETE from bo_tournament where tourn_id = :tourn_id and ro > :ro";
+      $deletePrepared = $db->getPDO()->prepare($delete);
+      $deletePrepared->bindValue(':tourn_id', $_POST['tourn_id']);
+      $deletePrepared->bindValue(':ro', $_POST['max_rounds']);
+      $deletePrepared->execute();
     }
 
     if (isset($_POST['info'])) {

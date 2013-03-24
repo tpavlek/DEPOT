@@ -2,4 +2,6 @@
 assets/profile/*
 assets/replays/*
 .*
+Ujiji/
+depot.sql
 *.swp

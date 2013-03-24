@@ -1,5 +1,6 @@
 <?php
 require_once('obj/forum/Topic.php');
+require_once('obj/Replay.php');
 require_once('fragments/userBox.php');
 require_once('fragments/postControl.php');
 require_once('fragments/topicControl.php');
@@ -35,7 +36,8 @@ $replies = $topic->getReplies($pageNum, $postsPerPage);
     <div class="span8 topicMessage">
       <?php echo $topic->getMessage(); ?>
 <?php if($topic->getReplay()) {
-        $replayBox = new ReplayBox($topic->getReplay());
+  $replay = new Replay($topic->getReplay());
+        $replayBox = new ReplayBox($replay->getPath());
         print $replayBox->getBox();
    }
       ?>

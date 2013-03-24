@@ -15,6 +15,7 @@ class Match extends Page {
     $this->player_1 = $result['player_1'];
     $this->player_2 = $result['player_2'];
     $this->mid = $mid;
+    $this->replay = $result['replay'];
     $this->winner = $result['winner'];
   }
 
@@ -40,6 +41,10 @@ class Match extends Page {
 
   function getMID() {
     return $this->mid;
+  }
+
+  function getReplay() {
+    return $this->replay;
   }
 
 }
