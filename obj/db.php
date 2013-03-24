@@ -738,22 +738,31 @@ class DB {
             ':ro' => $round, ':bo' => $bo, ':map' => $map)));
     }
 
-    function getBoFromTournament($tourn_id) {
-        $query = "SELECT ro, bo from bo_tournament where tourn_id = :tourn_id ORDER by ro";
+    //This is a dirty hack. I'm sorry future self, but I just didn't want to refactor EVERY piece of code that uses this
+    // so, $ro will be false unless it's not.
+    function getBoFromTournament($tourn_id, $ro = FALSE) {
+        $query = "SELECT ro, bo, map from bo_tournament where tourn_id = :tourn_id ORDER by ro";
         $queryPrepared = $this->pdo->prepare($query);
         $queryPrepared->bindValue(':tourn_id', $tourn_id);
         $queryPrepared->execute();
         $data = $queryPrepared->fetchAll();
-        $ro = $this->determineNumberOfRounds($this->getTournamentRegisteredNum($tourn_id));
+        if (!$ro) {
+          $ro = $this->determineNumberofRounds($this->getTournamentRegisteredList($tourn_id));
+        }
         $sentinel = true;
+
+        /* the array by default returns 0 => all the data, 1 => all the data, etc.
+         * I want it roundnum => all the data so I'm going through this algorithm
+         */
         for ($i = 1; $i <= $ro; $i++ ) {
             foreach($data as $bo) {
                 if($bo['ro'] == $i) {
-                    $add = array('ro' => $bo['ro'], 'bo' => $bo['bo']);
+                    $add = array('ro' => $bo['ro'], 'bo' => $bo['bo'], 'map' => $bo['map']);
                     $return[] = $add;
                     $sentinel = false;
                 }
             }
+            // If we don't see the round we want to assume that it's a b01
             if ($sentinel) {
                 $add = array('ro' => $i, 'bo' => 1);
                 $return[] = $add;

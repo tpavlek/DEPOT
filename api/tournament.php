@@ -94,17 +94,63 @@ class APITournament {
 
   }
 
-  /*static function editTournament() {
+  static function editTournament() {
     $page = new Page();
     $db = $page->getDB();
+    $tournadd = array('table' => 'tournaments', 'where' => array(':id' => $_POST['tourn_id']));
     if (isset($_POST['name'])) {
       $tournadd['fields'][':name'] = $_POST['name'];
     }
-    foreach ($_POST as $post) {
-      switch ($post) {
-      }
+
+    if (isset($_POST['max_rounds'])) {
+      $tournadd['fields'][':num_rounds'] = $_POST['max_rounds'];
     }
-  }*/
+
+    if (isset($_POST['info'])) {
+      $tournadd['fields'][':info'] = $_POST['info'];
+    }
+
+    $ifExistsQuery = "SELECT tourn_id from bo_tournament where tourn_id = :tourn_id AND ro = :ro";
+    $updateQuery = "UPDATE bo_tournament SET map = :map, bo = :bo where tourn_id = :tourn_id AND ro = :ro";
+    $insertQuery = "INSERT into bo_tournament (bo, ro, map, tourn_id) VALUES (:bo, :ro, :map, :tourn_id)";
+    $existsQueryPrepared = $db->getPDO()->prepare($ifExistsQuery);
+    $updateQueryPrepared = $db->getPDO()->prepare($updateQuery);
+    $insertQueryPrepared = $db->getPDO()->prepare($insertQuery);
+    
+    $i = count($_POST['rd_bo']);
+
+    foreach ($_POST['rd_bo'] as $bo) {
+      $existsQueryPrepared->bindValue(':ro', $i);
+      $existsQueryPrepared->bindValue(':tourn_id', $_POST['tourn_id']);
+      $existsQueryPrepared->execute();
+      if ($existsQueryPrepared->rowCount() > 0) {
+        $updateQueryPrepared->bindValue(':ro', $i);
+        $updateQueryPrepared->bindValue(':bo', $bo);
+        $updateQueryPrepared->bindValue(':map', $_POST['map_'.$i]);
+        $updateQueryPrepared->bindValue(':tourn_id', $_POST['tourn_id']);
+        if(!$updateQueryPrepared->execute()) return array('status' => 1, 'data' => $updateQueryPrepared->errorInfo());
+      } else {
+        $insertQueryPrepared->bindValue(':ro', $i);
+        $insertQueryPrepared->bindValue(':bo', $bo);
+        $insertQueryPrepared->bindValue(':map', $_POST['map_'.$i]);
+        $insertQueryPrepared->bindValue(':tourn_id', $_POST['tourn_id']);
+        if (!$insertQueryPrepared->execute()) return array('status' => 1, 'data' => $insertQueryPrepared->errorInfo());
+      }
+      $i--;
+    }
+    $result = $db->update($tournadd);
+    if ($result['status']) return $result;
+    else return array('status' => 0, 'data' => $_POST['tourn_id']);
+  }
+
+  static function createTournament() {
+    $page = new Page();
+    $db = $page->getDB();
+    $result = $db->add(array('table' => 'tournaments', 'fields' => array(':name' => $_POST['name'], 
+      ':num_rounds' => $_POST['max_rounds'], ':info' => $_POST['info']))); 
+    if ($result['status']) return $result;
+    else return array('status' => 0, 'data' => $db->getLastInsertId());
+  }
 
  /* static function deleteTournament() {
     $page = new Page();
@@ -137,7 +183,7 @@ class APITournament {
     return $db->getMapList();
   }
 
-  static function createTournament() { //TODO $_GET checking, rank
+  /*static function createTournament() { //TODO $_GET checking, rank
     $page = new Page();
     $db = $page->getDB();
     if (!$page->permissions(array("admin"))) {
@@ -160,7 +206,7 @@ class APITournament {
     }
     return array('status' => 0);
 
-  }
+  }*/
 
 }
 
