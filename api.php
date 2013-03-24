@@ -47,6 +47,7 @@ switch($_GET['type']) {
       case 'editTournament': print json_encode(APITournament::editTournament()); break;
       case 'deleteTournament': print json_encode(APITournament::deleteTournament()); break;
       case 'createTournament': print json_encode(APITournament::createTournament()); break;
+      case 'reportResults': print json_encode(APITournament::reportResults()); break;
     } break;
 
   case 'user': require_once('api/user.php'); 

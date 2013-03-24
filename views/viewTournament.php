@@ -70,17 +70,15 @@ if ($page->permissions(array('admin'))) {
 
 <?php if ($page->permissions(array("loggedIn"))) {
   $user = new User($_SESSION['uid']);
-  if ($user->isInMatch($tourn_id)) { ?>
+  $match_id = $user->isInMatch($tourn_id);
+  if ($match_id) { ?>
     <div class="row-fluid">
       <div class="span12">
-        <form action="api.php?type=tournament&method=uploadReplay" method="POST" enctype="multipart/form-data" target="submit-iframe">
-          <input type="hidden" name="tourn_id" value='<?php echo $tourn_id; ?>' />
-          <input name="tournament_replay_upload" type="file" style="display:none;" onchange="javascript:processReplayUpload()">
-          <a class="btn-large btn-warning btn-block btn" name="tournament_replay_upload_button" onclick="$('[name=tournament_replay_upload]').click();">Upload Replay</a>
-        </form>
+          <a class="btn-large btn-warning btn-block btn" role="button" data-toggle="modal" href="#reportMatchModal">
+            Report Match Result
+          </a>
       </div>
     </div>
-    <p class="error"></p>
 <?php
   }
 }?>
@@ -106,6 +104,55 @@ if ($page->permissions(array('admin'))) {
 <div class="progress progress-striped">
 <div class="bar" style="width:<?php echo $tournament->getProgressAsPercent(); ?>%;"></div>
 </div>
+
+<!-- Match Report Modal -->
+<?php if ($match_id) { 
+  $match = new Match($match_id);
+  $player1 = new User($match->getPlayer1());
+  $player2 = new User($match->getPlayer2());
+  ?>
+<div class="modal hide fade" id="reportMatchModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+    <h3>Report Match</h3>
+  </div>
+  <div class="modal-body">
+  <div class="error"></div>
+  <form class="form-horizontal" action="api.php?type=tournament&method=reportResults" enctype="multipart/form-data" target="submit-iframe" method="POST">
+    <div class="control-group">
+      <label class="control-label" for="report_win">Winner: </label> 
+        <div class="controls">
+        <label class="radio inline">
+          <input type="radio" name="report_win" value="<?php echo $player1->getUID();?>"><?php echo $player1->getBnetName(); ?>
+        </label>
+        <label class="radio inline">
+          <input type="radio" name="report_win" value="<?php echo $player2->getUID(); ?>" checked><?php echo $player2->getBnetName(); ?>
+        </label>
+        </div>
+    </div>
+    <input type="hidden" name="tourn_id" value='<?php echo $tourn_id; ?>' />
+    <div class="control-group">
+      <label class="control-label" for="tournament_replay_upload">Replay:</label>
+      <div class="controls">
+        <input name="tournament_replay_upload" type="file" onchange="javascript:processReplayUpload()">
+      </div>
+    </div>
+
+    <div class="control-group">
+      <div class="controls">
+        <input class="btn btn-success" type="submit" value="Confirm" />
+      </div>
+    </div>
+  </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn" data-dismiss="modal">Close</button>
+  </div>
+</div>
+
+<?php } ?>
+
+
 <!-- Modal match edit -->
 <div class="modal hide fade" id="editMatchModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-header">
@@ -255,12 +302,12 @@ function addColumn(data) {
 }
 
 function processReplayUpload() {
-  var search = $('input[type="file"]').val().search(".SC2Replay");
+  var search = $('input[type=file]').val().search(".SC2Replay");
   if (search > 0) {
     $('.error').hide('fast');
-    $('[name=tournament_replay_upload_button]').removeClass('btn-danger').addClass('btn-success').html("Uploading").parent().submit();
+    $('input[type=submit]').removeClass('btn-danger').addClass('btn-success').val("Upload");
   } else {
-    $('[name=tournament_replay_upload_button]').removeClass('btn-warning btn-success').addClass('btn-danger').html("Try Again");
+    $('input[type=submit]').removeClass('btn-warning btn-success').addClass('btn-danger').val("Try Again");
     $('.error').show('fast').html("That doesn't look like an SC2Replay to me");
   }
 }

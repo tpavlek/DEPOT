@@ -32,6 +32,26 @@ class APITournament {
     return $db->generateBracket($_GET['tourn_id']);
   }
 
+  static function reportResults() {
+    $page = new Page();
+    $db = $page->getDB();
+    $match_id = $db->isInMatch($_SESSION['uid'], $_POST['tourn_id']);
+    if (!$match_id) {
+      return array('status' => 1, 'message' => "You don't appear to be in a match");
+    }
+    if (isset($_FILES['tournament_replay_upload'])) {
+      if (!($_FILES['tournament_replay_upload']['error'])) {
+        $replayPath =  "assets/replays/".$_SESSION['uid'] . "_" .date('YmdHis') .".SC2Replay";
+        move_uploaded_file($_FILES['tournament_replay_upload']['tmp_name'], $replayPath);
+        $db->addMatchReplay($match_id, $replayPath);
+
+      }
+    }
+        //return(APITournament::processReplay($match_id, $replayPath));
+    return $db->reportGameWin($match_id, $_POST['report_win']);
+
+  } 
+
   static function uploadReplay() {
     $page = new Page();
     $db = $page->getDB();

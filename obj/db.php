@@ -747,7 +747,7 @@ class DB {
         $queryPrepared->execute();
         $data = $queryPrepared->fetchAll();
         if (!$ro) {
-          $ro = $this->determineNumberofRounds($this->getTournamentRegisteredList($tourn_id));
+          $ro = $this->determineNumberofRounds($this->getTournamentRegisteredNum($tourn_id));
         }
         $sentinel = true;
 
@@ -780,12 +780,19 @@ class DB {
         $tournament_bo = $this->getBoFromTournament($tourn_id);
         for ($i = $rounds; $i > 0; $i--) {
             for ($n = 0; $n < $tournament_bo[$i - 1]['bo']; $n++) {
-                for ($k = 0; ($k < pow(2, $i - 1)); $k++) {
+              for ($k = 0; ($k < pow(2, $i - 1)); $k++) {
+                    
                     $add = array('table' => 'matches', 'fields' => array(':in_tournament' => $tourn_id));
                     $this->add($add);
-                    $this->add(array('table' => 'bracket', 'fields' => array(':match_id' =>
-                    $this->getLastInsertId(), ':position' => $k, ':in_tournament' => $tourn_id, ':ro' => $i,
-                        ':bo' => $tournament_bo[$i - 1]['bo'], ':game_num' => $n + 1)));
+                    $add = array('table' => 'bracket', 'fields' => array(':match_id' =>
+                      $this->getLastInsertId(), ':position' => $k, ':in_tournament' => $tourn_id, ':ro' => $i,
+                        ':bo' => $tournament_bo[$i - 1]['bo'], ':game_num' => $n + 1));
+
+                    // We only want to set the first map of the match, the default will handle the rest
+                    if (isset($tournament_bo[$i - 1]['map']) && $n == 0) {
+                      $add['fields'][':map'] = $tournament_bo[$i-1]['map'];
+                    }
+                    $this->add($add);
                 }
             }
         }

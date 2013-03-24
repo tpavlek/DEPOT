@@ -11,9 +11,11 @@ class BracketRender extends Page {
   private $bo;
   private $bracket;
   private $ro;
+  private $tourn_id;
 
   public function __construct($tourn_id, $ro) {
     parent::__construct();
+    $this->tourn_id = $tourn_id;
     $this->bracket = new Bracket($tourn_id);
     $this->match_array = $this->bracket->getBracket($ro);
     $this->bo = $this->bracket->getBo($ro);
@@ -25,7 +27,7 @@ class BracketRender extends Page {
       <div class='span3 matchColumn' id='ro" . $this->ro ."'>";
     $content = "";
     for ($j = 1; $j <= $this->bo; $j++) {
-      $map = $this->bracket->getMap($this->ro, $j);
+      $map = $this->getDB()->getMapByRoundGame($this->tourn_id, $this->ro, $j);
       $content .= "<p>Game " . $j . ": " . $map['name'] ."</p>";
     }
     $str .= "<div class='mapListPopover' data-trigger='hover' data-html='true' data-content = '" . $content . "' rel='popover'
