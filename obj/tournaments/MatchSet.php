@@ -29,7 +29,7 @@ class MatchSet extends Page{
     $this->player_2_score = 0;
     $this->winner = 0;
     $this->game_num = 1;
-    $this->bo = sizeof($this->matchset);
+    $this->bo = count($this->matchset);
     foreach ($this->matchset as $match) {
       if ($match->hasWinner()) {
         $this->game_num++;

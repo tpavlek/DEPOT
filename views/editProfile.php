@@ -22,6 +22,8 @@ $user = new User($_SESSION['uid']);
 </form>
 <!-- TODO check for bad inputs before submit -->
 <hr>
+
+  <div class="error"></div>
 <form action="api.php?type=user&method=setBnet" method="POST" target="submit-iframe" class="form-horizontal" onsubmit="return validateMyForm();">
   <div class="control-group">
     <label class="control-label" for="bnet_id">Battle.net Profile URL:</label>
@@ -38,7 +40,6 @@ $user = new User($_SESSION['uid']);
     </div>
   </div>
 </form>
-  <div class="error"></div>
 <script>
   $('input[name=profile_pic_upload]').change(function() {
     console.log();

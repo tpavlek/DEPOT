@@ -700,12 +700,13 @@ class DB {
         if ($result[0]['bo'] > 1) {
             $i = 0;
             foreach ($result as $match) {
-                if ($i < $result[0]['bo']) {
-                    $midarray[] = $match['match_id'];
+              if ($i < $result[0]['bo']) {
+                $midarray[] = $match['match_id'];
                     if ($i == $result[0]['bo'] -1) {
                         $bracket[] = new MatchSet($midarray);
                         $midarray = array();
                         $i = 0;
+                        continue; // we need to continue to stop $i from incrementing again
                     }
                 }
                 $i++;

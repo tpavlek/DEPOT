@@ -1,7 +1,13 @@
 <?php
 require_once('obj/Forum.php');
 require_once('fragments/userBox.php');
-$pageNum = (isset($_GET['pageNum'])) ? $_GET['pageNum'] - 1: 0;
+if (isset($_GET['pageNum'])) {
+  if (is_numeric($_GET['pageNum']) && $_GET['pageNum'] > 0) {
+    $pageNum = $_GET['pageNum'] -1;
+  } else {
+    $pageNum = 0;
+  }
+}
 $topicsPerPage = 25;
 $forum = new Forum($_GET['fid']);
 $topicList = $forum->getTopics($pageNum, $topicsPerPage);

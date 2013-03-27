@@ -16,8 +16,7 @@ case (strstr($val, "Bronze") !== FALSE): print "BRONZE"; break;
 case (strpos($val, "Platinum")): print "PLAT"; break;
 default: print htmlspecialchars($val); ; break;*/
 
-print_r($db->getMatchSet(407));
-
+print ini_get('display_errors');
 ?>
 <?php
 ?>
