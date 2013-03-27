@@ -43,7 +43,7 @@ class APITournament {
       if (!($_FILES['tournament_replay_upload']['error'])) {
         $replayPath =  "assets/replays/".$_SESSION['uid'] . "_" .date('YmdHis') .".SC2Replay";
         move_uploaded_file($_FILES['tournament_replay_upload']['tmp_name'], $replayPath);
-        $db->addMatchReplay($match_id, $replayPath);
+        $db->addMatchReplay($match_id, $_SESSION['uid'], $replayPath);
 
       }
     }

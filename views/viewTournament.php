@@ -6,6 +6,7 @@ require_once('fragments/Bracket.php');
 $tourn_id = isset($_GET['tourn_id']) ? $_GET['tourn_id'] : 1;
 $tournament = new Tournament($tourn_id);
 $users = $tournament->getUserList(); 
+$userNum = (isset($users['data'])) ? count($users['data']) : 0; 
 $bracket = new Bracket($tourn_id);
 ?>
 <?php if (!$tournament->hasStarted()) {
@@ -25,7 +26,7 @@ $bracket = new Bracket($tourn_id);
 </div>
 <div class="row-fluid">
   <div class="span5">
-    <h3>Registered Users (<?php echo count($users);?>):</h3>
+    <h3>Registered Users (<?php echo $userNum;?>):</h3>
     <div class="well">
       <?php 
         if ($users['status']) {
@@ -109,10 +110,11 @@ if ($page->permissions(array('admin'))) {
 </div>
 
 <!-- Match Report Modal -->
-<?php if ($match_id) { 
-  $match = new Match($match_id);
-  $player1 = new User($match->getPlayer1());
-  $player2 = new User($match->getPlayer2());
+<?php if ($page->permissions(array("loggedIn"))) {
+  if ($match_id) { 
+    $match = new Match($match_id);
+    $player1 = new User($match->getPlayer1());
+    $player2 = new User($match->getPlayer2());
   ?>
 <div class="modal hide fade" id="reportMatchModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-header">
@@ -153,8 +155,9 @@ if ($page->permissions(array('admin'))) {
   </div>
 </div>
 
-<?php } ?>
-
+<?php } 
+  }
+?>
 
 <!-- Modal match edit -->
 <div class="modal hide fade" id="editMatchModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -188,6 +191,7 @@ if ($page->permissions(array('admin'))) {
     <form action="api.php?type=tournament&method=reportWin" method="POST" target="submit-iframe"
       class="form-inline">
       <input type="hidden" name="match_id" />
+      <input type="hidden" name="uid" value=<?php echo $_SESSION['uid']; ?>/>
       <label class="radio inline">
         <input type="radio" name="report_winner" checked value="1" />Player 1</input>
       </label>

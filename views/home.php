@@ -5,9 +5,21 @@
         </div>
     </div>
 </section>
+<?php
+$acronym = $page->getDB()->getAcronym();
+?>
 <section id="about">
     <div class="page-header">
-        <h1>About [FGT]<small>For Great Times!</small></h1>
+      <h1>About [FGT] <a id="acronymPopover" href="#" data-html="true" data-placement="bottom" rel="popover" 
+          data-toggle="popover" title data-content="
+            <div class='error'></div>
+            <form action='api.php?type=misc&method=submitAcronym' method='POST' target='submit-iframe'>
+              <input type='text' name='acronym' />
+              <input type='submit' class='btn btn-success' value='Suggest' />
+            </form>
+" data-original-title="What does [FGT] stand for?">
+        <small><?php echo $acronym; ?></small></h1>
+        </a>
     </div>
     <div class="row">
         <!--<div class="span4"><h2>History</h2>
@@ -82,4 +94,20 @@ require_once('obj/Replay.php');
         </div>
     </div>
 </section>
+                <script>
+                $(document).ready(function() {
+                  $('#acronymPopover').popover();
+                });
+                $('#submit-iframe-dood').load( function() {
+  var result = JSON.parse($('#submit-iframe-dood').contents().find('body').html());
+    if (result.status) {
+      $('.error').html(result.message).show('fast');
+    } else {
+      location.reload();
+    }
+});
+
+
+
+                </script>
 

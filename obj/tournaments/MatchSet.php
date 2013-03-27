@@ -1,7 +1,8 @@
 <?php
 require_once('obj/tournaments/Match.php');
+require_once('obj/page.php');
 
-class MatchSet {
+class MatchSet extends Page{
 
   private $matchset;
   private $player1;
@@ -12,10 +13,16 @@ class MatchSet {
   private $game_num;
   private $winner;
   
-  public function __construct($midarray) {
-    foreach ($midarray as $match) {
-      $this->matchset[] = new Match($match);
+  public function __construct($mid, $array = TRUE) {
+    if($array) {
+      foreach ($mid as $match) {
+        $this->matchset[] = new Match($match);
+      }
+    } else {
+      parent::__construct();
+      $this->matchset = $this->getDB()->getMatchSet($mid);
     }
+
     $this->player1 = $this->matchset[0]->getPlayer1();
     $this->player2 = $this->matchset[0]->getPlayer2();
     $this->player_1_score = 0;
@@ -63,6 +70,16 @@ class MatchSet {
 
   function getGameNum() {
     return $this->game_num;
+  }
+
+  function getReplay($num = FALSE) {
+    if ($num) {
+    }
+    $replayArray = array();
+    foreach ($this->matchset as $match) {
+      $replayArray[] = $match->getReplay();
+    }
+    return $replayArray;
   }
   
   /* if OBJ is true, it will return the current match object,

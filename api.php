@@ -1,6 +1,11 @@
 <?php
 require_once('obj/db.php');
 switch($_GET['type']) {
+case 'misc': require_once('api/misc.php');
+  switch($_GET['method']) {
+  case 'submitAcronym': print json_encode(APIMisc::submitAcronym()); break;
+  case 'modAcronym': print json_encode(APIMisc::modAcronym()); break;
+  } break;
  	case 'post': require_once('api/post.php');
  		switch ($_GET['method']) {
  			case 'adminDeletePost': print json_encode(APIPost::adminDeletePost()); break;

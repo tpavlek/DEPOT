@@ -26,6 +26,12 @@ class Replay extends Page {
         return $this->path;
     }
 
+    function hasMatch() {
+      $result = $this->db->getMatchFromReplay($this->rid);
+      if ($result) return $result['match_id'];
+      else return false;
+    }
+
 }
 
 ?>

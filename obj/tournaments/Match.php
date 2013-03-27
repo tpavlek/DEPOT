@@ -8,10 +8,12 @@ class Match extends Page {
   private $player_2;
   private $replay;
   private $winner;
+  private $tourn_id;
 
   public function __construct($mid) {
     parent::__construct();
     $result = $this->db->getMatch($mid);
+    $this->tourn_id = $result['in_tournament'];
     $this->player_1 = $result['player_1'];
     $this->player_2 = $result['player_2'];
     $this->mid = $mid;
@@ -45,6 +47,16 @@ class Match extends Page {
 
   function getReplay() {
     return $this->replay;
+  }
+
+  function getTournID() {
+    return $this->tourn_id;
+  }
+
+  function isMatchSet() {
+    $bo = $this->db->getBoFromMatch($this->mid);
+    if ($bo > 1) return $this->mid;
+    return false;
   }
 
 }

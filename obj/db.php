@@ -262,7 +262,8 @@ class DB {
     }
 
     function isInMatch($uid, $tourn_id) {
-        require_once('obj/tournaments/Match.php');
+      require_once('obj/tournaments/Match.php');
+      require_once('obj/tournaments/MatchSet.php');
         $query = "SELECT matches.player_1, matches.player_2, matches.match_id
       from bracket, matches where bracket.match_id = matches.match_id
       AND (matches.player_1 = :uid OR matches.player_2 = :uid) 
@@ -276,9 +277,18 @@ class DB {
         if ($queryPrepared->rowCount() == 0) {
             return false;
         }
-        $result = $queryPrepared->fetch();
-        if ($result['player_1'] == $uid || $result['player_2'] == $uid) {
-            $match = new Match($result['match_id']);
+        $result = $queryPrepared->fetchAll();
+        if (count($result) > 1) {
+          $midarray = array();
+          foreach ($result as $mid) {
+            $midarray[] = $mid['match_id'];
+          }
+          $match = new MatchSet($midarray);
+          if (!$match->hasWinner()) {
+            return $match->getCurrentMatch();
+          }
+        } else {
+          $match = new Match($result['match_id']);
             if (!$match->hasWinner()) {
                 return $result['match_id'];
             }
@@ -608,12 +618,67 @@ class DB {
         return $queryPrepared->fetch();
     }
 
+    function getAcronym() {
+      $queryPrepared = $this->pdo->query("SELECT fgt from acronyms where approved = 1 ORDER BY RAND() LIMIT 1");
+      $queryPrepared->execute();
+      return $queryPrepared->fetch()['fgt'];
+    }
+
+    function approveAcronym($id) {
+      $update = array('table' => 'acronyms', 'fields' => array(':approved' => 1), 
+        'where' => array(':id' => $id));
+      return $this->update($update);
+    }
+
+    function deleteAcronym($id) {
+      $delete = array('table' => 'acronyms', 'fields' => array(':id' => $id));
+      return $this->delete($delete);
+    }
+
+    function getUnapprovedAcronymsByPage($page, $pageLimit = 10) {
+      $query = "SELECT id, fgt from acronyms where approved = 0 ORDER by id
+        LIMIT ". ($page *$pageLimit) .", ".$pageLimit;
+      $queryPrepared = $this->pdo->prepare($query);
+      $queryPrepared->execute();
+      return $queryPrepared->fetchAll();
+    }
+
+    function submitAcronym($str) {
+      $query = "insert into acronyms (fgt) values (:str)";
+      $queryPrepared = $this->pdo->prepare($query);
+      $queryPrepared->bindValue(':str', $str);
+      return $queryPrepared->execute();
+    }
+
     function getMatch($mid) {
         $query = "SELECT in_tournament, player_1, player_2, replay, winner, match_id from matches where match_id = :mid";
         $queryPrepared = $this->pdo->prepare($query);
         $queryPrepared->bindValue(':mid', $mid);
         $queryPrepared->execute();
         return $queryPrepared->fetch();
+    }
+
+    function getMatchSet($mid) {
+      require_once('obj/tournaments/MatchSet.php');
+      require_once('obj/tournaments/Match.php');
+      $query = "SELECT b1.match_id 
+        from bracket b1, bracket b2
+        where b2.match_id = :mid
+        AND b1.ro = b2.ro
+        AND b1.position = b2.position
+        AND b1.in_tournament = b2.in_tournament
+        ORDER BY b1.match_id";
+      $queryPrepared = $this->pdo->prepare($query);
+      $queryPrepared->bindValue(':mid', $mid);
+      $queryPrepared->execute();
+      $data = $queryPrepared->fetchAll();
+
+      $matchset = array();
+
+      foreach ($data as $mid) {
+        $matchset[] = new Match($mid['match_id']);
+      }
+      return $matchset;
     }
 
     function getBracket($tourn_id, $round) {
@@ -669,6 +734,21 @@ class DB {
         return $this->add(array('table' => 'tournament_registered', 'fields' => array(':uid' => $uid, ':tourn_id' => $tourn_id)));
     }
 
+    function getMatchFromReplay($rid) {
+      $query = "SELECT match_id from matches where replay = :rid";
+      $queryPrepared = $this->pdo->prepare($query);
+      $queryPrepared->bindValue(':rid', $rid);
+      $queryPrepared->execute();
+      return $queryPrepared->fetch();
+    }
+
+    function getBoFromMatch($match_id) {
+      $query = "SELECT bo from bracket where match_id = :match_id";
+      $queryPrepared = $this->pdo->prepare($query);
+      $queryPrepared->bindValue(':match_id', $match_id);
+      $queryPrepared->execute();
+      return $queryPrepared->fetch()['bo'];
+    }
     /**
      * Takes a $tourn_id
      * returns an array with 'status' and 'data' containing an array of User objects.
@@ -934,10 +1014,10 @@ class DB {
       return $this->add($add);
     }
 
-    function addMatchReplay($match_id, $replay) {
+    function addMatchReplay($match_id, $uid, $replay) {
       $this->addReplay($uid, $replay);
-        return ($this->update(array('table' => 'matches', 'fields' => array(':replay' => $this->lastInsertId()),
-            'where' => array(':match_id' => $match_id))));
+      return ($this->update(array('table' => 'matches', 'fields' => array(':replay' => 
+        $this->getLastInsertId()), 'where' => array(':match_id' => $match_id))));
     }
 
     function getReplay($rid) {

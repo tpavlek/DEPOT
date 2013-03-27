@@ -42,7 +42,7 @@ class MatchBox extends Page {
 
   function getReplay($match) {
     if ($match->getReplay()) {
-      return "<p><a href='?page=viewReplay&rid=" . $match->getReplay() . "' class='btn pull-left'>
+      return "<p><a href='?page=viewReplay.php&rid=" . $match->getReplay() . "' class='btn pull-left'>
           <i class='icon-play'></i>
         </a></p>";
     }

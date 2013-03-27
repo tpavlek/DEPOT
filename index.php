@@ -15,6 +15,9 @@ if (isset($_GET['page'])) {
   case 'viewForum.php': $currentPage = 'viewForum.php'; break;
   case 'viewTopic.php': $currentPage = 'viewTopic.php'; break;
   case 'viewTournament.php': $currentPage = 'viewTournament.php'; break;
+  case 'viewReplay.php': $currentPage = 'viewReplay.php'; break;
+  case 'modqueue.php': $currentPage = 'modqueue.php'; break;
+  case 'test.php': $currentPage = 'test.php'; break;
   default: $currentPage = 'home.php'; break;
   }
 } else {
