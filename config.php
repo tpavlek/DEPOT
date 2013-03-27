@@ -1,9 +1,9 @@
 <?php
 $DATABASE = array (
-	'username' => 'ebon',
+	'username' => '',
 	'host' => 'localhost',
-	'password' => 'wubase',
-	'name' => 'ebon_depot'
+	'password' => '',
+	'name' => ''
 );
 
 
