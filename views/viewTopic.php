@@ -6,7 +6,6 @@ require_once('fragments/postControl.php');
 require_once('fragments/topicControl.php');
 require_once('fragments/replayBox.php');
 $topic = new Topic($_GET['tid']);
-$pageNum = (isset($_GET['pageNum'])) ? $_GET['pageNum'] - 1 : 0;
 $postsPerPage = 20; // TODO MAKE THIS LESS MAGIC
 $replies = $topic->getReplies($pageNum, $postsPerPage);
 ?>

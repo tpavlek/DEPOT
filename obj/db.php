@@ -134,8 +134,8 @@ class DB {
             if ($ver2['status'] == 1) {
                 $ver2['message'] = "Message " . $ver2['message'];
                 return $ver2;
-            } else $args['fields'][':message'] = validateString($message);
-            $args = array('table' => 'posts', 'fields' => array(':subject' => $subject, ':message' => $message), 'where' => array(':id' => $pid));
+            } else $args['fields'][':message'] = validateString($message); //TODO this doesn't actually do things
+            $args = array('table' => 'posts', 'fields' => array(':subject' => $subject, ':message' => validateString($message)), 'where' => array(':id' => $pid));
             return $this->update($args);
         }
     }
@@ -1041,6 +1041,12 @@ class DB {
     }
 
     function getMapByName($name) {
+        if (strpos($name, "WCS") !== FALSE) {
+          $name = substr($name, 4); // TODO this is a dirty hack, oh god why, I can't maintain this. 
+        }
+        if (substr_compare($name, " LE", -1, 3) === 0) {
+          $name = substr($name, 0, -3);
+        }
         $query = "SELECT * from maps where name = :name";
         $queryPrepared = $this->pdo->prepare($query);
         $queryPrepared->bindValue(':name', $name);

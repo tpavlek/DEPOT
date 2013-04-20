@@ -22,7 +22,17 @@ if (isset($_GET['page'])) {
   }
 } else {
   $currentPage = 'home.php';
+
+if (isset($_GET['pageNum'])) {
+  if (is_numeric($_GET['pageNum']) && $_GET['pageNum'] > 0) {
+    $pageNum = $_GET['pageNum'] -1;
+  } else {
+    $pageNum = 0;
+  }
+} else {
+  $pageNum = 0;
 }
+
 
 ?>
 
@@ -36,6 +46,7 @@ if (isset($_GET['page'])) {
     <meta   name=  "author"   content=  ""  >
     <!-- Le styles -->  
     <link   href=  "bootstrap/css/bootstrap.css"   rel=  "stylesheet">
+		<!--<link href ="//netdna.bootstrapcdn.com/bootswatch/2.3.1/united/bootstrap.min.css" rel = "stylesheet">-->
     <style>  
       body   {
         padding-top  : 60px  ; /* 60px to make the container go all the way to the bottom of the topbar */  
@@ -68,7 +79,7 @@ if (isset($_GET['page'])) {
         <li><a href="index.php">Home</a></li> <!-- TODO make actives work -->
         <li><a href="index.php?page=members.php">Members</a></li>
         <li><a href="index.php?page=forum.php">Forum</a></li>
-        <li><a href="index.php?page=viewTournament.php&tourn_id=8">Plat/Dia Tournament</a></li>
+        <li><a href="index.php?page=viewTournament.php&tourn_id=11">[FGT] Open</a></li>
       </ul>
       <ul class="pull-right" style="padding-right:1em"> 
         <?php if(!isset($_SESSION['username'])) { ?>

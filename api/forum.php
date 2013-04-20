@@ -60,7 +60,8 @@ class APIForum {
     if (!($_FILES['replayUpload']['error'])) {
        $replayPath =  "assets/replays/".$_SESSION['uid'] . "_" .date('YmdHis') .".SC2Replay";
        move_uploaded_file($_FILES['replayUpload']['tmp_name'], $replayPath);
-       $argArray['fields'][':replay'] = $replayPath;
+       $db->addReplay($_SESSION['uid'], $replayPath);
+       $argArray['fields'][':replay'] = $db->getLastInsertId();
     }
     
     $result = $db->addTopic($argArray);

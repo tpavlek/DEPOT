@@ -98,6 +98,10 @@ class replayBox {
 
         </div>
         ";
+    $str = "
+      <p>
+      <a href='". $this->replayPath . "' class='btn'><i class='icon-play'></i> Download Replay</a>
+      </p>";
     return $str;
   }
 

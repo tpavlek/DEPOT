@@ -19,7 +19,7 @@
             </ul>
         </div>
         <div class="span5 offset1">
-            <div class="well"><h3>League: <small>Platinum</small></h3>
+            <div class="well"><h3>League: <small>Diamond</small></h3>
                 <p>
                     I like my crayons, and my Nexus Four Superphone, and my magical meeting cards, and my Starcraft 2
                     Game. I did all the web-development for this site. I also exist on the internet, so you can see me

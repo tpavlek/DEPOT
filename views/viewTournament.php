@@ -19,7 +19,11 @@ $bracket = new Bracket($tourn_id);
     <div class="span4">
       <form action="api.php?type=tournament&method=register&tourn_id=<?php echo $tourn_id; ?>" method="POST" onsubmit="return validateTournamentRegister()" target="submit-iframe">
         <div class="error" style="display:none;"></div>
-      <input name="submit" type="submit" value="Join Tournament" class="btn-large btn-block btn btn-success pull-right">
+      <input name="submit" type="submit" value="Join Tournament" 
+<?php if (!isset($_SESSION['uid']) || $tournament->isRegistered($_SESSION['uid'])) {
+  echo "disabled";
+} ?>
+        class="btn-large btn-block btn btn-success pull-right">
       </form>
     </div>
   </div>

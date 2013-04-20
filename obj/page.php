@@ -10,9 +10,9 @@ class Page {
 		global $DATABASE;
 		$this->db = new DB($DATABASE['username'],$DATABASE['password'],$DATABASE['name'],$DATABASE['host']);
     date_default_timezone_set('America/Edmonton');
-		$this->date = date("d-m-Y H:i:s");
-	}
-  
+    $this->date = date("d-m-Y H:i:s");
+  }
+
   function permissions($reqd) {
     foreach ($reqd as $perm) {
       switch ($perm) {
